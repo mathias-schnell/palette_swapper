@@ -4,12 +4,56 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+if (!extension_loaded('gd')) {
+    die("GD extension is not enabled. Enable GD in PHP to process images.");
+}
+
+function get_image_loader($mime) {
+    switch ($mime) {
+        case 'image/png':
+            return 'imagecreatefrompng';
+        case 'image/jpeg':
+        case 'image/jpg':
+            return 'imagecreatefromjpeg';
+        case 'image/gif':
+            return 'imagecreatefromgif';
+        case 'image/webp':
+            return function_exists('imagecreatefromwebp') ? 'imagecreatefromwebp' : null;
+        default:
+            return null;
+    }
+}
+
 $palette = [];
 $image = null;
 $width = $height = 0;
 
-if(!empty($_FILES['image']['tmp_name'])) {
-    $image = imagecreatefrompng($_FILES['image']['tmp_name']);
+if (!empty($_FILES['image']['tmp_name'])) {
+    $image_info = getimagesize($_FILES['image']['tmp_name']);
+    if ($image_info === false) {
+        die("Uploaded file is not a valid image.");
+    }
+
+    $loader = get_image_loader($image_info['mime']);
+    if ($loader === null) {
+        die("Unsupported image type: " . htmlspecialchars($image_info['mime']));
+    }
+    if (!function_exists($loader) && !is_callable($loader)) {
+        die("Required GD function is missing for this image type: " . $image_info['mime']);
+    }
+
+    if (is_callable($loader)) {
+        $image = $loader($_FILES['image']['tmp_name']);
+    } else {
+        $image = $loader($_FILES['image']['tmp_name']);
+    }
+
+    if (!$image) {
+        die("Failed to create image resource.");
+    }
+}
+
+if($image) {
     $width = imagesx($image);
     $height = imagesy($image);
     for ($y = 0; $y < $height; $y++) {
