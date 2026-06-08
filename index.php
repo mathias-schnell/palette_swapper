@@ -61,11 +61,10 @@ if($image) {
             $index = imagecolorat($image, $x, $y);
             $color = imagecolorsforindex($image, $index);
             $hex = sprintf('%02x%02x%02x', $color['red'], $color['green'], $color['blue']);
-            if (!in_array($hex, $palette)) {
+            if (!isset($palette[$hex])) {
                 $palette[$hex] = 0;
-            } else {
-                $palette[$hex]++;
             }
+            $palette[$hex]++;
         }
     }
     arsort($palette);
@@ -109,13 +108,13 @@ if($image) {
             <button type="submit">Upload</button>
         </form>
         <?php if(!empty($palette)): ?>
-            <h2>Image Data</h2>
-            <h3>Dimensions: <?= $width ?>x<?= $height ?></h3>
-            <h3>Unique Colors: <?= count($palette) ?></h3>
-            <h3>Palette:</h3>
-            <div style="display: flex; flex-wrap: wrap;">
+            <h3>Image Data</h3>
+            <h4>Dimensions: <?= $width ?>x<?= $height ?></h4>
+            <h4>Unique Colors: <?= count($palette) ?></h4>
+            <h4>Palette:</h4>
+            <div>
                 <?php foreach($palette as $hex => $count): ?>
-                    <span class="swatch" style="background-color: #<?= $hex ?>;" title="<?= $count ?>"><?= $hex; ?> (<?= $count ?> pixels)</span>
+                    <span class="swatch" style="background-color: #<?= $hex ?>;" title="<?= $count ?>"></span> <?= "#" . strtoupper($hex); ?> (<?= $count ?> pixels)<br />
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
