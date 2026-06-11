@@ -1,5 +1,4 @@
 <?php
-
 function get_image_loader($mime) {
     switch ($mime):
         case 'image/png':
@@ -30,12 +29,12 @@ function image_to_string($image, $format = 'png') {
             imagegif($image);
             break;
         case 'webp':
-            if (function_exists('imagewebp')):
-                imagewebp($image);
-            else:
+            if (!function_exists('imagewebp')):
                 ob_end_clean();
                 return false;
             endif;
+
+            imagewebp($image);
             break;
         default:
             ob_end_clean();
@@ -45,11 +44,7 @@ function image_to_string($image, $format = 'png') {
 }
 
 function hex_to_rgb($hex) {
-    return [
-        'red' => hexdec(substr($hex, 0, 2)),
-        'green' => hexdec(substr($hex, 2, 2)),
-        'blue' => hexdec(substr($hex, 4, 2))
-    ];
+    return ['red' => hexdec(substr($hex, 0, 2)), 'green' => hexdec(substr($hex, 2, 2)), 'blue' => hexdec(substr($hex, 4, 2))];
 }
 
 function rgb_to_hex($rgb) {
