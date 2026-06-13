@@ -2,23 +2,75 @@ body {
     font-family: Arial, sans-serif;
     padding: 20px;
 }
-h1 {
-    margin-bottom: 20px;
+button {
+    padding: 5px 10px;
 }
 form {
+    margin-bottom: 20px;
+}
+h1 {
     margin-bottom: 20px;
 }
 input[type="file"] {
     margin-right: 10px;
 }
-button {
-    padding: 5px 10px;
-}
+
 #preview_canvas {
-    border: 1px solid #000;
+    display: block;
+    image-rendering: pixelated;
+}
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
 }
 #source_image {
     display: none;
+}
+
+.canvas_container {
+    border: 1px solid black;
+    display: inline-block;
+    background:
+        linear-gradient(45deg, #ccc 25%, transparent 25%),
+        linear-gradient(-45deg, #ccc 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ccc 75%),
+        linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+.sidebar_tabs {
+    display: flex;
+    flex-direction: column;
+}
+.sidebar_tab {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background: #f0f0f0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.sidebar_panel {
+    position: absolute;
+    left: 48px;
+    top: 0;
+
+    width: 300px;
+    min-height: 100%;
+
+    display: none;
+
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+}
+.sidebar_panel.open {
+    display: block;
 }
 .swatch {
     border: 1px solid #000;
@@ -26,4 +78,10 @@ button {
     height: 32px;
     vertical-align: middle;
     width: 32px;
+}
+.workspace {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 80vh;
 }

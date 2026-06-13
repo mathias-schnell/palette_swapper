@@ -47,6 +47,13 @@ function redraw_preview() {
     ctx.putImageData(image_data, 0, 0);
 }
 
+function toggle_panel(panel_id) {
+    const panels = document.querySelectorAll('.sidebar_panel');
+    const target = document.getElementById(panel_id);
+    panels.forEach(panel => panel.classList.remove('open'));
+    target.classList.add('open');
+}
+
 function update_color_map() {
     document.querySelectorAll('input[type=color]').forEach(input => color_map[input.dataset.original] = input.value.replace('#', ''));
     redraw_preview();

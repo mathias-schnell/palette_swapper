@@ -16,33 +16,50 @@ extract($image_data);
         <link rel="stylesheet" href="assets/css/main.css">
     </head>
     <body>
-        <form method="post" enctype="multipart/form-data">
-            <input type="file" name="image" accept="image/png, image/gif, image/jpeg" required>
-            <button type="submit">Upload</button>
-        </form>
-        <?php if($src): ?>
-            <h3>Uploaded Image</h3>
-            <h4>
-                Scale: 
-                <input name="scale" readonly value="1" style="width: 25px; text-align: center;"> 
-                <button onclick="adjust_scale(0.5)">+</button>
-                <button onclick="adjust_scale(-0.5)">-</button>
-            </h4>
-            <img src="<?= $src ?>" id="source_image" name="source_image" alt="Source Image" style="display: none;" />
-            <canvas id="preview_canvas" name="preview_canvas"></canvas>
-            <h4>Dimensions: <?= $width ?>x<?= $height ?></h4>
-        <?php endif; ?>
-        <?php if(!empty($palette)): ?>
-            <div>
-                <?php foreach($palette as $hex => $count): ?>
-                    <div class="palette-row">
-                        <span class="swatch" style="background-color: #<?= $hex ?>;"></span>
-                        #<?= strtoupper($hex) ?>
-                        <input type="color" value="#<?= $hex ?>" data-original="<?= $hex ?>" onchange="update_color_map(this)" />
-                        (<?= $count ?> pixels)
-                    </div>
-                <?php endforeach; ?>
+        <center>
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" name="image" accept="image/png, image/gif, image/jpeg" required onchange="this.form.submit()">
+            </form>
+        </center>
+        <div id="sidebar">
+            <div class="sidebar_tabs">
+                <div class="sidebar_tab" onclick="toggle_panel('image_panel')">🖼</div>
+                <div class="sidebar_tab" onclick="toggle_panel('palette_panel')">🎨</div>
+                <div class="sidebar_tab" onclick="toggle_panel('settings_panel')">⚙</div>
+                <div class="sidebar_tab" onclick="toggle_panel('info_panel')">ℹ</div>
+                <div class="sidebar_tab" onclick="toggle_panel('close_panel')">×</div>
             </div>
-        <?php endif; ?>
+            <div id="image_panel" class="sidebar_panel">
+                <?php if($src): ?>
+                    Scale:
+                    <input name="scale" readonly value="1">
+                    <button type="button" onclick="adjust_scale(0.5)">+</button>
+                    <button type="button" onclick="adjust_scale(-0.5)">-</button>
+                <?php endif; ?>
+            </div>
+            <div id="palette_panel" class="sidebar_panel">
+                <?php if($src): ?>
+                    <?php if(!empty($palette)): ?>
+                        <?php foreach($palette as $hex => $count): ?>
+                            <div class="palette-row">
+                                <span class="swatch" style="background-color: #<?= $hex ?>;"></span>
+                                #<?= strtoupper($hex) ?>
+                                <input type="color" value="#<?= $hex ?>" data-original="<?= $hex ?>" onchange="update_color_map(this)" />
+                                (<?= $count ?> pixels)
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+            <div id="settings_panel" class="sidebar_panel"></div>
+            <div id="info_panel" class="sidebar_panel"></div>
+            <div id="close_panel" class="sidebar_panel" style="display: none;">×</div>
+        </div>
+        <img src="<?= $src ?>" id="source_image" name="source_image" alt="Source Image" />
+        <div class="workspace">
+            <div class="canvas_container">
+                <canvas id="preview_canvas" name="preview_canvas"></canvas>
+            </div>
+        </div>
     </body>
 </html>
