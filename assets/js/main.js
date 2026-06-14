@@ -47,7 +47,16 @@ function redraw_preview() {
     ctx.putImageData(image_data, 0, 0);
 }
 
-function toggle_panel(panel_id) {
+function close_sidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+
+    document.querySelectorAll('.sidebar_panel').forEach(
+        panel => panel.classList.remove('open')
+    );
+}
+
+function open_sidebar(panel_id) {
+    document.getElementById('sidebar').classList.add('open');
     const panels = document.querySelectorAll('.sidebar_panel');
     const target = document.getElementById(panel_id);
     panels.forEach(panel => panel.classList.remove('open'));
