@@ -1,10 +1,15 @@
 const color_map = {};
-
-document.querySelectorAll('input[type=color]').forEach(input => color_map[input.dataset.original] = input.value.replace('#', ''));
-
+const tooltip = document.getElementById('tooltip');
 const image = document.getElementById('source_image');
 const canvas = document.getElementById('preview_canvas');
 let ctx = null;
+
+const tooltip_settings = {
+    delay: 200,
+    offset_x: 5,
+    offset_y: 0
+};
+
 if (canvas && image) {
     ctx = canvas.getContext('2d');
     const render = () => {
@@ -12,6 +17,29 @@ if (canvas && image) {
         redraw_preview();
     };
     image.complete ? render() : image.onload = render;
+}
+
+document.querySelectorAll('input[type=color]').forEach(input => color_map[input.dataset.original] = input.value.replace('#', ''));
+
+document.querySelectorAll('[data-tooltip]').forEach(element => {
+    element.addEventListener('mouseenter', () => {
+        tooltip_timer = setTimeout(() => {
+            tooltip.textContent = element.dataset.tooltip;
+            position_tooltip(element);
+            tooltip.classList.add('visible');
+        }, tooltip_settings.delay);
+    });
+    element.addEventListener('mouseleave', () => {
+        clearTimeout(tooltip_timer);
+        tooltip.classList.remove('visible');
+    });
+});
+
+function position_tooltip(element) {
+    const rect = element.getBoundingClientRect();
+    tooltip.style.left = `${rect.right + tooltip_settings.offset_x}px`;
+    tooltip.style.top = `${rect.top + (rect.height / 2) + tooltip_settings.offset_y}px`;
+    tooltip.style.transform = 'translateY(-50%)';
 }
 
 function adjust_scale(delta) {

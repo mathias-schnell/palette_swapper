@@ -16,25 +16,26 @@ extract($image_data);
         <link rel="stylesheet" href="assets/css/main.css">
     </head>
     <body>
-        <center>
-            <form method="post" enctype="multipart/form-data">
-                <input type="file" id="image_upload" name="image" hidden onchange="this.form.submit()">
-                <label for="image_upload" class="upload_button">Upload Image</label>
-            </form>
-        </center>
         <div id="sidebar" class="sidebar">
             <div id="sidebar_panel_container" class="sidebar_panel_container">
                 <div id="image_panel" class="sidebar_panel">
+                    <form method="post" enctype="multipart/form-data">
+                        <input type="file" id="image_upload" name="image" hidden onchange="this.form.submit()">
+                        <label for="image_upload" class="upload_button">Upload Image</label>
+                    </form>
                     <?php if($src): ?>
-                        Scale:
-                        <input name="scale" readonly value="1.0">
-                        <button type="button" onclick="adjust_scale(0.5)">+</button>
-                        <button type="button" onclick="adjust_scale(-0.5)">-</button>
+                        <h2>Scale</h2>
+                        <p>
+                            <input name="scale" readonly value="1.0">
+                            <button type="button" onclick="adjust_scale(0.5)">+</button>
+                            <button type="button" onclick="adjust_scale(-0.5)">-</button>
+                        </p>
                     <?php endif; ?>
                 </div>
                 <div id="palette_panel" class="sidebar_panel">
                     <?php if($src): ?>
                         <?php if(!empty($palette)): ?>
+                            <h2>Color Palette</h2>
                             <?php foreach($palette as $hex => $count): ?>
                                 <div class="palette_row">
                                     <span class="swatch" style="background-color: #<?= $hex ?>;"></span>
@@ -46,20 +47,21 @@ extract($image_data);
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
-                <div id="settings_panel" class="sidebar_panel"></div>
                 <div id="info_panel" class="sidebar_panel">
                     <?php if($src): ?>
-                        <p>Dimensions: <?= $width ?>px × <?= $height ?>px</p>
-                        <p>Unique Colors: <?= count($palette) ?></p>
+                        <h2>Dimensions</h2>
+                        <p><?= $width ?>px × <?= $height ?>px</p>
+
+                        <h2>Unique Colors</h2>
+                        <p><?= count($palette) ?></p>
                     <?php endif; ?>
                 </div>
             </div>
             <div class="sidebar_tabs">
-                <div class="sidebar_tab" onclick="open_sidebar('image_panel')">🖼</div>
-                <div class="sidebar_tab" onclick="open_sidebar('palette_panel')">🎨</div>
-                <div class="sidebar_tab" onclick="open_sidebar('settings_panel')">⚙</div>
-                <div class="sidebar_tab" onclick="open_sidebar('info_panel')">ℹ</div>
-                <div class="sidebar_tab" onclick="close_sidebar()">×</div>
+                <div class="sidebar_tab" data-tooltip="Image Settings" onclick="open_sidebar('image_panel')">🖼</div>
+                <div class="sidebar_tab" data-tooltip="Color Palette" onclick="open_sidebar('palette_panel')">🎨</div>
+                <div class="sidebar_tab" data-tooltip="Image Info" onclick="open_sidebar('info_panel')">ℹ</div>
+                <div class="sidebar_tab" data-tooltip="Close" onclick="close_sidebar()">×</div>
             </div>
         </div>
         <?php if($src): ?>
@@ -70,5 +72,6 @@ extract($image_data);
                 </div>
             </div>
         <?php endif; ?>
+        <div id="tooltip"></div>
     </body>
 </html>
