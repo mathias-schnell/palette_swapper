@@ -51,7 +51,7 @@ h1 {
 }
 #tooltip {
     position: fixed;
-    
+
     background: rgba(40, 40, 40, 0.95);
     border-radius: 4px;
     color: white;
@@ -146,7 +146,7 @@ h1 {
     border-radius: 4px;
     cursor: pointer;
     display: inline-block;
-    padding: 10px 16px;
+    padding: 5px 10px;
 }
 .upload_button:hover {
     background: #e5e5e5;

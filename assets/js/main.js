@@ -35,17 +35,33 @@ document.querySelectorAll('[data-tooltip]').forEach(element => {
     });
 });
 
+function adjust_scale(delta) {
+    const scale_input = document.querySelector('input[name=scale]');
+    scale_input.value = Math.max(1.0, Math.min(5.0, parseFloat(scale_input.value) + delta)).toFixed(1);
+    update_canvas_scale(parseFloat(scale_input.value));
+}
+
+function close_sidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+
+    document.querySelectorAll('.sidebar_panel').forEach(
+        panel => panel.classList.remove('open')
+    );
+}
+
+function open_sidebar(panel_id) {
+    document.getElementById('sidebar').classList.add('open');
+    const panels = document.querySelectorAll('.sidebar_panel');
+    const target = document.getElementById(panel_id);
+    panels.forEach(panel => panel.classList.remove('open'));
+    target.classList.add('open');
+}
+
 function position_tooltip(element) {
     const rect = element.getBoundingClientRect();
     tooltip.style.left = `${rect.right + tooltip_settings.offset_x}px`;
     tooltip.style.top = `${rect.top + (rect.height / 2) + tooltip_settings.offset_y}px`;
     tooltip.style.transform = 'translateY(-50%)';
-}
-
-function adjust_scale(delta) {
-    const scale_input = document.querySelector('input[name=scale]');
-    scale_input.value = Math.max(1.0, Math.min(5.0, parseFloat(scale_input.value) + delta)).toFixed(1);
-    update_canvas_scale(parseFloat(scale_input.value));
 }
 
 function redraw_preview() {
@@ -75,24 +91,13 @@ function redraw_preview() {
     ctx.putImageData(image_data, 0, 0);
 }
 
-function close_sidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-
-    document.querySelectorAll('.sidebar_panel').forEach(
-        panel => panel.classList.remove('open')
-    );
-}
-
-function open_sidebar(panel_id) {
-    document.getElementById('sidebar').classList.add('open');
-    const panels = document.querySelectorAll('.sidebar_panel');
-    const target = document.getElementById(panel_id);
-    panels.forEach(panel => panel.classList.remove('open'));
-    target.classList.add('open');
+function reset_color_map() {
+    document.querySelectorAll('.palette_row').forEach(item => color_map[item.dataset.source] = item.dataset.source);
+    redraw_preview();
 }
 
 function update_color_map() {
-    document.querySelectorAll('input[type=color]').forEach(input => color_map[input.dataset.original] = input.value.replace('#', ''));
+    document.querySelectorAll('.palette_row').forEach(item => color_map[item.dataset.source] = item.dataset.target);
     redraw_preview();
 }
 

@@ -1,10 +1,12 @@
 <?php
 require_once 'includes/error_conf.php';
 require_once 'includes/helper_funcs.php';
-require_once 'includes/image_proc.php';
 
-$image_data = process_uploaded_image();
-extract($image_data);
+$source_data = process_image($_FILES['source_image'] ?? null);
+$target_data = process_image($_FILES['target_image'] ?? null);
+extract($source_data, EXTR_PREFIX_ALL, 'source');
+extract($target_data, EXTR_PREFIX_ALL, 'target');
+$palette_map = generate_palette_map($source_palette, $target_palette);
 ?>
 
 <!doctype html>
@@ -20,10 +22,19 @@ extract($image_data);
             <div id="sidebar_panel_container" class="sidebar_panel_container">
                 <div id="image_panel" class="sidebar_panel">
                     <form method="post" enctype="multipart/form-data">
-                        <input type="file" id="image_upload" name="image" hidden onchange="this.form.submit()">
-                        <label for="image_upload" class="upload_button">Upload Image</label>
+                        <label for="image_upload" class="upload_button">
+                            Source Image
+                            <input type="file" id="image_upload" name="source_image" hidden>
+                        </label>
+                        <br /><br />
+                        <label for="target_image" class="upload_button">
+                            Target Palette
+                            <input type="file" id="target_image" name="target_image" hidden>
+                        </label>
+                        <br /><br />
+                        <input type="submit" value="Upload" />
                     </form>
-                    <?php if($src): ?>
+                    <?php if($source_src): ?>
                         <h2>Scale</h2>
                         <p>
                             <input name="scale" readonly value="1.0">
@@ -33,27 +44,40 @@ extract($image_data);
                     <?php endif; ?>
                 </div>
                 <div id="palette_panel" class="sidebar_panel">
-                    <?php if($src): ?>
-                        <?php if(!empty($palette)): ?>
+                    <?php if($source_src): ?>
+                        <?php if(!empty($source_palette)): ?>
+                            <button id="apply_new_palette" onclick="update_color_map()">Apply New Palette</button><br /><br />
+                            <button id="reset_palette" onclick="reset_color_map()">Reset Palette</button><br /><br />
                             <h2>Color Palette</h2>
-                            <?php foreach($palette as $hex => $count): ?>
-                                <div class="palette_row">
-                                    <span class="swatch" style="background-color: #<?= $hex ?>;"></span>
-                                    #<?= strtoupper($hex) ?>
-                                    <input type="color" value="#<?= $hex ?>" data-original="<?= $hex ?>" onchange="update_color_map(this)" />
-                                    (<?= $count ?> pixels)
-                                </div>
-                            <?php endforeach; ?>
+                            <?php if(!empty($target_palette && !empty($palette_map))): ?>
+                                <?php foreach($source_palette as $source_hex => $count): ?>
+                                    <div class="palette_row" data-source="<?= $source_hex ?>" data-target="<?= $palette_map[$source_hex] ?>">
+                                        <span class="swatch" style="background:#<?= $source_hex ?>"></span>
+                                        →
+                                        <span class="swatch" style="background:#<?= $palette_map[$source_hex] ?>"></span>
+                                        #<?= strtoupper($source_hex) ?>
+                                        →
+                                        #<?= strtoupper($palette_map[$source_hex]) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <?php foreach($source_palette as $source_hex => $count): ?>
+                                    <div class="palette_row">
+                                        <span class="swatch" style="background:#<?= $source_hex ?>"></span>
+                                        #<?= strtoupper($source_hex) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
                 <div id="info_panel" class="sidebar_panel">
-                    <?php if($src): ?>
+                    <?php if($source_src): ?>
                         <h2>Dimensions</h2>
-                        <p><?= $width ?>px × <?= $height ?>px</p>
+                        <p><?= $source_width ?>px × <?= $source_height ?>px</p>
 
                         <h2>Unique Colors</h2>
-                        <p><?= count($palette) ?></p>
+                        <p><?= count($source_palette) ?></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -64,8 +88,8 @@ extract($image_data);
                 <div class="sidebar_tab" data-tooltip="Close" onclick="close_sidebar()">×</div>
             </div>
         </div>
-        <?php if($src): ?>
-            <img src="<?= $src ?>" id="source_image" name="source_image" alt="Source Image" />
+        <?php if($source_src): ?>
+            <img src="<?= $source_src ?>" id="source_image" name="source_image" alt="Source Image" />
             <div class="workspace">
                 <div class="canvas_container">
                     <canvas id="preview_canvas" name="preview_canvas"></canvas>
