@@ -27,7 +27,7 @@ extract($image_data);
                 <div id="image_panel" class="sidebar_panel">
                     <?php if($src): ?>
                         Scale:
-                        <input name="scale" readonly value="1">
+                        <input name="scale" readonly value="1.0">
                         <button type="button" onclick="adjust_scale(0.5)">+</button>
                         <button type="button" onclick="adjust_scale(-0.5)">-</button>
                     <?php endif; ?>
@@ -47,7 +47,12 @@ extract($image_data);
                     <?php endif; ?>
                 </div>
                 <div id="settings_panel" class="sidebar_panel"></div>
-                <div id="info_panel" class="sidebar_panel"></div>
+                <div id="info_panel" class="sidebar_panel">
+                    <?php if($src): ?>
+                        <p>Dimensions: <?= $width ?>px × <?= $height ?>px</p>
+                        <p>Unique Colors: <?= count($palette) ?></p>
+                    <?php endif; ?>
+                </div>
             </div>
             <div class="sidebar_tabs">
                 <div class="sidebar_tab" onclick="open_sidebar('image_panel')">🖼</div>

@@ -1,3 +1,6 @@
+* {
+    box-sizing: border-box;
+}
 body {
     font-family: Arial, sans-serif;
     padding: 10px;
@@ -11,7 +14,14 @@ form {
 h1 {
     margin-bottom: 10px;
 }
-
+#image_panel input[name="scale"] {
+    margin: 0;
+    padding: 0;
+    width: 3ch;
+}
+#image_panel button {
+    padding: 0 2px;
+}
 #preview_canvas {
     display: block;
     image-rendering: pixelated;
@@ -77,15 +87,15 @@ h1 {
 }
 .sidebar_panel {
     position: relative;
-
-    width: 290px;
     height: 100vh;
-
-    display: none;
 
     background: #fff;
     border: 1px solid #ccc;
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 5px;
+    scrollbar-gutter: stable;
 }
 .sidebar_panel.open {
     display: block;
