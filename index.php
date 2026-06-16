@@ -38,8 +38,8 @@ $palette_map = generate_palette_map($source_palette, $target_palette);
                         <h2>Scale</h2>
                         <p>
                             <input name="scale" readonly value="1.0">
-                            <button type="button" onclick="adjust_scale(0.5)">+</button>
-                            <button type="button" onclick="adjust_scale(-0.5)">-</button>
+                            <button type="button" id="scale_up">+</button>
+                            <button type="button" id="scale_down">-</button>
                         </p>
                     <?php endif; ?>
                 </div>
