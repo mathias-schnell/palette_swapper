@@ -50,6 +50,7 @@ function rgb_distance($rgb_a, $rgb_b) {
         (($rgb_a['blue'] - $rgb_b['blue']) ** 2)
     );
 }
+
 function find_closest_color($source_hex, $target_palette) {
     $source_rgb = hex_to_rgb($source_hex);
     $closest_hex = null;

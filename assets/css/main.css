@@ -25,8 +25,11 @@ h1 {
 #image_panel button {
     padding: 0 2px;
 }
+#palette_row_prime {
+    display: none;
+}
 #preview_canvas {
-    display: block;
+    display: none;
     image-rendering: pixelated;
 }
 #sidebar {
