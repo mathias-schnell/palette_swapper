@@ -17,25 +17,34 @@
                 <div id="image_panel" class="sidebar_panel">
                     <form method="post" enctype="multipart/form-data">
                         <label for="image_upload" class="upload_button">
-                            Source Image
+                            Load Image
                             <input type="file" id="image_upload" name="source_image" hidden>
-                        </label>
-                        <br /><br />
-                        <label for="target_upload" class="upload_button">
-                            Target Palette
-                            <input type="file" id="target_upload" name="target_upload" hidden>
-                        </label>
+                        </label>                        
                     </form>
                         <h2>Scale</h2>
                         <p>
-                            <input name="scale" readonly value="1.0">
+                            <input id="scale_input" name="scale" readonly value="1.00">
                             <button type="button" id="scale_up">+</button>
                             <button type="button" id="scale_down">-</button>
                         </p>
                 </div>
                 <div id="palette_panel" class="sidebar_panel">
-                    <button id="apply_new_palette">Apply New Palette</button><br /><br />
-                    <button id="reset_palette">Reset Palette</button><br /><br />
+                    <label for="target_upload" class="upload_button">
+                        Load Palette
+                        <input type="file" id="target_upload" name="target_upload" hidden>
+                    </label>
+                    <br /><br />
+                    <h2>Color Mapping Presets</h2>
+                    <select id="color_map_method" name="color_map_method">
+                        <option value="reset">Reset</option>
+                        <option value="rgb">RGB</option>
+                        <option value="rgb_w">Weighted RGB</option>
+                        <option value="lab">LAB</option>
+                        <option value="oklab">Oklab</option>
+                        <option value="hsv">HSV</option>
+                    </select>
+                    <button id="apply_palette_changes" name="apply_palette_changes">Apply Changes</button>
+                    <br /><br />
                     <h2>Color Palette</h2>
                     <div id="palette_container">
                         <div id="palette_row_prime" class="palette_row">

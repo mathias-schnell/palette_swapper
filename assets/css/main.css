@@ -20,7 +20,7 @@ h1 {
 #image_panel input[name="scale"] {
     margin: 0;
     padding: 0;
-    width: 3ch;
+    width: 4ch;
 }
 #image_panel button {
     padding: 0 2px;
