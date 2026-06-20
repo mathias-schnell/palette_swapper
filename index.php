@@ -6,8 +6,7 @@
 <html>
     <head>
         <title>Palette Swapper</title>
-        <script type="text/javascript" src="assets/js/helper_funcs.js" defer></script>
-        <script type="text/javascript" src="assets/js/main.js" defer></script>
+        <script type="module" src="assets/js/main.js"></script>
         <link rel="stylesheet" href="assets/css/reset.css">
         <link rel="stylesheet" href="assets/css/main.css">
     </head>
