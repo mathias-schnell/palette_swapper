@@ -11,28 +11,30 @@
         <link rel="stylesheet" href="assets/css/main.css">
     </head>
     <body>
+        <input type="file" id="image_upload" name="source_image" hidden>
+        <input type="file" id="target_upload" name="target_upload" hidden>
+        <div id="toolbar">
+            <div class="toolbar_item" data-menu="file">File
+                <div id="menu_file" class="toolbar_menu">
+                    <div id="load_source_image" class="toolbar_item">Load Source Image</div>
+                    <div id="load_target_palette" class="toolbar_item">Load Target Palette</div>
+                </div>
+            </div>
+            <div class="toolbar_item">Edit</div>
+            <div class="toolbar_item">Image</div>
+            <div class="toolbar_item">Palette</div>
+        </div>
         <div id="sidebar" class="sidebar">
             <div id="sidebar_panel_container" class="sidebar_panel_container">
                 <div id="image_panel" class="sidebar_panel">
-                    <form method="post" enctype="multipart/form-data">
-                        <label for="image_upload" class="upload_button">
-                            Load Image
-                            <input type="file" id="image_upload" name="source_image" hidden>
-                        </label>                        
-                    </form>
-                        <h2>Scale</h2>
-                        <p>
-                            <input id="scale_input" name="scale" readonly value="1.00">
-                            <button type="button" id="scale_up">+</button>
-                            <button type="button" id="scale_down">-</button>
-                        </p>
+                    <h2>Scale</h2>
+                    <p>
+                        <input id="scale_input" name="scale" readonly value="1.00">
+                        <button type="button" id="scale_up">+</button>
+                        <button type="button" id="scale_down">-</button>
+                    </p>
                 </div>
                 <div id="palette_panel" class="sidebar_panel">
-                    <label for="target_upload" class="upload_button">
-                        Load Palette
-                        <input type="file" id="target_upload" name="target_upload" hidden>
-                    </label>
-                    <br /><br />
                     <h2>Color Mapping Presets</h2>
                     <select id="color_map_method" name="color_map_method">
                         <option value="reset">Reset</option>

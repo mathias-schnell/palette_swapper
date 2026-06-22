@@ -9,11 +9,20 @@ export function adjust_scale(delta) {
     redraw_preview();
 }
 
+export function close_all_menus() {
+    document.querySelectorAll('.toolbar_menu').forEach(menu => menu.classList.remove('open'));
+}
+
 export function close_sidebar() {
     document.getElementById('sidebar').classList.remove('open');
     document.querySelectorAll('.sidebar_panel').forEach(
         panel => panel.classList.remove('open')
     );
+}
+
+export function open_menu(menu_id) {
+    close_all_menus();
+    document.getElementById(menu_id).classList.add('open');
 }
 
 export function open_sidebar(panel_id) {
