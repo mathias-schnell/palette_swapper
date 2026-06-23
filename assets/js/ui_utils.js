@@ -43,12 +43,19 @@ export function position_tooltip(element) {
 export function redraw_palette() {
     if (!Object.keys(app.source.palette).length) return;
     if (!Object.keys(app.target.palette).length) return;
-    
+    let colors = null;
+    if (app.mapping.method === "custom") {
+        if(!app.mapping.custom) app.mapping.custom = color.generate_palette_map(app.source.palette, app.target.palette, "oklab");
+        colors = app.mapping.custom;
+    } else {
+        colors = color.generate_palette_map(app.source.palette, app.target.palette, app.mapping.method);
+    }
     const container = document.getElementById('palette_container');
     const template = document.getElementById('palette_row_prime');
     container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
-    app.mapping.colors = color.generate_palette_map(app.source.palette, app.target.palette, app.mapping.method);
-    Object.entries(app.mapping.colors).forEach(([source_hex, target_hex]) => {
+    document.getElementById("palette_container").classList.toggle("custom_mode", app.mapping.method === "custom");
+    console.log(colors);
+    Object.entries(colors).forEach(([source_hex, target_hex]) => {
         const row = template.cloneNode(true);
         row.removeAttribute('id');
         row.style.display = 'block';
@@ -58,6 +65,14 @@ export function redraw_palette() {
         row.querySelector('.target_swatch').style.background = `#${target_hex}`;
         row.querySelector('.source_hex').textContent = `#${source_hex}`;
         row.querySelector('.target_hex').textContent = `#${target_hex}`;
+        row.querySelector('.target_hex_select').value = target_hex;
+        row.querySelector('.target_hex_select').addEventListener('change', e => {
+            const t_hex = e.target.value;
+            const t_row = e.target.closest('.palette_row');
+            const t_swatch = row.querySelector('.target_swatch');
+            app.mapping.custom[row.dataset.source] = row.dataset.target = t_hex;
+            t_swatch.style.background = `#${t_hex}`;
+        });
         container.appendChild(row);
     });
 }
@@ -65,12 +80,13 @@ export function redraw_palette() {
 export function redraw_preview() {
     const { ctx, element } = app.canvas;
     const img = app.source.image;
+    const colors = (app.mapping.method === "custom" ? app.mapping.custom : app.mapping.colors);
     if (!ctx || !element || !img) return;
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, element.width, element.height);
     ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, element.width, element.height);
     const image_data = ctx.getImageData(0, 0, element.width, element.height);
-    image.apply_palette(image_data);
+    image.apply_palette(image_data, colors);
     ctx.putImageData(image_data, 0, 0);
 }
 

@@ -43,14 +43,15 @@
                         <option value="lab">LAB</option>
                         <option value="oklab">Oklab</option>
                         <option value="hsv">HSV</option>
+                        <option value="custom">Custom</option>
                     </select>
                     <button id="apply_palette_changes" name="apply_palette_changes">Apply Changes</button>
                     <br /><br />
                     <h2>Color Palette</h2>
                     <div id="palette_container">
                         <div id="palette_row_prime" class="palette_row">
-                            <span class="swatch source_swatch"></span> → <span class="swatch target_swatch"></span>
-                            <span class="source_hex"></span> → <span class="target_hex"></span>
+                            <span class="swatch source_swatch"></span> <span class="source_hex"></span>
+                             → <span class="swatch target_swatch"></span> <span class="target_hex"></span><select class="target_hex_select"></select>
                         </div>
                     </div>
                 </div>

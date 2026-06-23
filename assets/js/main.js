@@ -36,17 +36,17 @@ function bind_events() {
             ui.redraw_palette();
         })
     );
+    document.querySelectorAll('.sidebar_tabs > .sidebar_tab').forEach(
+        element => element.addEventListener('click', () => { 
+            element.dataset.panel === 'close' ? ui.close_sidebar() : ui.open_sidebar(element.dataset.panel); 
+        })
+    );
     document.querySelectorAll('.toolbar_item[data-menu]').forEach(element => {
         element.addEventListener('click', e => { 
             e.stopPropagation();
             ui.open_menu(`menu_${element.dataset.menu}`);
         });
     });
-    document.querySelectorAll('.sidebar_tabs > .sidebar_tab').forEach(
-        element => element.addEventListener('click', () => { 
-            element.dataset.panel === 'close' ? ui.close_sidebar() : ui.open_sidebar(element.dataset.panel); 
-        })
-    );
     document.querySelectorAll('[data-tooltip]').forEach(element => {
         let tooltip_timer = null;
         element.addEventListener('mouseenter', () => {

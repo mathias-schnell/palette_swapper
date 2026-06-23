@@ -1,11 +1,11 @@
 import { app } from "./app.js";
 import * as color from "./color_utils.js"
 
-export function apply_palette(image_data) {
+export function apply_palette(image_data, palette) {
     const pixels = image_data.data;
     for (let i = 0; i < pixels.length; i += 4) {
         if (pixels[i + 3] === 0) continue;
-        const replacement = app.mapping.colors[color.rgb_to_hex(pixels[i], pixels[i + 1], pixels[i + 2])];
+        const replacement = palette[color.rgb_to_hex(pixels[i], pixels[i + 1], pixels[i + 2])];
         if (!replacement) continue;
         [pixels[i], pixels[i + 1], pixels[i + 2]] = color.hex_to_rgb(replacement);
     }
@@ -39,6 +39,7 @@ export function load_target_image(e, callback) {
         app.target.image = new Image();
         app.target.image.onload = () => {
             app.target.palette = extract_palette(app.target.image);
+            populate_palette_dropdown(document.querySelector("#palette_row_prime .target_hex_select"), app.target.palette);
             if (typeof callback === 'function') callback();
         };
         app.target.image.src = event.target.result;
@@ -66,4 +67,14 @@ function image_to_canvas(image) {
     [canvas.width, canvas.height] = [image.naturalWidth, image.naturalHeight];
     ctx.drawImage(image, 0, 0);
     return { canvas, ctx };
+}
+
+function populate_palette_dropdown(select, palette) {
+    select.replaceChildren();
+    Object.keys(palette).forEach((hex) => {
+        const option = document.createElement("option");
+        option.value = hex;
+        option.textContent = `#${hex}`;
+        select.appendChild(option);
+    })
 }

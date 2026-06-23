@@ -25,6 +25,15 @@ h1 {
 #image_panel button {
     padding: 0 2px;
 }
+#palette_container .target_hex_select {
+    display: none;
+}
+#palette_container.custom_mode .target_hex {
+    display: none;
+}
+#palette_container.custom_mode .target_hex_select {
+    display: inline-block;
+}
 #palette_row_prime {
     display: none;
 }
@@ -160,6 +169,9 @@ h1 {
     height: 24px;
     vertical-align: middle;
     width: 24px;
+}
+.target_hex_select {
+    text-transform: uppercase;
 }
 .toolbar_item {
     align-items: center;

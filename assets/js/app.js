@@ -15,6 +15,7 @@ export const app = {
     },
     mapping: {
         colors: {},
+        custom: null,
         method: 'reset'
     },
     settings: {

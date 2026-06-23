@@ -3,7 +3,8 @@ const color_dist_funcs = {
     rgb_w: get_distance_rgb_w,
     hsv: get_distance_hsv,
     lab: get_distance_lab,
-    oklab: get_distance_oklab
+    oklab: get_distance_oklab,
+    custom: get_distance_oklab
 };
 
 export function find_closest_color(source_hex, palette, method) {
@@ -25,9 +26,7 @@ export function find_closest_color(source_hex, palette, method) {
 export function generate_palette_map(source_palette, target_palette, method) {
     if (!Object.keys(source_palette).length || !Object.keys(target_palette).length) return;
     const map = {};
-    Object.keys(source_palette).forEach(
-        source_hex => map[source_hex] = find_closest_color(source_hex, target_palette, method)
-    );
+    Object.keys(source_palette).forEach(source_hex => map[source_hex] = find_closest_color(source_hex, target_palette, method));
     return map;
 }
 
