@@ -39,7 +39,7 @@ export function load_target_image(e, callback) {
         app.target.image = new Image();
         app.target.image.onload = () => {
             app.target.palette = extract_palette(app.target.image);
-            populate_palette_dropdown(document.querySelector("#palette_row_prime .target_hex_select"), app.target.palette);
+            populate_palette_dropdown(document.querySelector("#target_hex_select_list"), app.target.palette);
             if (typeof callback === 'function') callback();
         };
         app.target.image.src = event.target.result;
@@ -69,12 +69,15 @@ function image_to_canvas(image) {
     return { canvas, ctx };
 }
 
-function populate_palette_dropdown(select, palette) {
-    select.replaceChildren();
+function populate_palette_dropdown(container, palette) {
+    container.replaceChildren();
+    const colors = Object.keys(palette);
+    container.style.gridTemplateColumns = `repeat(${Math.ceil(Math.sqrt(colors.length))}, 1fr)`;
     Object.keys(palette).forEach((hex) => {
-        const option = document.createElement("option");
-        option.value = hex;
-        option.textContent = `#${hex}`;
-        select.appendChild(option);
+        const swatch = document.createElement("span");
+        swatch.classList.add("swatch");
+        swatch.dataset.target = hex;
+        swatch.style.backgroundColor = `#${hex}`;
+        container.appendChild(swatch);
     })
 }

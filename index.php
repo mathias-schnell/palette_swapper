@@ -50,8 +50,14 @@
                     <h2>Color Palette</h2>
                     <div id="palette_container">
                         <div id="palette_row_prime" class="palette_row">
-                            <span class="swatch source_swatch"></span> <span class="source_hex"></span>
-                             → <span class="swatch target_swatch"></span> <span class="target_hex"></span><select class="target_hex_select"></select>
+                            <div class="source_color">
+                                <span class="swatch source_swatch"></span> <span class="source_hex"></span>
+                            </div>
+                             → 
+                            <div class="target_color">
+                                <span class="swatch target_swatch"></span> <span class="target_hex"></span>
+                                <div class="target_hex_select_button">&#9205;</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -72,13 +78,14 @@
                 <div class="sidebar_tab" data-panel="info_panel" data-tooltip="Image Info">ℹ</div>
                 <div class="sidebar_tab" data-panel="close" data-tooltip="Close">×</div>
             </div>
+            <div id="target_hex_select_list" class="hidden"></div>
         </div>
-            <img src="" id="source_image" name="source_image" alt="Source Image" />
-            <div class="workspace">
-                <div class="canvas_container">
-                    <canvas id="preview_canvas" name="preview_canvas"></canvas>
-                </div>
+        <img src="" id="source_image" name="source_image" alt="Source Image" />
+        <div class="workspace">
+            <div class="canvas_container">
+                <canvas id="preview_canvas" name="preview_canvas"></canvas>
             </div>
+        </div>
         <div id="tooltip"></div>
     </body>
 </html>

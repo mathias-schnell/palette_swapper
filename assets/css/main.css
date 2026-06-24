@@ -25,15 +25,6 @@ h1 {
 #image_panel button {
     padding: 0 2px;
 }
-#palette_container .target_hex_select {
-    display: none;
-}
-#palette_container.custom_mode .target_hex {
-    display: none;
-}
-#palette_container.custom_mode .target_hex_select {
-    display: inline-block;
-}
 #palette_row_prime {
     display: none;
 }
@@ -50,7 +41,7 @@ h1 {
     top: 32px;
     transform: translateX(-300px);
     transition: transform 0.25s ease;
-    z-index: 100;
+    z-index: 1000;
 }
 #sidebar.open {
     transform: translateX(0);
@@ -61,6 +52,35 @@ h1 {
 #source_image {
     display: none;
 }
+#target_hex_select_list {
+    cursor: pointer;
+    display: grid;
+}
+#target_hex_select_list,
+#tooltip {
+    background: rgba(40, 40, 40, 0.95);
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    padding: 6px 10px;
+    position: fixed;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+    z-index: 1000;
+}
+#target_hex_select_list.hidden,
+#tooltip.hidden {
+    left: -1000px !important;
+    opacity: 0 !important;
+    top: -1000px !important;
+}
+#target_hex_select_list.visible,
+#tooltip.visible {
+    left: -1000px;
+    opacity: 1;
+    top: -1000px;
+}
 #toolbar {
     background: white;
     border-bottom: 1px solid #444;
@@ -70,24 +90,10 @@ h1 {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 101;
+    z-index: 1001;
 }
 #tooltip {
-    position: fixed;
-
-    background: rgba(40, 40, 40, 0.95);
-    border-radius: 4px;
-    color: white;
-    font-size: 14px;
-    padding: 6px 10px;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease;
-    white-space: nowrap;
-    z-index: 1000;
-}
-#tooltip.visible {
-    opacity: 1;
 }
 
 /* Custom Classes */
@@ -113,6 +119,16 @@ h1 {
     padding: 0;
     vertical-align: middle;
     width: 24px;
+}
+.palette_row .source_color,
+.palette_row .target_color {
+    display: inline-block;
+}
+.palette_row .target_hex_select_button {
+    display: none;
+}
+.palette_row.custom_mode .target_hex_select_button {
+    display: inline-block;
 }
 .sidebar_tabs {
     display: flex;
@@ -170,8 +186,9 @@ h1 {
     vertical-align: middle;
     width: 24px;
 }
-.target_hex_select {
-    text-transform: uppercase;
+.target_hex_select_button {
+    cursor: pointer;
+    display: inline-block;
 }
 .toolbar_item {
     align-items: center;
@@ -181,7 +198,7 @@ h1 {
     display: flex;
     padding: 0 10px;
     position: relative;
-    z-index: 101;
+    z-index: 1001;
 }
 .toolbar_menu {
     background: white;
@@ -191,7 +208,7 @@ h1 {
     left: 0;
     position: absolute;
     top: 100%;
-    z-index: 101;
+    z-index: 1001;
 }
 .toolbar_menu.open {
     display: flex;

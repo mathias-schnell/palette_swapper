@@ -17,20 +17,38 @@ function initialize_app() {
 }
 
 function bind_events() {
-    document.addEventListener('click',ui.close_all_menus);
+    let palette_selector = document.getElementById('target_hex_select_list');
+    document.addEventListener('click', ui.close_all_menus);
     document.getElementById('scale_up').addEventListener('click', () => ui.adjust_scale(0.25));
     document.getElementById('scale_down').addEventListener('click', () => ui.adjust_scale(-0.25));
     document.getElementById('color_map_method').addEventListener('change', ui.update_palette_map);
     document.getElementById('apply_palette_changes').addEventListener('click', ui.redraw_preview);
     document.getElementById('load_source_image').addEventListener('click', () => document.getElementById('image_upload').click());
-    document.getElementById('load_target_palette').addEventListener('click',() => document.getElementById('target_upload').click());
-    document.querySelectorAll('input[type=color]').forEach(input => app.mapping.colors[input.dataset.original] = input.value.replace('#', ''));
+    document.getElementById('load_target_palette').addEventListener('click', () => document.getElementById('target_upload').click());document.querySelectorAll('input[type=color]').forEach(input => app.mapping.colors[input.dataset.original] = input.value.replace('#', ''));
     document.getElementById('image_upload').addEventListener('change', e =>
         image.load_source_image(e, () => {
             ui.redraw_palette();
             ui.redraw_preview();
         })
     );
+    document.addEventListener('click', (e) => {
+        if(e.target.matches('#target_hex_select_list') || e.target.matches('.target_hex_select_button')) return;
+        ui.hide_palette_selector(palette_selector);
+    });
+    document.getElementById('palette_container').addEventListener('click', (e) => {
+        if(!e.target.matches('.target_hex_select_button')) return;
+        ui.position_palette_selector(e.target, palette_selector);
+        ui.open_palette_selector(palette_selector);
+        palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
+    });
+    document.getElementById('target_hex_select_list').addEventListener('click', (e) => {
+        if(!e.target.matches('.swatch')) return;
+        let row = document.querySelector("[data-source*='" + palette_selector.dataset.source, + "']:not(#" + palette_selector.getAttribute('id') + ")");
+        ui.change_swatch_color(row, e.target.dataset.target);
+        ui.hide_palette_selector(palette_selector);
+        app.mapping.custom[palette_selector.dataset.source] = e.target.dataset.target;
+        palette_selector.dataset.source = null;
+    });
     document.getElementById('target_upload').addEventListener('change', e =>
         image.load_target_image(e, () => {
             ui.redraw_palette();

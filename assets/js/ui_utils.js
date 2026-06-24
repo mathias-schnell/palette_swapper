@@ -9,6 +9,13 @@ export function adjust_scale(delta) {
     redraw_preview();
 }
 
+export function change_swatch_color(swatch_row, target_hex) {
+    console.log(swatch_row);
+    swatch_row.dataset.target = target_hex;
+    swatch_row.querySelector('.target_swatch').style.background = `#${target_hex}`;
+    swatch_row.querySelector('.target_hex').textContent = `#${target_hex}`;
+}
+
 export function close_all_menus() {
     document.querySelectorAll('.toolbar_menu').forEach(menu => menu.classList.remove('open'));
 }
@@ -33,12 +40,30 @@ export function open_sidebar(panel_id) {
     target.classList.add('open');
 }
 
+export function hide_palette_selector(palette_selector) {
+    palette_selector.classList.add('hidden');
+    palette_selector.classList.remove('visible');
+}
+
+export function open_palette_selector(palette_selector) {
+    palette_selector.classList.add('visible');
+    palette_selector.classList.remove('hidden');
+}
+
+export function position_palette_selector(element, palette_selector) {
+    const rect = element.getBoundingClientRect();
+    palette_selector.style.left = `${rect.right + app.tooltip.offset_x}px`;
+    palette_selector.style.top = `${rect.top + (rect.height / 2) + app.tooltip.offset_y}px`;
+    palette_selector.style.transform = 'translateY(-50%)';
+}
+
 export function position_tooltip(element) {
     const rect = element.getBoundingClientRect();
     app.ui.tooltip.style.left = `${rect.right + app.tooltip.offset_x}px`;
     app.ui.tooltip.style.top = `${rect.top + (rect.height / 2) + app.tooltip.offset_y}px`;
     app.ui.tooltip.style.transform = 'translateY(-50%)';
 }
+
 
 export function redraw_palette() {
     if (!Object.keys(app.source.palette).length) return;
@@ -53,26 +78,17 @@ export function redraw_palette() {
     const container = document.getElementById('palette_container');
     const template = document.getElementById('palette_row_prime');
     container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
-    document.getElementById("palette_container").classList.toggle("custom_mode", app.mapping.method === "custom");
-    console.log(colors);
     Object.entries(colors).forEach(([source_hex, target_hex]) => {
         const row = template.cloneNode(true);
         row.removeAttribute('id');
         row.style.display = 'block';
+        row.classList.toggle("custom_mode", app.mapping.method === "custom")
         row.dataset.source = source_hex;
         row.dataset.target = target_hex;
         row.querySelector('.source_swatch').style.background = `#${source_hex}`;
         row.querySelector('.target_swatch').style.background = `#${target_hex}`;
         row.querySelector('.source_hex').textContent = `#${source_hex}`;
         row.querySelector('.target_hex').textContent = `#${target_hex}`;
-        row.querySelector('.target_hex_select').value = target_hex;
-        row.querySelector('.target_hex_select').addEventListener('change', e => {
-            const t_hex = e.target.value;
-            const t_row = e.target.closest('.palette_row');
-            const t_swatch = row.querySelector('.target_swatch');
-            app.mapping.custom[row.dataset.source] = row.dataset.target = t_hex;
-            t_swatch.style.background = `#${t_hex}`;
-        });
         container.appendChild(row);
     });
 }
