@@ -11,6 +11,21 @@ export function apply_palette(image_data, palette) {
     }
 }
 
+export function export_image(filename = "project.png") {
+    const canvas = document.createElement("canvas");
+    canvas.width = app.source.width;
+    canvas.height = app.source.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(app.source.image, 0, 0);
+    const image_data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    apply_palette(image_data, (app.mapping.method = 'custom' ? app.mapping.custom : app.mapping.colors));
+    ctx.putImageData(image_data, 0, 0);
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = filename;
+    link.click();
+}
+
 export function load_source_image(e, callback) {
     const file = e.target.files[0];
     if (!file) return;

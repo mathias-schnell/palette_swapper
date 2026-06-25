@@ -21,7 +21,11 @@
                 </div>
             </div>
             <div class="toolbar_item">Edit</div>
-            <div class="toolbar_item">Image</div>
+            <div class="toolbar_item" data-menu="image">Image
+                <div id="menu_image" class="toolbar_menu">
+                    <div id="export_image" class="toolbar_item">Export Image</div>
+                </div>
+            </div>
             <div class="toolbar_item">Palette</div>
         </div>
         <div id="sidebar" class="sidebar">
@@ -78,14 +82,14 @@
                 <div class="sidebar_tab" data-panel="info_panel" data-tooltip="Image Info">ℹ</div>
                 <div class="sidebar_tab" data-panel="close" data-tooltip="Close">×</div>
             </div>
-            <div id="target_hex_select_list" class="hidden"></div>
         </div>
+        <div id="target_hex_select_list" class="hidden"></div>
         <img src="" id="source_image" name="source_image" alt="Source Image" />
         <div class="workspace">
             <div class="canvas_container">
                 <canvas id="preview_canvas" name="preview_canvas"></canvas>
             </div>
         </div>
-        <div id="tooltip"></div>
+        <div id="tooltip" class="hidden"></div>
     </body>
 </html>

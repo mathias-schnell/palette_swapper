@@ -10,7 +10,6 @@ export function adjust_scale(delta) {
 }
 
 export function change_swatch_color(swatch_row, target_hex) {
-    console.log(swatch_row);
     swatch_row.dataset.target = target_hex;
     swatch_row.querySelector('.target_swatch').style.background = `#${target_hex}`;
     swatch_row.querySelector('.target_hex').textContent = `#${target_hex}`;
@@ -40,30 +39,32 @@ export function open_sidebar(panel_id) {
     target.classList.add('open');
 }
 
-export function hide_palette_selector(palette_selector) {
-    palette_selector.classList.add('hidden');
-    palette_selector.classList.remove('visible');
+export function position_floating_element(anchor, float_el, anchor_pt = 'middle', settings = app.tooltip) {
+    const rect = anchor.getBoundingClientRect();
+    const el_rect = float_el.getBoundingClientRect();
+    let top;
+    switch(anchor_pt) {
+        case 'top': top = rect.top; break;
+        case 'bottom': top = rect.bottom - el_rect.height; break;
+        default: top = rect.top + (rect.height / 2) - (el_rect.height / 2);
+    }
+    float_el.style.left = `${rect.right + settings.offset_x}px`;
+    float_el.style.top = `${top}px`;
+    clamp_to_viewport(float_el, window.innerWidth, window.innerHeight);
 }
 
-export function open_palette_selector(palette_selector) {
-    palette_selector.classList.add('visible');
-    palette_selector.classList.remove('hidden');
+export function toggle_floating_element(float_el, force_hide = false, force_show = false) {
+    if(force_hide) {
+        float_el.classList.add('hidden');
+        float_el.classList.remove('visible');
+    } else if(force_show) {
+        float_el.classList.remove('hidden');
+        float_el.classList.add('visible');
+    } else {
+        float_el.classList.toggle('hidden');
+        float_el.classList.toggle('visible');
+    }
 }
-
-export function position_palette_selector(element, palette_selector) {
-    const rect = element.getBoundingClientRect();
-    palette_selector.style.left = `${rect.right + app.tooltip.offset_x}px`;
-    palette_selector.style.top = `${rect.top + (rect.height / 2) + app.tooltip.offset_y}px`;
-    palette_selector.style.transform = 'translateY(-50%)';
-}
-
-export function position_tooltip(element) {
-    const rect = element.getBoundingClientRect();
-    app.ui.tooltip.style.left = `${rect.right + app.tooltip.offset_x}px`;
-    app.ui.tooltip.style.top = `${rect.top + (rect.height / 2) + app.tooltip.offset_y}px`;
-    app.ui.tooltip.style.transform = 'translateY(-50%)';
-}
-
 
 export function redraw_palette() {
     if (!Object.keys(app.source.palette).length) return;
@@ -114,6 +115,14 @@ export function update_palette_map() {
 
 function calc_and_update_scale(delta) {
     app.settings.scale = (Math.max(1.00, Math.min(5.00, app.settings.scale + delta)));
+}
+
+function clamp_to_viewport(float_el, vw, vh) {
+    const el_rect = float_el.getBoundingClientRect();
+    const top = parseFloat(float_el.style.top) || 0;
+    const left = parseFloat(float_el.style.left) || 0;
+    float_el.style.top = `${Math.max(5, Math.min(top, vh - el_rect.height - 5))}px`;
+    float_el.style.left = `${Math.max(5, Math.min(left, vw - el_rect.width - 5))}px`;
 }
 
 function resize_canvas() {

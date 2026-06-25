@@ -8,7 +8,7 @@ const color_dist_funcs = {
 };
 
 export function find_closest_color(source_hex, palette, method) {
-    if (method === "reset") return source_hex;
+    if (method === "reset" || method === "custom") return source_hex;
     const source_rgb = hex_to_rgb(source_hex);
     let closest_hex = null;
     let closest_distance = Infinity;
