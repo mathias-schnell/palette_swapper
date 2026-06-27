@@ -17,7 +17,7 @@ h1 {
 }
 
 /* Specific Element Styles */
-#image_panel input[name="scale"] {
+#image_panel input[name="zoom"] {
     margin: 0;
     padding: 0;
     width: 4ch;

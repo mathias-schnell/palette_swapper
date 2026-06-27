@@ -24,7 +24,6 @@ export function find_closest_color(source_hex, palette, method) {
 }
 
 export function generate_palette_map(source_palette, target_palette, method) {
-    if (!Object.keys(source_palette).length || !Object.keys(target_palette).length) return;
     const map = {};
     Object.keys(source_palette).forEach(source_hex => map[source_hex] = find_closest_color(source_hex, target_palette, method));
     return map;

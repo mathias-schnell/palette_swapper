@@ -31,25 +31,29 @@
         <div id="sidebar" class="sidebar">
             <div id="sidebar_panel_container" class="sidebar_panel_container">
                 <div id="image_panel" class="sidebar_panel">
-                    <h2>Scale</h2>
-                    <p>
-                        <input id="scale_input" name="scale" readonly value="1.00">
-                        <button type="button" id="scale_up">+</button>
-                        <button type="button" id="scale_down">-</button>
-                    </p>
+                    <div id="zoom_block">
+                        <h2>Zoom</h2>
+                        <p>
+                            <input id="zoom_input" name="zoom" readonly value="1.00">
+                            <button type="button" id="zoom_up">+</button>
+                            <button type="button" id="zoom_down">-</button>
+                        </p>
+                    </div>
                 </div>
                 <div id="palette_panel" class="sidebar_panel">
-                    <h2>Color Mapping Presets</h2>
-                    <select id="color_map_method" name="color_map_method">
-                        <option value="reset">Reset</option>
-                        <option value="rgb">RGB</option>
-                        <option value="rgb_w">Weighted RGB</option>
-                        <option value="lab">LAB</option>
-                        <option value="oklab">Oklab</option>
-                        <option value="hsv">HSV</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                    <button id="apply_palette_changes" name="apply_palette_changes">Apply Changes</button>
+                    <div id="color_map_block">
+                        <h2>Color Mapping Presets</h2>
+                        <select id="color_map_method" name="color_map_method">
+                            <option value="reset">Reset</option>
+                            <option value="rgb">RGB</option>
+                            <option value="rgb_w">Weighted RGB</option>
+                            <option value="lab">LAB</option>
+                            <option value="oklab">Oklab</option>
+                            <option value="hsv">HSV</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <button id="apply_palette_changes" name="apply_palette_changes">Apply Changes</button>
+                    </div>
                     <br /><br />
                     <h2>Color Palette</h2>
                     <div id="palette_container">

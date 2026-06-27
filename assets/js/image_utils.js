@@ -1,5 +1,7 @@
-import { app } from "./app.js";
-import * as color from "./color_utils.js"
+import * as app from "./app.js";
+import * as color from "./color_utils.js";
+import {ui_cache} from "./ui_cache.js";
+import { redraw_palette } from "./ui_utils.js";
 
 export function apply_palette(image_data, palette) {
     const pixels = image_data.data;
@@ -12,13 +14,15 @@ export function apply_palette(image_data, palette) {
 }
 
 export function export_image(filename = "project.png") {
+    const src = app.get_source();
+    const mapping = app.get_mapping();
     const canvas = document.createElement("canvas");
-    canvas.width = app.source.width;
-    canvas.height = app.source.height;
+    canvas.width = src.image.naturalWidth;
+    canvas.height = src.image.naturalHeight;
     const ctx = canvas.getContext("2d");
-    ctx.drawImage(app.source.image, 0, 0);
+    ctx.drawImage(src.image, 0, 0);
     const image_data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    apply_palette(image_data, (app.mapping.method = 'custom' ? app.mapping.custom : app.mapping.colors));
+    apply_palette(image_data, (mapping.method == 'custom' ? mapping.custom : mapping.colors));
     ctx.putImageData(image_data, 0, 0);
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
@@ -32,15 +36,18 @@ export function load_source_image(e, callback) {
 
     const reader = new FileReader();
     reader.onload = event => {
-        app.source.image = new Image();
-        app.source.image.onload = () => {
-            [app.source.width, app.source.height] = [app.source.image.naturalWidth, app.source.image.naturalHeight];
-            app.source.palette = extract_palette(app.source.image);
-            [app.canvas.element.width, app.canvas.element.height] = [app.source.image.naturalWidth, app.source.image.naturalHeight];
-            app.canvas.element.style.display = "block";
-            if (typeof callback === 'function') callback();
+        const src = {
+            image: new Image(),
+            palette: {}
         };
-        app.source.image.src = event.target.result;
+        src.image.onload = () => {
+            src.palette = extract_palette(src.image);
+            app.update_source(src);
+            [ui_cache.canvas.width, ui_cache.canvas.height] = [src.image.naturalWidth, src.image.naturalHeight];
+            ui_cache.canvas.style.display = "block";
+            callback?.()
+        };
+        src.image.src = event.target.result;
     };
     reader.readAsDataURL(file);
 }
@@ -51,13 +58,16 @@ export function load_target_image(e, callback) {
 
     const reader = new FileReader();
     reader.onload = event => {
-        app.target.image = new Image();
-        app.target.image.onload = () => {
-            app.target.palette = extract_palette(app.target.image);
-            populate_palette_dropdown(document.querySelector("#target_hex_select_list"), app.target.palette);
-            if (typeof callback === 'function') callback();
+        const tar = {
+            image: new Image(),
+            palette: {}
         };
-        app.target.image.src = event.target.result;
+        tar.image.onload = () => {
+            tar.palette = extract_palette(tar.image);
+            app.update_target(tar);
+            callback?.()
+        };
+        tar.image.src = event.target.result;
     };
     reader.readAsDataURL(file);
 }
@@ -82,17 +92,4 @@ function image_to_canvas(image) {
     [canvas.width, canvas.height] = [image.naturalWidth, image.naturalHeight];
     ctx.drawImage(image, 0, 0);
     return { canvas, ctx };
-}
-
-function populate_palette_dropdown(container, palette) {
-    container.replaceChildren();
-    const colors = Object.keys(palette);
-    container.style.gridTemplateColumns = `repeat(${Math.ceil(Math.sqrt(colors.length))}, 1fr)`;
-    Object.keys(palette).forEach((hex) => {
-        const swatch = document.createElement("span");
-        swatch.classList.add("swatch");
-        swatch.dataset.target = hex;
-        swatch.style.backgroundColor = `#${hex}`;
-        container.appendChild(swatch);
-    })
 }

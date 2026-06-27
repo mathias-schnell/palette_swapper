@@ -1,56 +1,61 @@
-import { app } from "./app.js"
-import * as image from "./image_utils.js"
-import * as ui from "./ui_utils.js"
+import * as app from "./app.js";
+import * as image from "./image_utils.js";
+import * as ui from "./ui_utils.js";
+import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
-initialize_app();
-bind_events();
+window.addEventListener("DOMContentLoaded", () => {
+    initialize_app();
+});
 
 function initialize_app() {
-    app.canvas.element = document.getElementById('preview_canvas');
-    if (app.canvas.element) {
-        app.canvas.ctx = app.canvas.element.getContext('2d', { willReadFrequently: true });
-    }
-    Object.entries(app.ui).forEach(([key]) => {
-        app.ui[key] = document.getElementById(key);
-    });
+    ui_cache_init();
+    bind_events();
 }
 
 function bind_events() {
     let palette_selector = document.getElementById('target_hex_select_list');
     document.addEventListener('click', ui.close_all_menus);
-    document.getElementById('scale_up').addEventListener('click', () => ui.adjust_scale(0.25));
-    document.getElementById('scale_down').addEventListener('click', () => ui.adjust_scale(-0.25));
-    document.getElementById('color_map_method').addEventListener('change', ui.update_palette_map);
+    document.getElementById('zoom_up').addEventListener('click', () => ui.adjust_scale(0.25));
+    document.getElementById('zoom_down').addEventListener('click', () => ui.adjust_scale(-0.25));
     document.getElementById('apply_palette_changes').addEventListener('click', ui.redraw_preview);
     document.getElementById('load_source_image').addEventListener('click', () => document.getElementById('image_upload').click());
     document.getElementById('load_target_palette').addEventListener('click', () => document.getElementById('target_upload').click());
     document.getElementById('export_image').addEventListener('click', () => image.export_image());
+    document.getElementById('color_map_method').addEventListener('change', e => {
+        ui.update_palette_map();
+        ui.redraw_palette();
+    });
     document.getElementById('image_upload').addEventListener('change', e =>
         image.load_source_image(e, () => {
+            ui.update_palette_map();
             ui.redraw_palette();
             ui.redraw_preview();
         })
     );
     document.addEventListener('click', (e) => {
         if(e.target.matches('#target_hex_select_list') || e.target.matches('.target_hex_select_button')) return;
-        ui.toggle_floating_element(palette_selector, true);
+        ui.toggle_floating_element(ui_cache.palette_selector, true);
     });
     document.getElementById('palette_container').addEventListener('click', (e) => {
         if(!e.target.matches('.target_hex_select_button')) return;
-        ui.position_floating_element(e.target, palette_selector, 'top');
-        ui.toggle_floating_element(palette_selector);
-        palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
+        ui.position_floating_element(e.target, ui_cache.palette_selector, 'top');
+        ui.toggle_floating_element(ui_cache.palette_selector);
+        ui_cache.palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
     });
     document.getElementById('target_hex_select_list').addEventListener('click', (e) => {
         if(!e.target.matches('.swatch')) return;
-        let row = document.querySelector("[data-source*='" + palette_selector.dataset.source, + "']:not(#" + palette_selector.getAttribute('id') + ")");
+        let row = document.querySelector("[data-source*='" + ui_cache.palette_selector.dataset.source, + "']:not(#" + ui_cache.palette_selector.getAttribute('id') + ")");
+        let colors = app.get_mapping().custom;
         ui.change_swatch_color(row, e.target.dataset.target);
-        ui.toggle_floating_element(palette_selector);
-        app.mapping.custom[palette_selector.dataset.source] = e.target.dataset.target;
-        palette_selector.dataset.source = null;
+        ui.toggle_floating_element(ui_cache.palette_selector);
+        colors[ui_cache.palette_selector.dataset.source] = e.target.dataset.target;
+        app.update_mapping({custom: colors});
+        ui_cache.palette_selector.dataset.source = null;
     });
     document.getElementById('target_upload').addEventListener('change', e =>
         image.load_target_image(e, () => {
+            ui.update_palette_map();
+            ui.populate_palette_selector();
             ui.redraw_palette();
         })
     );

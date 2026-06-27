@@ -1,34 +1,33 @@
-export const app = {
-    canvas: {
-        ctx: null,
-        element: null,
+const app = {
+    mapping: {
+        colors: {},
+        custom: {},
+        method: 'reset'
+    },
+    settings: {
+        zoom: 1.00
     },
     source: {
         image: null,
-        palette: {},
-        width: 0,
-        height: 0
+        palette: {}
     },
     target: {
         image: null,
         palette: {}
-    },
-    mapping: {
-        colors: {},
-        custom: null,
-        method: 'reset'
-    },
-    settings: {
-        scale: 1.00
-    },
-    tooltip: {
-        delay: 200,
-        offset_x: 5,
-        offset_y: 0
-    },
-    ui: {
-        color_map_method: null,
-        scale_input: null,
-        tooltip: null,
     }
 };
+
+export const tooltip_config = {
+    delay: 200,
+    offset_x: 5,
+    offset_y: 0
+}
+
+export function get_mapping() { return app.mapping; }
+export function get_settings() { return app.settings; }
+export function get_source() { return app.source; }
+export function get_target() { return app.target; }
+export function update_mapping(data) { Object.assign(app.mapping, data); }
+export function update_settings(data) { Object.assign(app.settings, data); }
+export function update_source(data) { Object.assign(app.source, data); }
+export function update_target(data) { Object.assign(app.target, data); }
