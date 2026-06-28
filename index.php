@@ -52,7 +52,6 @@
                             <option value="hsv">HSV</option>
                             <option value="custom">Custom</option>
                         </select>
-                        <button id="apply_palette_changes" name="apply_palette_changes">Apply Changes</button>
                     </div>
                     <br /><br />
                     <h2>Color Palette</h2>

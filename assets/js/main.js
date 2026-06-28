@@ -13,25 +13,15 @@ function initialize_app() {
 }
 
 function bind_events() {
-    let palette_selector = document.getElementById('target_hex_select_list');
     document.addEventListener('click', ui.close_all_menus);
     document.getElementById('zoom_up').addEventListener('click', () => ui.adjust_scale(0.25));
     document.getElementById('zoom_down').addEventListener('click', () => ui.adjust_scale(-0.25));
-    document.getElementById('apply_palette_changes').addEventListener('click', ui.redraw_preview);
     document.getElementById('load_source_image').addEventListener('click', () => document.getElementById('image_upload').click());
     document.getElementById('load_target_palette').addEventListener('click', () => document.getElementById('target_upload').click());
     document.getElementById('export_image').addEventListener('click', () => image.export_image());
-    document.getElementById('color_map_method').addEventListener('change', e => {
-        ui.update_palette_map();
-        ui.redraw_palette();
-    });
-    document.getElementById('image_upload').addEventListener('change', e =>
-        image.load_source_image(e, () => {
-            ui.update_palette_map();
-            ui.redraw_palette();
-            ui.redraw_preview();
-        })
-    );
+    document.getElementById('color_map_method').addEventListener('change', () => ui.refresh_ui());
+    document.getElementById('image_upload').addEventListener('change', (e) => image.load_source_image(e, () => ui.refresh_ui() ));
+    document.getElementById('target_upload').addEventListener('change', (e) => image.load_target_image(e, () => ui.refresh_ui() ));
     document.addEventListener('click', (e) => {
         if(e.target.matches('#target_hex_select_list') || e.target.matches('.target_hex_select_button')) return;
         ui.toggle_floating_element(ui_cache.palette_selector, true);
@@ -44,21 +34,15 @@ function bind_events() {
     });
     document.getElementById('target_hex_select_list').addEventListener('click', (e) => {
         if(!e.target.matches('.swatch')) return;
-        let row = document.querySelector("[data-source*='" + ui_cache.palette_selector.dataset.source, + "']:not(#" + ui_cache.palette_selector.getAttribute('id') + ")");
+        let row = document.querySelector("[data-source*='" + ui_cache.palette_selector.dataset.source + "']:not(#" + ui_cache.palette_selector.getAttribute('id') + ")");
         let colors = app.get_mapping().custom;
         ui.change_swatch_color(row, e.target.dataset.target);
         ui.toggle_floating_element(ui_cache.palette_selector);
         colors[ui_cache.palette_selector.dataset.source] = e.target.dataset.target;
         app.update_mapping({custom: colors});
         ui_cache.palette_selector.dataset.source = null;
+        ui.refresh_ui(false, false, true, false);
     });
-    document.getElementById('target_upload').addEventListener('change', e =>
-        image.load_target_image(e, () => {
-            ui.update_palette_map();
-            ui.populate_palette_selector();
-            ui.redraw_palette();
-        })
-    );
     document.querySelectorAll('.sidebar_tabs > .sidebar_tab').forEach(
         element => element.addEventListener('click', () => { 
             element.dataset.panel === 'close' ? ui.close_sidebar() : ui.open_sidebar(element.dataset.panel); 

@@ -81,6 +81,12 @@ export function toggle_floating_element(float_el, force_hide = false, force_show
         float_el.classList.toggle('visible');
     }
 }
+export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false) {
+    if (!skip_upm) update_palette_map();
+    if (!skip_pps) populate_palette_selector();
+    if (!skip_rp) redraw_palette();
+    if (!skip_rc) redraw_preview();
+}
 
 export function redraw_palette() {
     ui_cache.palette_container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
