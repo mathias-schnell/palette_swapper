@@ -136,6 +136,9 @@ h6:not(:first-child) {
 .palette_row > .lock_button.unlocked::before {
     content: "\1F513";
 }
+.palette_row > .lock_button.locked ~ .target_color > .target_hex_select_button {
+    display: none;
+}
 .palette_row input[type="color"] {
     height: 24px;
     margin: 0;

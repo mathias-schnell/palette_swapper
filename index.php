@@ -55,7 +55,7 @@
                     </div>
                     <h2>Color Palette</h2>
                     <div id="palette_container">
-                        <div id="palette_row_prime" class="palette_row unlocked">
+                        <div id="palette_row_prime" class="palette_row">
                             <div class="lock_button unlocked"></div>
                             <div class="source_color">
                                 <span class="swatch source_swatch"></span><span class="source_hex"></span>
