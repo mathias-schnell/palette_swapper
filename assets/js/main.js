@@ -32,6 +32,16 @@ function bind_events() {
         ui.toggle_floating_element(ui_cache.palette_selector);
         ui_cache.palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
     });
+    document.getElementById('palette_container').addEventListener('click', (e) => {
+        if(!e.target.matches('.lock_button')) return;
+        e.target.classList.toggle('locked');
+        e.target.classList.toggle('unlocked');
+        if(e.target.classList.contains('locked')) {
+            app.add_lock(e.target.closest("[data-source]").dataset.source, e.target.closest("[data-target]").dataset.target);
+        } else {
+            app.remove_lock(e.target.closest("[data-source]").dataset.source);
+        }
+    });
     document.getElementById('target_hex_select_list').addEventListener('click', (e) => {
         if(!e.target.matches('.swatch')) return;
         let row = document.querySelector("[data-source*='" + ui_cache.palette_selector.dataset.source + "']:not(#" + ui_cache.palette_selector.getAttribute('id') + ")");

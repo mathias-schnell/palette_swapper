@@ -2,6 +2,7 @@ const app = {
     mapping: {
         colors: {},
         custom: {},
+        locked: {},
         method: 'reset'
     },
     settings: {
@@ -23,6 +24,8 @@ export const tooltip_config = {
     offset_y: 0
 }
 
+export function add_lock(source_hex, target_hex) { app.mapping.locked[source_hex] = target_hex; console.log(app.mapping.locked); }
+export function remove_lock(source_hex) { delete app.mapping.locked[source_hex]; console.log(app.mapping.locked); }
 export function get_mapping() { return app.mapping; }
 export function get_settings() { return app.settings; }
 export function get_source() { return app.source; }

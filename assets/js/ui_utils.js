@@ -1,7 +1,7 @@
 import * as app from "./app.js";
 import * as color from "./color_utils.js";
 import * as image from "./image_utils.js";
-import {ui_cache} from "./ui_cache.js";
+import { ui_cache } from "./ui_cache.js";
 
 export function adjust_scale(delta) {
     app.update_settings({zoom: (Math.max(1.00, Math.min(5.00, app.get_settings().zoom + delta))) });
@@ -89,11 +89,11 @@ export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, 
 }
 
 export function redraw_palette() {
+    const colors = (app.get_mapping().method === "custom" ? app.get_mapping().custom : app.get_mapping().colors);
     ui_cache.palette_container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
-    Object.entries(app.get_mapping().colors).forEach(([source_hex, target_hex]) => {
+    Object.entries(colors).forEach(([source_hex, target_hex]) => {
         const row = ui_cache.palette_row_prime.cloneNode(true);
         row.removeAttribute('id');
-        row.style.display = 'block';
         row.classList.toggle("custom_mode", app.get_mapping().method === "custom");
         row.dataset.source = source_hex;
         row.dataset.target = target_hex;
@@ -101,6 +101,10 @@ export function redraw_palette() {
         row.querySelector('.target_swatch').style.background = `#${target_hex}`;
         row.querySelector('.source_hex').textContent = `#${source_hex}`;
         row.querySelector('.target_hex').textContent = `#${target_hex}`;
+        if (app.get_mapping().locked[source_hex]) {
+            row.querySelector('.lock_button').classList.toggle('locked', true);
+            row.querySelector('.lock_button').classList.toggle('unlocked', false);
+        }
         ui_cache.palette_container.appendChild(row);
     });
 }
@@ -121,8 +125,22 @@ export function redraw_preview() {
 
 export function update_palette_map() {
     const method = ui_cache.color_map.querySelector("#color_map_method").value;
-    const colors = color.generate_palette_map(app.get_source().palette, app.get_target().palette, method);
-    app.update_mapping({colors: colors, method: method});
+    const locked = app.get_mapping().locked;
+    const new_map = color.generate_palette_map(app.get_source().palette, app.get_target().palette, method);
+    let colors = app.get_mapping().colors;
+    let custom = app.get_mapping().custom;
+    
+    if (Object.keys(custom).length === 0) {
+        custom = structuredClone(colors); 
+    }
+    Object.entries(new_map).forEach(([source_hex, target_hex]) => {
+        if (locked[source_hex]) {
+            new_map[source_hex] = locked[source_hex];
+            custom[source_hex] = locked[source_hex];
+        }
+    });
+    colors = new_map;
+    app.update_mapping({colors: colors, custom: custom, method: method});
 }
 
 function clamp_to_viewport(x, y, el_rect, vw, vh) {

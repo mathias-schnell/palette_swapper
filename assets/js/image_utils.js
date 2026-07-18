@@ -1,6 +1,6 @@
 import * as app from "./app.js";
 import * as color from "./color_utils.js";
-import {ui_cache} from "./ui_cache.js";
+import { ui_cache } from "./ui_cache.js";
 import { redraw_palette } from "./ui_utils.js";
 
 export function apply_palette(image_data, palette) {

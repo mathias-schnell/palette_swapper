@@ -53,16 +53,16 @@
                             <option value="custom">Custom</option>
                         </select>
                     </div>
-                    <br /><br />
                     <h2>Color Palette</h2>
                     <div id="palette_container">
-                        <div id="palette_row_prime" class="palette_row">
+                        <div id="palette_row_prime" class="palette_row unlocked">
+                            <div class="lock_button unlocked"></div>
                             <div class="source_color">
-                                <span class="swatch source_swatch"></span> <span class="source_hex"></span>
+                                <span class="swatch source_swatch"></span><span class="source_hex"></span>
                             </div>
-                             → 
+                            →
                             <div class="target_color">
-                                <span class="swatch target_swatch"></span> <span class="target_hex"></span>
+                                <span class="swatch target_swatch"></span><span class="target_hex"></span>
                                 <div class="target_hex_select_button">&#9205;</div>
                             </div>
                         </div>

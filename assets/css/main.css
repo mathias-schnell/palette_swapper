@@ -10,10 +10,18 @@ button {
     padding: 5px 10px;
 }
 form {
-    margin-bottom: 10px;
+    margin-bottom: 0.25em;
 }
-h1 {
-    margin-bottom: 10px;
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.25em;
+}
+h1:not(:first-child), 
+h2:not(:first-child), 
+h3:not(:first-child), 
+h4:not(:first-child), 
+h5:not(:first-child), 
+h6:not(:first-child) {
+    margin-top: 0.75em;
 }
 
 /* Specific Element Styles */
@@ -109,9 +117,24 @@ h1 {
     background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 }
 .palette_row {
+    align-items: center;
+    display: flex;
     font-family: Consolas, Monaco, 'Courier New', monospace;
+    gap: 5px;
+    letter-spacing: -0.025em;
     margin: 2px 0;
     padding: 1px;
+}
+.palette_row > .lock_button::before {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+}
+.palette_row > .lock_button.locked::before {
+    content: "\1F512";
+}
+.palette_row > .lock_button.unlocked::before {
+    content: "\1F513";
 }
 .palette_row input[type="color"] {
     height: 24px;
@@ -129,6 +152,7 @@ h1 {
 }
 .palette_row.custom_mode .target_hex_select_button {
     display: inline-block;
+    margin-left: -5px;
 }
 .sidebar_tabs {
     display: flex;
@@ -178,6 +202,10 @@ h1 {
 .source_hex,
 .target_hex {
     text-transform: uppercase;
+}
+.source_swatch,
+.target_swatch {
+    margin-right: 4px;
 }
 .swatch {
     border: 1px solid #000;
