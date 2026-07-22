@@ -1,3 +1,9 @@
+/*
+    * ui_cache.js
+    * This file contains the UI cache and functions for managing it.
+*/
+
+/* the ui_cache object stores references to frequently accessed DOM elements */
 export const ui_cache = {
     canvas: null,
     color_map: null,
@@ -10,6 +16,7 @@ export const ui_cache = {
     zoom: null,
 }
 
+/* initialize the ui_cache by selecting and storing references to DOM elements */
 export function ui_cache_init() {
     ui_cache.canvas = document.getElementById('preview_canvas');
     ui_cache.ctx = ui_cache.canvas.getContext('2d', { willReadFrequently: true });

@@ -1,3 +1,8 @@
+/*
+    * ui_utils.js
+    * This file contains functions for UI manipulation and communication between UI and app state.
+*/
+
 import * as app from "./app.js";
 import * as color from "./color_utils.js";
 import * as image from "./image_utils.js";
@@ -81,6 +86,7 @@ export function toggle_floating_element(float_el, force_hide = false, force_show
         float_el.classList.toggle('visible');
     }
 }
+
 export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false) {
     if (!skip_upm) update_palette_map();
     if (!skip_pps) populate_palette_selector();
@@ -123,6 +129,42 @@ export function redraw_preview() {
     ctx.putImageData(image_data, 0, 0);
 }
 
+export function rotate_image(degrees) {
+    const source = app.get_source();
+    if (!source.image) return;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (degrees === 90 || degrees === -270) {
+        canvas.width = source.image.naturalHeight;
+        canvas.height = source.image.naturalWidth;
+        ctx.translate(canvas.width, 0);
+        ctx.rotate(Math.PI / 2);
+    } else if (degrees === -90 || degrees === 270) {
+        canvas.width = source.image.naturalHeight;
+        canvas.height = source.image.naturalWidth;
+        ctx.translate(0, canvas.height);
+        ctx.rotate(-Math.PI / 2);
+    } else if (degrees === 180 || degrees === -180) {
+        canvas.width = source.image.naturalWidth;
+        canvas.height = source.image.naturalHeight;
+        ctx.translate(canvas.width, canvas.height);
+        ctx.rotate(Math.PI);
+    } else {
+        console.error("Invalid rotation angle. Must be 90, -90, 180, or -180.");
+        return;
+    }
+    ctx.drawImage(source.image, 0, 0);
+    const rotated_image = new Image();
+    rotated_image.onload = () => {
+        source.image = rotated_image;
+        source.palette = image.extract_palette(rotated_image);
+        app.update_source(source);
+        [ui_cache.canvas.width, ui_cache.canvas.height] = [rotated_image.naturalWidth * app.get_settings().zoom, rotated_image.naturalHeight * app.get_settings().zoom];
+        redraw_preview();
+    };
+    rotated_image.src = canvas.toDataURL("image/png");
+}
+
 export function update_palette_map() {
     const method = ui_cache.color_map.querySelector("#color_map_method").value;
     const locked = app.get_mapping().locked;
@@ -131,7 +173,7 @@ export function update_palette_map() {
     let custom = app.get_mapping().custom;
     
     if (Object.keys(custom).length === 0) {
-        custom = structuredClone(colors); 
+        custom = structuredClone(colors);
     }
     Object.entries(new_map).forEach(([source_hex, target_hex]) => {
         if (locked[source_hex]) {

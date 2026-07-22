@@ -1,3 +1,8 @@
+/*
+    * image_utils.js
+    * This file contains utility functions for image loading and manipulation.
+*/
+
 import * as app from "./app.js";
 import * as color from "./color_utils.js";
 import { ui_cache } from "./ui_cache.js";

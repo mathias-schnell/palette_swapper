@@ -1,3 +1,9 @@
+/*
+    * color_utils.js
+    * This file contains utility functions for color manipulation and distance calculations.
+*/
+
+/* color distance functions for different color spaces */
 const color_dist_funcs = {
     rgb: get_distance_rgb,
     rgb_w: get_distance_rgb_w,

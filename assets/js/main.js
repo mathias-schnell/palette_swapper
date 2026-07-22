@@ -1,3 +1,8 @@
+/*
+    * main.js
+    * This file contains the main application initialization and event binding logic.
+*/
+
 import * as app from "./app.js";
 import * as image from "./image_utils.js";
 import * as ui from "./ui_utils.js";
@@ -13,15 +18,25 @@ function initialize_app() {
 }
 
 function bind_events() {
-    document.addEventListener('click', ui.close_all_menus);
-    document.getElementById('zoom_up').addEventListener('click', () => ui.adjust_scale(0.25));
-    document.getElementById('zoom_down').addEventListener('click', () => ui.adjust_scale(-0.25));
-    document.getElementById('load_source_image').addEventListener('click', () => document.getElementById('image_upload').click());
-    document.getElementById('load_target_palette').addEventListener('click', () => document.getElementById('target_upload').click());
-    document.getElementById('export_image').addEventListener('click', () => image.export_image());
-    document.getElementById('color_map_method').addEventListener('change', () => ui.refresh_ui());
     document.getElementById('image_upload').addEventListener('change', (e) => image.load_source_image(e, () => ui.refresh_ui() ));
     document.getElementById('target_upload').addEventListener('change', (e) => image.load_target_image(e, () => ui.refresh_ui() ));
+
+    /* sidebar bindings */
+    const sidebar = document.getElementById('sidebar');
+    sidebar.querySelector('#zoom_up').addEventListener('click', () => ui.adjust_scale(0.25));
+    sidebar.querySelector('#zoom_down').addEventListener('click', () => ui.adjust_scale(-0.25));
+    sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
+
+    /* toolbar bindings */
+    const toolbar = document.getElementById('toolbar');
+    toolbar.querySelector('#load_source_image').addEventListener('click', () => document.getElementById('image_upload').click());
+    toolbar.querySelector('#load_target_palette').addEventListener('click', () => document.getElementById('target_upload').click());
+    toolbar.querySelector('#rotate_90cw').addEventListener('click', () => ui.rotate_image(90));
+    toolbar.querySelector('#rotate_90ccw').addEventListener('click', () => ui.rotate_image(-90));
+    toolbar.querySelector('#rotate_180').addEventListener('click', () => ui.rotate_image(180));
+    toolbar.querySelector('#export_image').addEventListener('click', () => image.export_image());
+    document.addEventListener('click', ui.close_all_menus);
+
     document.addEventListener('click', (e) => {
         if(e.target.matches('#target_hex_select_list') || e.target.matches('.target_hex_select_button')) return;
         ui.toggle_floating_element(ui_cache.palette_selector, true);

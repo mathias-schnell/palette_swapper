@@ -13,14 +13,20 @@
     <body>
         <input type="file" id="image_upload" name="source_image" hidden>
         <input type="file" id="target_upload" name="target_upload" hidden>
-        <div id="toolbar">
+        <div id="toolbar" class="toolbar">
             <div class="toolbar_item" data-menu="file">File
                 <div id="menu_file" class="toolbar_menu">
                     <div id="load_source_image" class="toolbar_item">Load Source Image</div>
                     <div id="load_target_palette" class="toolbar_item">Load Target Palette</div>
                 </div>
             </div>
-            <div class="toolbar_item">Edit</div>
+            <div class="toolbar_item" data-menu="edit">Edit
+                <div id="menu_edit" class="toolbar_menu">
+                    <div id="rotate_90cw" class="toolbar_item">Rotate 90° CW</div>
+                    <div id="rotate_90ccw" class="toolbar_item">Rotate 90° CCW</div>
+                    <div id="rotate_180" class="toolbar_item">Rotate 180°</div>
+                </div>
+            </div>
             <div class="toolbar_item" data-menu="image">Image
                 <div id="menu_image" class="toolbar_menu">
                     <div id="export_image" class="toolbar_item">Export Image</div>
