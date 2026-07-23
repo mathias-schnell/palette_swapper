@@ -23,8 +23,8 @@ function bind_events() {
 
     /* sidebar bindings */
     const sidebar = document.getElementById('sidebar');
-    sidebar.querySelector('#zoom_up').addEventListener('click', () => ui.adjust_scale(0.25));
-    sidebar.querySelector('#zoom_down').addEventListener('click', () => ui.adjust_scale(-0.25));
+    sidebar.querySelector('#zoom_up').addEventListener('click', () => ui.zoom_image(0.25));
+    sidebar.querySelector('#zoom_down').addEventListener('click', () => ui.zoom_image(-0.25));
     sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
 
     /* toolbar bindings */
@@ -34,6 +34,8 @@ function bind_events() {
     toolbar.querySelector('#rotate_90cw').addEventListener('click', () => ui.rotate_image(90));
     toolbar.querySelector('#rotate_90ccw').addEventListener('click', () => ui.rotate_image(-90));
     toolbar.querySelector('#rotate_180').addEventListener('click', () => ui.rotate_image(180));
+    toolbar.querySelector('#flip_horizontal').addEventListener('click', () => ui.flip_image_horizontal());
+    toolbar.querySelector('#flip_vertical').addEventListener('click', () => ui.flip_image_vertical());
     toolbar.querySelector('#export_image').addEventListener('click', () => image.export_image());
     document.addEventListener('click', ui.close_all_menus);
 
@@ -52,7 +54,7 @@ function bind_events() {
         e.target.classList.toggle('locked');
         e.target.classList.toggle('unlocked');
         if(e.target.classList.contains('locked')) {
-            app.add_lock(e.target.closest("[data-source]").dataset.source, e.target.closest("[data-target]").dataset.target);
+            app.set_lock(e.target.closest("[data-source]").dataset.source, e.target.closest("[data-target]").dataset.target);
         } else {
             app.remove_lock(e.target.closest("[data-source]").dataset.source);
         }

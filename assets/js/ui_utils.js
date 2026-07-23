@@ -4,15 +4,30 @@
 */
 
 import * as app from "./app.js";
+import * as canvas from "./canvas_utils.js";
 import * as color from "./color_utils.js";
 import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
-export function adjust_scale(delta) {
-    app.update_settings({zoom: (Math.max(1.00, Math.min(5.00, app.get_settings().zoom + delta))) });
-    update_scale_ui();
-    resize_canvas();
-    redraw_preview();
+export function zoom_image(delta) {
+    app.get_transforms()['zoom'] ? app.set_transform('zoom', app.get_transforms()['zoom'] + delta) : app.set_transform('zoom', 1.00 + delta);
+    update_scale_ui(delta);
+    canvas.render();
+}
+
+export function flip_image_horizontal() {
+    app.get_transforms()['flip_horizontal'] ? app.set_transform('flip_horizontal', !app.get_transforms()['flip_horizontal']) : app.set_transform('flip_horizontal', true);
+    canvas.render();
+}
+
+export function flip_image_vertical() {
+    app.get_transforms()['flip_vertical'] ? app.set_transform('flip_vertical', !app.get_transforms()['flip_vertical']) : app.set_transform('flip_vertical', true);
+    canvas.render();
+}
+
+export function rotate_image(degrees) {
+    app.get_transforms()['rotate'] ? app.set_transform('rotate', app.get_transforms()['rotate'] + degrees) : app.set_transform('rotate', degrees);
+    canvas.render();
 }
 
 export function change_swatch_color(swatch_row, target_hex) {
@@ -91,7 +106,7 @@ export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, 
     if (!skip_upm) update_palette_map();
     if (!skip_pps) populate_palette_selector();
     if (!skip_rp) redraw_palette();
-    if (!skip_rc) redraw_preview();
+    if (!skip_rc) canvas.render();
 }
 
 export function redraw_palette() {
@@ -113,56 +128,6 @@ export function redraw_palette() {
         }
         ui_cache.palette_container.appendChild(row);
     });
-}
-
-export function redraw_preview() {
-    const canvas = ui_cache.canvas;
-    const ctx = ui_cache.ctx;
-    const source = app.get_source();
-    const mapping = app.get_mapping();
-    if (!canvas || !ctx || !source.image) return;
-    ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(source.image, 0, 0, source.image.naturalWidth, source.image.naturalHeight, 0, 0, canvas.width, canvas.height);
-    const image_data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    image.apply_palette(image_data, (mapping.method === "custom" ? mapping.custom : mapping.colors));
-    ctx.putImageData(image_data, 0, 0);
-}
-
-export function rotate_image(degrees) {
-    const source = app.get_source();
-    if (!source.image) return;
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (degrees === 90 || degrees === -270) {
-        canvas.width = source.image.naturalHeight;
-        canvas.height = source.image.naturalWidth;
-        ctx.translate(canvas.width, 0);
-        ctx.rotate(Math.PI / 2);
-    } else if (degrees === -90 || degrees === 270) {
-        canvas.width = source.image.naturalHeight;
-        canvas.height = source.image.naturalWidth;
-        ctx.translate(0, canvas.height);
-        ctx.rotate(-Math.PI / 2);
-    } else if (degrees === 180 || degrees === -180) {
-        canvas.width = source.image.naturalWidth;
-        canvas.height = source.image.naturalHeight;
-        ctx.translate(canvas.width, canvas.height);
-        ctx.rotate(Math.PI);
-    } else {
-        console.error("Invalid rotation angle. Must be 90, -90, 180, or -180.");
-        return;
-    }
-    ctx.drawImage(source.image, 0, 0);
-    const rotated_image = new Image();
-    rotated_image.onload = () => {
-        source.image = rotated_image;
-        source.palette = image.extract_palette(rotated_image);
-        app.update_source(source);
-        [ui_cache.canvas.width, ui_cache.canvas.height] = [rotated_image.naturalWidth * app.get_settings().zoom, rotated_image.naturalHeight * app.get_settings().zoom];
-        redraw_preview();
-    };
-    rotated_image.src = canvas.toDataURL("image/png");
 }
 
 export function update_palette_map() {
@@ -191,11 +156,7 @@ function clamp_to_viewport(x, y, el_rect, vw, vh) {
     return [clampedX, clampedY];
 }
 
-function resize_canvas() {
-    ui_cache.canvas.width = app.get_source().image.naturalWidth * app.get_settings().zoom;
-    ui_cache.canvas.height = app.get_source().image.naturalHeight * app.get_settings().zoom;
-}
-
-function update_scale_ui() {
-    ui_cache.zoom.querySelector("#zoom_input").value = app.get_settings().zoom.toFixed(2);
+function update_scale_ui(delta) {
+    const zoom_val = parseFloat(ui_cache.zoom.querySelector("#zoom_input").value) + delta;
+    ui_cache.zoom.querySelector("#zoom_input").value = zoom_val.toFixed(2);
 }

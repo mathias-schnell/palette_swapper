@@ -22,6 +22,8 @@
             </div>
             <div class="toolbar_item" data-menu="edit">Edit
                 <div id="menu_edit" class="toolbar_menu">
+                    <div id="flip_horizontal" class="toolbar_item">Flip Horizontal</div>
+                    <div id="flip_vertical" class="toolbar_item">Flip Vertical</div>
                     <div id="rotate_90cw" class="toolbar_item">Rotate 90° CW</div>
                     <div id="rotate_90ccw" class="toolbar_item">Rotate 90° CCW</div>
                     <div id="rotate_180" class="toolbar_item">Rotate 180°</div>
