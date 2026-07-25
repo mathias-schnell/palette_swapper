@@ -48,7 +48,7 @@ export function close_sidebar() {
 }
 
 export function open_menu(menu_id) {
-    close_all_menus();
+    console.log("Opening menu:", menu_id);
     document.getElementById(menu_id).classList.add('open');
 }
 

@@ -18,10 +18,11 @@ export function apply_palette(image_data, palette) {
     }
 }
 
-export function export_image(filename = "project.png") {
+export function export_image(filename = "project.png", filetype = "image/png") {
     const src = app.get_source();
     const mapping = app.get_mapping();
     const canvas = document.createElement("canvas");
+    if(!src.image) return;
     canvas.width = src.image.naturalWidth;
     canvas.height = src.image.naturalHeight;
     const ctx = canvas.getContext("2d");
@@ -30,7 +31,7 @@ export function export_image(filename = "project.png") {
     apply_palette(image_data, (mapping.method == 'custom' ? mapping.custom : mapping.colors));
     ctx.putImageData(image_data, 0, 0);
     const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
+    link.href = canvas.toDataURL(filetype);
     link.download = filename;
     link.click();
 }

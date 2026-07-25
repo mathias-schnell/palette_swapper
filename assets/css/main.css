@@ -92,6 +92,7 @@ h6:not(:first-child) {
 #toolbar {
     background: white;
     border-bottom: 1px solid #444;
+    color: black;
     display: flex;
     height: 32px;
     left: 0;
@@ -222,36 +223,53 @@ h6:not(:first-child) {
     display: inline-block;
 }
 .toolbar_item {
-    align-items: center;
-    background-color: white;
-    color: black;
-    cursor: pointer;
-    display: flex;
-    padding: 0 10px;
     position: relative;
-    z-index: 1001;
+    padding: 6px 12px;
+    cursor: pointer;
+    user-select: none;
+}
+.toolbar_item:hover,
+.menu_item:hover {
+    background: black;
+    color: white;
+}
+.toolbar_item:hover > .toolbar_menu {
+    display: block;
 }
 .toolbar_menu {
-    background: white;
-    border: 1px solid black;
-    display: none;
-    min-width: 180px;
-    left: 0;
     position: absolute;
+    display: none;
+
     top: 100%;
-    z-index: 1001;
+    left: 0;
+
+    min-width: 180px;
+
+    background: white;
+    border: 1px solid #222;
+    color: black;
+
+    z-index: 1000;
 }
-.toolbar_menu.open {
-    display: flex;
-    flex-direction: column;
+.toolbar_menu.submenu {
+    top: 0;
+    left: 100%;
 }
-.toolbar_menu > .toolbar_item {
-    padding: 3px 10px;
+.menu_item {
+    background: white;
+    color: black;
+    position: relative;
+    padding: 6px 12px;
+    white-space: nowrap;
 }
-.toolbar_menu > .toolbar_item:hover,
-#toolbar > .toolbar_item:hover {
-    background-color: black;
+.menu_item:hover > .submenu {
+    display: block;
+}
+.menu_separator {
+    height: 1px;
+    background: black;
     color: white;
+    margin: 4px 0;
 }
 .upload_button {
     background: #f5f5f5;

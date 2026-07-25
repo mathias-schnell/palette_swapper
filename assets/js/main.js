@@ -18,25 +18,36 @@ function initialize_app() {
 }
 
 function bind_events() {
-    document.getElementById('image_upload').addEventListener('change', (e) => image.load_source_image(e, () => ui.refresh_ui() ));
-    document.getElementById('target_upload').addEventListener('change', (e) => image.load_target_image(e, () => ui.refresh_ui() ));
+    const sidebar = document.getElementById('sidebar');
+    const toolbar = document.getElementById('toolbar');
+    const source_upload = toolbar.querySelector('#source_upload');
+    const palette_upload = toolbar.querySelector('#palette_upload');
+    const actions = {
+        load_source         : () => source_upload.click(),
+        load_palette        : () => palette_upload.click(),
+        flip_h              : () => ui.flip_image_horizontal(),
+        flip_v              : () => ui.flip_image_vertical(),
+        rotate_90cw         : () => ui.rotate_image(90),
+        rotate_90ccw        : () => ui.rotate_image(-90),
+        rotate_180          : () => ui.rotate_image(180),
+        export_png          : () => image.export_image('untitled.png', 'image/png'),
+        export_jpg          : () => image.export_image('untitled.jpg', 'image/jpeg'),
+        export_gif          : () => image.export_image('untitled.gif', 'image/gif')
+    };
 
     /* sidebar bindings */
-    const sidebar = document.getElementById('sidebar');
     sidebar.querySelector('#zoom_up').addEventListener('click', () => ui.zoom_image(0.25));
     sidebar.querySelector('#zoom_down').addEventListener('click', () => ui.zoom_image(-0.25));
     sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
 
     /* toolbar bindings */
-    const toolbar = document.getElementById('toolbar');
-    toolbar.querySelector('#load_source_image').addEventListener('click', () => document.getElementById('image_upload').click());
-    toolbar.querySelector('#load_target_palette').addEventListener('click', () => document.getElementById('target_upload').click());
-    toolbar.querySelector('#rotate_90cw').addEventListener('click', () => ui.rotate_image(90));
-    toolbar.querySelector('#rotate_90ccw').addEventListener('click', () => ui.rotate_image(-90));
-    toolbar.querySelector('#rotate_180').addEventListener('click', () => ui.rotate_image(180));
-    toolbar.querySelector('#flip_horizontal').addEventListener('click', () => ui.flip_image_horizontal());
-    toolbar.querySelector('#flip_vertical').addEventListener('click', () => ui.flip_image_vertical());
-    toolbar.querySelector('#export_image').addEventListener('click', () => image.export_image());
+    source_upload.addEventListener('change', (e) => image.load_source_image(e, () => ui.refresh_ui() ));
+    palette_upload.addEventListener('change', (e) => image.load_target_image(e, () => ui.refresh_ui() ));
+    toolbar.addEventListener('click', (e) => {
+        const action = e.target.dataset.action;
+        if(!action) return;
+        actions[action]?.();
+    });
     document.addEventListener('click', ui.close_all_menus);
 
     document.addEventListener('click', (e) => {
@@ -75,12 +86,6 @@ function bind_events() {
             element.dataset.panel === 'close' ? ui.close_sidebar() : ui.open_sidebar(element.dataset.panel); 
         })
     );
-    document.querySelectorAll('.toolbar_item[data-menu]').forEach(element => {
-        element.addEventListener('click', e => { 
-            e.stopPropagation();
-            ui.open_menu(`menu_${element.dataset.menu}`);
-        });
-    });
     document.querySelectorAll('[data-tooltip]').forEach(element => {
         const tooltip = document.getElementById('tooltip');
         let tooltip_timer = null;
