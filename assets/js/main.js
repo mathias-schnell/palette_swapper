@@ -8,15 +8,25 @@ import * as image from "./image_utils.js";
 import * as ui from "./ui_utils.js";
 import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
+let demo_mode = false;
+
+/* try our best to ensure that everything starts after the DOM has loaded */
 window.addEventListener("DOMContentLoaded", () => {
+    demo_mode = document.getElementById("demo_css") ? true : false;
+    if(demo_mode) {
+        image.load_source("/assets/demo/demo_source.png", () => ui.refresh_ui() );
+        image.load_target("/assets/demo/demo_palette.png", () => ui.refresh_ui() );
+    }
     initialize_app();
 });
 
+/* all the initialization that is required before the app is properly used */
 function initialize_app() {
     ui_cache_init();
     bind_events();
 }
 
+/* all the event binding that needs to happen to make the UI behave as it should */
 function bind_events() {
     const sidebar = document.getElementById('sidebar');
     const toolbar = document.getElementById('toolbar');
@@ -41,8 +51,8 @@ function bind_events() {
     sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
 
     /* toolbar bindings */
-    source_upload.addEventListener('change', (e) => image.load_source_image(e, () => ui.refresh_ui() ));
-    palette_upload.addEventListener('change', (e) => image.load_target_image(e, () => ui.refresh_ui() ));
+    source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0], () => ui.refresh_ui() ));
+    palette_upload.addEventListener('change', (e) => image.load_target(e.target.files[0], () => ui.refresh_ui() ));
     toolbar.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
         if(!action) return;

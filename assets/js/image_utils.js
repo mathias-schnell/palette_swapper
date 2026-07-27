@@ -36,46 +36,47 @@ export function export_image(filename = "project.png", filetype = "image/png") {
     link.click();
 }
 
-export function load_source_image(e, callback) {
-    const file = e.target.files[0];
-    if (!file) return;
+export function load_source(source, callback) {
+    if (source?.target?.files) source = source.target.files[0];
+    if (!source) return;
 
-    const reader = new FileReader();
-    reader.onload = event => {
-        const src = {
-            image: new Image(),
-            palette: {}
-        };
-        src.image.onload = () => {
-            src.palette = extract_palette(src.image);
-            app.update_source(src);
-            [ui_cache.canvas.width, ui_cache.canvas.height] = [src.image.naturalWidth, src.image.naturalHeight];
-            ui_cache.canvas.style.display = "block";
-            callback?.()
-        };
-        src.image.src = event.target.result;
+    const src = { image: new Image(), palette: {} };
+    src.image.crossOrigin = "Anonymous";
+    src.image.onload = () => {
+        src.palette = extract_palette(src.image);
+        app.update_source(src);
+        [ui_cache.canvas.width, ui_cache.canvas.height] = [src.image.naturalWidth, src.image.naturalHeight];
+        ui_cache.canvas.style.display = "block";
+        if (source instanceof File || source instanceof Blob) { URL.revokeObjectURL(src.image.src); }
+        callback?.();
     };
-    reader.readAsDataURL(file);
+    src.image.onerror = () => { console.error("Failed to load image from source:", source); };
+
+    if (source instanceof File || source instanceof Blob) {
+        src.image.src = URL.createObjectURL(source);
+    } else if (typeof source === 'string') {
+        src.image.src = source;
+    }
 }
 
-export function load_target_image(e, callback) {
-    const file = e.target.files[0];
-    if (!file) return;
+export function load_target(target, callback) {
+    if (target?.target?.files) target = target.target.files[0];
+    if (!target) return;
 
-    const reader = new FileReader();
-    reader.onload = event => {
-        const tar = {
-            image: new Image(),
-            palette: {}
-        };
-        tar.image.onload = () => {
-            tar.palette = extract_palette(tar.image);
-            app.update_target(tar);
-            callback?.()
-        };
-        tar.image.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
+    const tar = { image: new Image(), palette: {} };
+    tar.image.crossOrigin = "Anonymous";
+    tar.image.onload = () => {
+        tar.palette = extract_palette(tar.image);
+        app.update_target(tar);
+        if (target instanceof File || target instanceof Blob) { URL.revokeObjectURL(tar.image.src); }
+        callback?.()
+    }
+
+    if (target instanceof File || target instanceof Blob) {
+        tar.image.src = URL.createObjectURL(target);
+    } else if (typeof target === 'string') {
+        tar.image.src = target;
+    }
 }
 
 function extract_palette(image) {

@@ -228,6 +228,9 @@ h6:not(:first-child) {
     cursor: pointer;
     user-select: none;
 }
+.toolbar_item.has_submenu::after {
+    content: '\2BC8';
+}
 .toolbar_item:hover,
 .menu_item:hover {
     background: black;
