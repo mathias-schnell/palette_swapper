@@ -30,6 +30,12 @@ export function rotate_image(degrees) {
     canvas.render();
 }
 
+export function activate_toolbar_menus() {
+    ui_cache.toolbar.querySelectorAll("[aria-disabled='true']").forEach((el) => {
+        el.ariaDisabled = false;
+    });
+}
+
 export function change_swatch_color(swatch_row, target_hex) {
     swatch_row.dataset.target = target_hex;
     swatch_row.querySelector('.target_swatch').style.background = `#${target_hex}`;
@@ -48,7 +54,6 @@ export function close_sidebar() {
 }
 
 export function open_menu(menu_id) {
-    console.log("Opening menu:", menu_id);
     document.getElementById(menu_id).classList.add('open');
 }
 

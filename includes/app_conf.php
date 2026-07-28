@@ -25,4 +25,5 @@
         ],
         'Palette' => []
     ];
+    $toolbar_no_disable = [ 'load_source', 'load_palette' ];
     $workspace_conf = [];

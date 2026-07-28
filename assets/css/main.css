@@ -228,9 +228,6 @@ h6:not(:first-child) {
     cursor: pointer;
     user-select: none;
 }
-.toolbar_item.has_submenu::after {
-    content: '\2BC8';
-}
 .toolbar_item:hover,
 .menu_item:hover {
     background: black;
@@ -239,24 +236,30 @@ h6:not(:first-child) {
 .toolbar_item:hover > .toolbar_menu {
     display: block;
 }
+.toolbar_item.has_submenu::after {
+    content: '\2BC8';
+}
+.toolbar_item .toolbar_item[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none; 
+}
 .toolbar_menu {
     position: absolute;
-    display: none;
-
-    top: 100%;
     left: 0;
-
-    min-width: 180px;
-
+    top: 100%;
+    
     background: white;
     border: 1px solid #222;
     color: black;
-
+    cursor: default;
+    display: none;
+    min-width: 180px;
     z-index: 1000;
 }
 .toolbar_menu.submenu {
-    top: 0;
     left: 100%;
+    top: 0;
 }
 .menu_item {
     background: white;
