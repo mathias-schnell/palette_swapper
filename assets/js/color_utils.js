@@ -13,25 +13,27 @@ const color_dist_funcs = {
     custom: get_distance_oklab
 };
 
-export function find_closest_color(source_hex, palette, method) {
-    if (method === "reset" || method === "custom") return source_hex;
-    const source_rgb = hex_to_rgb(source_hex);
+export function find_closest_color(source, palette, method) {
+    if (method === "reset" || method === "custom") return source;
+    const source_rgb = hex_to_rgb(source);
     let closest_hex = null;
     let closest_distance = Infinity;
-    for (const target_hex of Object.keys(palette)) {
-        const target_rgb = hex_to_rgb(target_hex);
+    for (let key of palette.keys()) {
+        const target_rgb = hex_to_rgb(key);
         const distance = color_dist_funcs[method](source_rgb, target_rgb);
         if (distance < closest_distance) {
             closest_distance = distance;
-            closest_hex = target_hex;
+            closest_hex = key;
         }
     }
     return closest_hex;
 }
 
 export function generate_palette_map(source_palette, target_palette, method) {
-    const map = {};
-    Object.keys(source_palette).forEach(source_hex => map[source_hex] = find_closest_color(source_hex, target_palette, method));
+    const map = new Map();
+    for (const key of source_palette.keys()) {
+        map.set(key, find_closest_color(key, target_palette, method));
+    }
     return map;
 }
 
@@ -62,7 +64,19 @@ export function hex_to_rgb(hex) {
     return [parseInt(hex.substring(0, 2), 16), parseInt(hex.substring(2, 4), 16), parseInt(hex.substring(4, 6), 16)];
 }
 
+export function hex_to_uint32(hex) {
+    const num = parseInt(hex, 16);
+    return ((0xFF << 24) | ((num & 0xFF) << 16) | (((num >> 8) & 0xFF) << 8) | ((num >> 16) & 0xFF)) >>> 0;
+}
+
 export function rgb_to_hex(r, g, b) {
+    return [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+
+export function uint32_to_hex(uint32) {
+    const r = uint32 & 0xFF;
+    const g = (uint32 >> 8) & 0xFF;
+    const b = (uint32 >> 16) & 0xFF;
     return [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 

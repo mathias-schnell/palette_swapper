@@ -67,8 +67,9 @@ export function open_sidebar(panel_id) {
 
 export function populate_palette_selector() {
     ui_cache.palette_selector.replaceChildren();
-    const colors = Object.keys(app.get_target().palette);
-    const size = Math.max(1, Math.ceil(Math.sqrt(colors.length)));
+    const target_palette = app.get_target().palette;
+    const colors = target_palette.keys();
+    const size = Math.max(1, Math.ceil(Math.sqrt(target_palette.size)));
     ui_cache.palette_selector.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     colors.forEach((hex) => {
         const swatch = document.createElement("span");
@@ -117,17 +118,17 @@ export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, 
 export function redraw_palette() {
     const colors = (app.get_mapping().method === "custom" ? app.get_mapping().custom : app.get_mapping().colors);
     ui_cache.palette_container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
-    Object.entries(colors).forEach(([source_hex, target_hex]) => {
+    colors.forEach((tar_hex, source_hex) => {
         const row = ui_cache.palette_row_prime.cloneNode(true);
         row.removeAttribute('id');
         row.classList.toggle("custom_mode", app.get_mapping().method === "custom");
         row.dataset.source = source_hex;
-        row.dataset.target = target_hex;
+        row.dataset.target = tar_hex;
         row.querySelector('.source_swatch').style.background = `#${source_hex}`;
-        row.querySelector('.target_swatch').style.background = `#${target_hex}`;
+        row.querySelector('.target_swatch').style.background = `#${tar_hex}`;
         row.querySelector('.source_hex').textContent = `#${source_hex}`;
-        row.querySelector('.target_hex').textContent = `#${target_hex}`;
-        if (app.get_mapping().locked[source_hex]) {
+        row.querySelector('.target_hex').textContent = `#${tar_hex}`;
+        if (app.get_mapping().locked.get(source_hex)) {
             row.querySelector('.lock_button').classList.toggle('locked', true);
             row.querySelector('.lock_button').classList.toggle('unlocked', false);
         }
@@ -142,15 +143,15 @@ export function update_palette_map() {
     let colors = app.get_mapping().colors;
     let custom = app.get_mapping().custom;
     
-    if (Object.keys(custom).length === 0) {
+    if (custom.size === 0) {
         custom = structuredClone(colors);
     }
-    Object.entries(new_map).forEach(([source_hex, target_hex]) => {
-        if (locked[source_hex]) {
-            new_map[source_hex] = locked[source_hex];
-            custom[source_hex] = locked[source_hex];
+    for (const key of new_map.keys()) {
+        if(locked.has(key)) {
+            new_map.set(key, locked.get(key));
+            custom.set(key, locked.get(key));
         }
-    });
+    }
     colors = new_map;
     app.update_mapping({colors: colors, custom: custom, method: method});
 }

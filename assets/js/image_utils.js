@@ -6,15 +6,14 @@
 import * as app from "./app.js";
 import * as color from "./color_utils.js";
 import { ui_cache } from "./ui_cache.js";
-import { redraw_palette } from "./ui_utils.js";
 
 export function apply_palette(image_data, palette) {
-    const pixels = image_data.data;
-    for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] === 0) continue;
-        const replacement = palette[color.rgb_to_hex(pixels[i], pixels[i + 1], pixels[i + 2])];
-        if (!replacement) continue;
-        [pixels[i], pixels[i + 1], pixels[i + 2]] = color.hex_to_rgb(replacement);
+    const buffer = new Uint32Array(image_data.data.buffer);
+    for (let i = 0; i < buffer.length; i++) {
+        if ((buffer[i] & 0xFF000000) === 0) continue;
+        const key = color.uint32_to_hex(buffer[i]);
+        const replacement = palette.get(key);
+        if (replacement !== undefined) buffer[i] = color.hex_to_uint32(replacement);
     }
 }
 
@@ -40,7 +39,7 @@ export function load_source(source, callback) {
     if (source?.target?.files) source = source.target.files[0];
     if (!source) return;
 
-    const src = { image: new Image(), palette: {} };
+    const src = { image: new Image(), palette: new Map() };
     src.image.crossOrigin = "Anonymous";
     src.image.onload = () => {
         src.palette = extract_palette(src.image);
@@ -63,7 +62,7 @@ export function load_target(target, callback) {
     if (target?.target?.files) target = target.target.files[0];
     if (!target) return;
 
-    const tar = { image: new Image(), palette: {} };
+    const tar = { image: new Image(), palette: new Map() };
     tar.image.crossOrigin = "Anonymous";
     tar.image.onload = () => {
         tar.palette = extract_palette(tar.image);
@@ -81,14 +80,12 @@ export function load_target(target, callback) {
 
 function extract_palette(image) {
     const { canvas, ctx } = image_to_canvas(image);
-    const palette = {};
-    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-    for (let i = 0; i < pixels.length; i += 4) {
-        if (pixels[i + 3] === 0) continue;
-        const hex = color.rgb_to_hex(pixels[i], pixels[i + 1], pixels[i + 2]);
-        if (!palette[hex]) palette[hex] = 0;
-        palette[hex]++;
+    const palette = new Map();
+    const buffer = new Uint32Array(ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer);
+    for (let i = 0; i < buffer.length; i ++) {
+        if ((buffer[i] & 0xFF000000) === 0) continue;
+        const key = color.uint32_to_hex(buffer[i]);
+        palette.set(key, (palette.get(key) || 0) + 1);
     }
     return palette;
 }

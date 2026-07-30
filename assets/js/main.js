@@ -65,28 +65,32 @@ function bind_events() {
         ui.toggle_floating_element(ui_cache.palette_selector, true);
     });
     document.getElementById('palette_container').addEventListener('click', (e) => {
-        if(!e.target.matches('.target_hex_select_button')) return;
-        ui.position_floating_element(e.target, ui_cache.palette_selector, 'top');
-        ui.toggle_floating_element(ui_cache.palette_selector);
-        ui_cache.palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
-    });
-    document.getElementById('palette_container').addEventListener('click', (e) => {
-        if(!e.target.matches('.lock_button')) return;
-        e.target.classList.toggle('locked');
-        e.target.classList.toggle('unlocked');
-        if(e.target.classList.contains('locked')) {
-            app.set_lock(e.target.closest("[data-source]").dataset.source, e.target.closest("[data-target]").dataset.target);
-        } else {
-            app.remove_lock(e.target.closest("[data-source]").dataset.source);
+        if(e.target.matches('.target_hex_select_button')) {
+            ui.position_floating_element(e.target, ui_cache.palette_selector, 'top');
+            ui.toggle_floating_element(ui_cache.palette_selector);
+            ui_cache.palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
+        } else if(e.target.matches('.lock_button')) {
+            e.target.classList.toggle('locked');
+            e.target.classList.toggle('unlocked');
+
+            const source = e.target.closest("[data-source]").dataset.source;
+            if(e.target.classList.contains('locked')) {
+                const target = e.target.closest("[data-target]").dataset.target;
+                app.set_lock(source, target);
+            } else {
+                app.remove_lock(source);
+            }
         }
     });
     document.getElementById('target_hex_select_list').addEventListener('click', (e) => {
         if(!e.target.matches('.swatch')) return;
-        let row = document.querySelector("[data-source*='" + ui_cache.palette_selector.dataset.source + "']:not(#" + ui_cache.palette_selector.getAttribute('id') + ")");
+        const source = ui_cache.palette_selector.dataset.source;
+        const id = ui_cache.palette_selector.getAttribute('id');
+        let row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
         let colors = app.get_mapping().custom;
         ui.change_swatch_color(row, e.target.dataset.target);
         ui.toggle_floating_element(ui_cache.palette_selector);
-        colors[ui_cache.palette_selector.dataset.source] = e.target.dataset.target;
+        colors.set(ui_cache.palette_selector.dataset.source, e.target.dataset.target);
         app.update_mapping({custom: colors});
         ui_cache.palette_selector.dataset.source = null;
         ui.refresh_ui(false, false, true, false);
