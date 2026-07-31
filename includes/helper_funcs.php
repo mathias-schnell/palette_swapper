@@ -1,5 +1,5 @@
 <?php
-    function menu_to_html($name, $item, $depth = 1, $do_not_disable = []) {
+    function menu_to_html($name, $item, $depth = 0, $do_not_disable = []) {
         if(strcmp($name, '---') === 0) return "<div class='menu_separator'></div>";
 
         $outer_end = $inner = $id = $action = "";
@@ -10,7 +10,7 @@
         if(!empty($item)):
             if(is_array($item)):
                 $id = str_replace(" ", "_", strtolower($name)) . "_menu";
-                if($depth <= 1):
+                if($depth <= 0):
                     $classes[] = "has_menu";
                     $outer_start .= " <div class='toolbar_menu'>";
                 else:
@@ -19,7 +19,7 @@
                 endif;
                 $outer_end = "</div>";
                 foreach($item as $subname => $subitem):
-                    $inner .= menu_to_html($subname, $subitem, $depth + 1, $do_not_disable);
+                    $inner .= " " . menu_to_html($subname, $subitem, $depth + 1, $do_not_disable);
                 endforeach;
             else:
                 $id = str_replace(" ", "_", strtolower($item));
@@ -28,7 +28,7 @@
         endif;
         $class_str = "class='" . implode(" ", $classes) . "'";
 
-        if(in_array($action, $do_not_disable)):
+        if(in_array($action, $do_not_disable) || $depth <= 0):
             $disabled = "false";
         endif;
 

@@ -2,6 +2,23 @@
 
 ---
 
+## [0.7.2] - 2026-07-30
+
+### Added
+- Javascript Custom Events implemented.
+
+### Fixed
+- UI won't refresh immediately on app start in Demo Mode. Should stop or reduce occurence of a canvas bug.
+
+### Internal
+- Demo Mode logic moved slightly for better organization and to prevent possible errors.
+- Removed callbacks from `load_source` and `load_target` functions in `image_utils.js`. Replaced with Custom Events.
+- `main.js` listens for Custom Events from image upload functions to trigger other things.
+- Tooltip binding logic moved into a new function inside `ui_utils.js`.
+- New UI function added to `ui_utils.js` to enable toolbar items and their parent elements.
+
+---
+
 ## [0.7.1] - 2026-07-30
 
 ### Changed
@@ -13,6 +30,8 @@
 - Cleaned up bindings in all categories so most are defined by a list of actions and `data-action` attributes when possible
 - Moved some logic from within `main.js` to `ui_utils.js` to further condense `main.js`
 - All actions in the lists have access to an `e` variable now to pass along to the internal functions where `e` is the event that activated the action
+
+---
 
 ## [0.7.0] - 2026-07-29
 

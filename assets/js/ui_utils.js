@@ -36,6 +36,18 @@ export function activate_toolbar_menus() {
     });
 }
 
+export function bind_tooltip(el) {
+    const tooltip = ui_cache.tooltip;
+    el.addEventListener('mouseenter', (e) => {
+        tooltip.textContent = e.target.dataset.tooltip;
+        position_floating_element(e.target, tooltip);
+        toggle_floating_element(tooltip);
+    });
+    el.addEventListener('mouseleave', (e) => {
+        toggle_floating_element(tooltip, true);
+    });
+}
+
 export function change_swatch_color(swatch_row, target_hex) {
     swatch_row.dataset.target = target_hex;
     swatch_row.querySelector('.target_swatch').style.background = `#${target_hex}`;
@@ -51,6 +63,16 @@ export function close_sidebar() {
     document.querySelectorAll('.sidebar_panel').forEach(
         panel => panel.classList.remove('open')
     );
+}
+
+export function enable_toolbar_items(toolbar, items) {
+    Object.values(items).forEach((id) => {
+        let el = toolbar.querySelector(`#${id}`);
+        while (el && el != toolbar) {
+            el.ariaDisabled = "false";
+            el = el.parentElement.closest(".toolbar_item");
+        }
+    });
 }
 
 export function lock_color(e) {

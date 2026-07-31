@@ -8,45 +8,31 @@ import * as image from "./image_utils.js";
 import * as ui from "./ui_utils.js";
 import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
-let demo_mode = false;
-
 /* try our best to ensure that everything starts after the DOM has loaded */
 window.addEventListener("DOMContentLoaded", () => {
-    demo_mode = document.getElementById("demo_css") ? true : false;
-    if(demo_mode) {
-        image.load_source("/assets/demo/demo_source.png", () => ui.refresh_ui() );
-        image.load_target("/assets/demo/demo_palette.png", () => ui.refresh_ui() );
-    }
-    initialize_app();
+    const demo_mode = document.getElementById("demo_css") ? true : false;
+    initialize_app(demo_mode);
 });
 
 /* all the initialization that is required before the app is properly used */
-function initialize_app() {
+function initialize_app(demo_mode = false) {
     ui_cache_init();
     bind_toolbar_events();
     bind_sidebar_events();
     bind_global_events();
+
+    if(demo_mode) {
+        image.load_source("/assets/demo/demo_source.png", (e) => ui.refresh_ui() );
+        image.load_target("/assets/demo/demo_palette.png", (e) => ui.refresh_ui() );
+    }
 }
 
 /* binding for all events that affect the entire app */
 function bind_global_events() {
-    document.addEventListener('click', ui.close_all_menus);
-    document.querySelectorAll('[data-tooltip]').forEach(e => {
-        const tooltip = ui_cache.tooltip;
-        let tooltip_timer = null;
-        e.addEventListener('mouseenter', (e) => {
-            tooltip.textContent = e.target.dataset.tooltip;
-            ui.position_floating_element(e.target, tooltip);
-            ui.toggle_floating_element(tooltip);
-        });
-        e.addEventListener('mouseleave', (e) => {
-            ui.toggle_floating_element(tooltip, true);
-        });
-    });
-
-    ui_cache.palette_selector.addEventListener('click', (e) => {
-        ui.set_custom_color(e.target);
-    });
+    document.addEventListener('click', (e) => ui.close_all_menus());
+    document.addEventListener('image_upload', (e) => ui.refresh_ui());
+    document.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(el));
+    ui_cache.palette_selector.addEventListener('click', (e) => ui.set_custom_color(e.target));
 }
 
 /* binding for all events specific to the sidebar */
@@ -63,7 +49,7 @@ function bind_sidebar_events() {
         toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target)
     };
 
-    sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
+    sidebar.querySelector('#color_map_method').addEventListener('change', (e) => ui.refresh_ui());
     sidebar.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
         if(action) {
@@ -91,12 +77,26 @@ function bind_toolbar_events() {
         export_jpg          : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
         export_gif          : (e) => image.export_image('untitled.gif', 'image/gif')
     };
+    const source_toolbar_items = [
+        'export_png', 
+        'export_jpg', 
+        'export_gif', 
+        'flip_h', 
+        'flip_v', 
+        'rotate_90cw', 
+        'rotate_90ccw', 
+        'rotate_180'
+    ];
 
     source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0], () => ui.refresh_ui() ));
     palette_upload.addEventListener('change', (e) => image.load_target(e.target.files[0], () => ui.refresh_ui() ));
     toolbar.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
-        if(!action) return;
-        actions[action]?.(e);
+        if(action) actions[action]?.(e);
+    });
+    document.addEventListener('image_upload', (e) => {
+        if(e.detail.type === "source") {
+            ui.enable_toolbar_items(toolbar, source_toolbar_items); 
+        }
     });
 }

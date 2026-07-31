@@ -35,7 +35,7 @@ export function export_image(filename = "project.png", filetype = "image/png") {
     link.click();
 }
 
-export function load_source(source, callback) {
+export function load_source(source) {
     if (source?.target?.files) source = source.target.files[0];
     if (!source) return;
 
@@ -47,7 +47,7 @@ export function load_source(source, callback) {
         [ui_cache.canvas.width, ui_cache.canvas.height] = [src.image.naturalWidth, src.image.naturalHeight];
         ui_cache.canvas.style.display = "block";
         if (source instanceof File || source instanceof Blob) { URL.revokeObjectURL(src.image.src); }
-        callback?.();
+        document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "source" } }));
     };
     src.image.onerror = () => { console.error("Failed to load image from source:", source); };
 
@@ -58,7 +58,7 @@ export function load_source(source, callback) {
     }
 }
 
-export function load_target(target, callback) {
+export function load_target(target) {
     if (target?.target?.files) target = target.target.files[0];
     if (!target) return;
 
@@ -68,7 +68,7 @@ export function load_target(target, callback) {
         tar.palette = extract_palette(tar.image);
         app.update_target(tar);
         if (target instanceof File || target instanceof Blob) { URL.revokeObjectURL(tar.image.src); }
-        callback?.()
+        document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "target" } }));
     }
 
     if (target instanceof File || target instanceof Blob) {
