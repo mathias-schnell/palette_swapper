@@ -42,7 +42,7 @@ export function update_target(data) { Object.assign(app.target, data); }
 export function update_transforms(data) { Object.assign(app.transforms, data); }
 
 /* specialized functions for interacting with the app state */
-export function remove_lock(source) { delete app.mapping.locked.delete(source); }
+export function remove_lock(source) { app.mapping.locked.delete(source); }
 export function remove_transform(name) { delete app.transforms[name]; }
 export function set_lock(source, target) { app.mapping.locked.set(source, target); }
 export function set_transform(name, args) { app.transforms[name] = args; }

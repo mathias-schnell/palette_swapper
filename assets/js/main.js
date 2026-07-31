@@ -23,94 +23,80 @@ window.addEventListener("DOMContentLoaded", () => {
 /* all the initialization that is required before the app is properly used */
 function initialize_app() {
     ui_cache_init();
-    bind_events();
+    bind_toolbar_events();
+    bind_sidebar_events();
+    bind_global_events();
 }
 
-/* all the event binding that needs to happen to make the UI behave as it should */
-function bind_events() {
+/* binding for all events that affect the entire app */
+function bind_global_events() {
+    document.addEventListener('click', ui.close_all_menus);
+    document.querySelectorAll('[data-tooltip]').forEach(e => {
+        const tooltip = ui_cache.tooltip;
+        let tooltip_timer = null;
+        e.addEventListener('mouseenter', (e) => {
+            tooltip.textContent = e.target.dataset.tooltip;
+            ui.position_floating_element(e.target, tooltip);
+            ui.toggle_floating_element(tooltip);
+        });
+        e.addEventListener('mouseleave', (e) => {
+            ui.toggle_floating_element(tooltip, true);
+        });
+    });
+
+    ui_cache.palette_selector.addEventListener('click', (e) => {
+        ui.set_custom_color(e.target);
+    });
+}
+
+/* binding for all events specific to the sidebar */
+function bind_sidebar_events() {
     const sidebar = document.getElementById('sidebar');
+    const actions = {
+        zoom_up             : (e) => ui.zoom_image(0.25),
+        zoom_down           : (e) => ui.zoom_image(-0.25),
+        lock_color          : (e) => ui.lock_color(e),
+        image_panel         : (e) => ui.open_sidebar(e.target.dataset.action),
+        palette_panel       : (e) => ui.open_sidebar(e.target.dataset.action),
+        info_panel          : (e) => ui.open_sidebar(e.target.dataset.action),
+        close_panel         : (e) => ui.close_sidebar(),
+        toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target)
+    };
+
+    sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
+    sidebar.addEventListener('click', (e) => {
+        const action = e.target.dataset.action;
+        if(action) {
+            actions[action]?.(e);
+        } else if(!e.target.matches('#target_hex_select_list') && !e.target.matches('.target_hex_select_button')) {
+            ui.toggle_floating_element(ui_cache.palette_selector, true);
+        }
+    });
+}
+
+/* binding for all events specific to the toolbar */
+function bind_toolbar_events() {
     const toolbar = document.getElementById('toolbar');
     const source_upload = toolbar.querySelector('#source_upload');
     const palette_upload = toolbar.querySelector('#palette_upload');
     const actions = {
-        load_source         : () => source_upload.click(),
-        load_palette        : () => palette_upload.click(),
-        flip_h              : () => ui.flip_image_horizontal(),
-        flip_v              : () => ui.flip_image_vertical(),
-        rotate_90cw         : () => ui.rotate_image(90),
-        rotate_90ccw        : () => ui.rotate_image(-90),
-        rotate_180          : () => ui.rotate_image(180),
-        export_png          : () => image.export_image('untitled.png', 'image/png'),
-        export_jpg          : () => image.export_image('untitled.jpg', 'image/jpeg'),
-        export_gif          : () => image.export_image('untitled.gif', 'image/gif')
+        load_source         : (e) => source_upload.click(),
+        load_palette        : (e) => palette_upload.click(),
+        flip_h              : (e) => ui.flip_image_horizontal(),
+        flip_v              : (e) => ui.flip_image_vertical(),
+        rotate_90cw         : (e) => ui.rotate_image(90),
+        rotate_90ccw        : (e) => ui.rotate_image(-90),
+        rotate_180          : (e) => ui.rotate_image(180),
+        export_png          : (e) => image.export_image('untitled.png', 'image/png'),
+        export_jpg          : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
+        export_gif          : (e) => image.export_image('untitled.gif', 'image/gif')
     };
 
-    /* sidebar bindings */
-    sidebar.querySelector('#zoom_up').addEventListener('click', () => ui.zoom_image(0.25));
-    sidebar.querySelector('#zoom_down').addEventListener('click', () => ui.zoom_image(-0.25));
-    sidebar.querySelector('#color_map_method').addEventListener('change', () => ui.refresh_ui());
-
-    /* toolbar bindings */
     source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0], () => ui.refresh_ui() ));
     palette_upload.addEventListener('change', (e) => image.load_target(e.target.files[0], () => ui.refresh_ui() ));
     toolbar.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
         if(!action) return;
-        actions[action]?.();
+        actions[action]?.(e);
     });
-    document.addEventListener('click', ui.close_all_menus);
-
-    document.addEventListener('click', (e) => {
-        if(e.target.matches('#target_hex_select_list') || e.target.matches('.target_hex_select_button')) return;
-        ui.toggle_floating_element(ui_cache.palette_selector, true);
-    });
-    document.getElementById('palette_container').addEventListener('click', (e) => {
-        if(e.target.matches('.target_hex_select_button')) {
-            ui.position_floating_element(e.target, ui_cache.palette_selector, 'top');
-            ui.toggle_floating_element(ui_cache.palette_selector);
-            ui_cache.palette_selector.dataset.source = e.target.closest("[data-source]").dataset.source;
-        } else if(e.target.matches('.lock_button')) {
-            e.target.classList.toggle('locked');
-            e.target.classList.toggle('unlocked');
-
-            const source = e.target.closest("[data-source]").dataset.source;
-            if(e.target.classList.contains('locked')) {
-                const target = e.target.closest("[data-target]").dataset.target;
-                app.set_lock(source, target);
-            } else {
-                app.remove_lock(source);
-            }
-        }
-    });
-    document.getElementById('target_hex_select_list').addEventListener('click', (e) => {
-        if(!e.target.matches('.swatch')) return;
-        const source = ui_cache.palette_selector.dataset.source;
-        const id = ui_cache.palette_selector.getAttribute('id');
-        let row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
-        let colors = app.get_mapping().custom;
-        ui.change_swatch_color(row, e.target.dataset.target);
-        ui.toggle_floating_element(ui_cache.palette_selector);
-        colors.set(ui_cache.palette_selector.dataset.source, e.target.dataset.target);
-        app.update_mapping({custom: colors});
-        ui_cache.palette_selector.dataset.source = null;
-        ui.refresh_ui(false, false, true, false);
-    });
-    document.querySelectorAll('.sidebar_tabs > .sidebar_tab').forEach(
-        element => element.addEventListener('click', () => { 
-            element.dataset.panel === 'close' ? ui.close_sidebar() : ui.open_sidebar(element.dataset.panel); 
-        })
-    );
-    document.querySelectorAll('[data-tooltip]').forEach(element => {
-        const tooltip = document.getElementById('tooltip');
-        let tooltip_timer = null;
-        element.addEventListener('mouseenter', (e) => {
-            tooltip.textContent = e.target.dataset.tooltip;
-            ui.position_floating_element(e.target, tooltip);
-            ui.toggle_floating_element(tooltip);
-        });
-        element.addEventListener('mouseleave', (e) => {
-            ui.toggle_floating_element(tooltip, true);
-        });
-    });
-    
 }

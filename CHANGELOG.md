@@ -2,6 +2,18 @@
 
 ---
 
+## [0.7.1] - 2026-07-30
+
+### Changed
+- Sidebar tabs were changed from having `data-panel` attributes to `data-action` attributes
+- `data-action` attributes also added to zoom buttons, color map method dropdown and color lock icons
+
+### Internal
+- Split event binding logic in main.js into three categories: global, sidebar and toolbar
+- Cleaned up bindings in all categories so most are defined by a list of actions and `data-action` attributes when possible
+- Moved some logic from within `main.js` to `ui_utils.js` to further condense `main.js`
+- All actions in the lists have access to an `e` variable now to pass along to the internal functions where `e` is the event that activated the action
+
 ## [0.7.0] - 2026-07-29
 
 ### Added

@@ -5,15 +5,15 @@
                 <h2>Zoom</h2>
                 <p>
                     <input id="zoom_input" name="zoom" readonly value="1.00">
-                    <button type="button" id="zoom_up">+</button>
-                    <button type="button" id="zoom_down">-</button>
+                    <button type="button" id="zoom_up" data-action="zoom_up">+</button>
+                    <button type="button" id="zoom_down" data-action="zoom_down">-</button>
                 </p>
             </div>
         </div>
         <div id="palette_panel" class="sidebar_panel">
             <div id="color_map_block">
                 <h2>Color Mapping Presets</h2>
-                <select id="color_map_method" name="color_map_method">
+                <select name="color_map_method" id="color_map_method" data-action="color_map_method">
                     <option value="reset">Reset</option>
                     <option value="rgb">RGB</option>
                     <option value="rgb_w">Weighted RGB</option>
@@ -26,14 +26,14 @@
             <h2>Color Palette</h2>
             <div id="palette_container">
                 <div id="palette_row_prime" class="palette_row">
-                    <div class="lock_button unlocked"></div>
+                    <div class="lock_button unlocked" data-action="lock_color"></div>
                     <div class="source_color">
                         <span class="swatch source_swatch"></span><span class="source_hex"></span>
                     </div>
                     →
                     <div class="target_color">
                         <span class="swatch target_swatch"></span><span class="target_hex"></span>
-                        <div class="target_hex_select_button">&#9205;</div>
+                        <div class="target_hex_select_button" data-action="toggle_pal_select">&#9205;</div>
                     </div>
                 </div>
             </div>
@@ -50,12 +50,11 @@
         </div>
     </div>
     <div class="sidebar_tabs">
-        <div class="sidebar_tab" data-panel="image_panel" data-tooltip="Image Settings">🖼</div>
-        <div class="sidebar_tab" data-panel="palette_panel" data-tooltip="Color Palette">🎨</div>
-        <div class="sidebar_tab" data-panel="info_panel" data-tooltip="Image Info">ℹ</div>
-        <div class="sidebar_tab" data-panel="close" data-tooltip="Close">×</div>
+        <div class="sidebar_tab" data-action="image_panel" data-tooltip="Image Settings">🖼</div>
+        <div class="sidebar_tab" data-action="palette_panel" data-tooltip="Color Palette">🎨</div>
+        <div class="sidebar_tab" data-action="info_panel" data-tooltip="Image Info">ℹ</div>
+        <div class="sidebar_tab" data-action="close_panel" data-tooltip="Close">×</div>
     </div>
 </div>
 <div id="target_hex_select_list" class="hidden"></div>
 <div id="tooltip" class="hidden"></div>
-<img src="" id="source_image" name="source_image" alt="Source Image" />

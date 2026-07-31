@@ -53,6 +53,19 @@ export function close_sidebar() {
     );
 }
 
+export function lock_color(e) {
+    e.target.classList.toggle('locked');
+    e.target.classList.toggle('unlocked');
+
+    const source = e.target.closest("[data-source]").dataset.source;
+    if(e.target.classList.contains('locked')) {
+        const target = e.target.closest("[data-target]").dataset.target;
+        app.set_lock(source, target);
+    } else {
+        app.remove_lock(source);
+    }
+}
+
 export function open_menu(menu_id) {
     document.getElementById(menu_id).classList.add('open');
 }
@@ -95,6 +108,20 @@ export function position_floating_element(anchor, float_el, anchor_pt = 'middle'
     float_el.style.top = `${top}px`;
 }
 
+export function set_custom_color(swatch) {
+    if(!swatch.matches('.swatch')) return;
+    const source = ui_cache.palette_selector.dataset.source;
+    const id = ui_cache.palette_selector.getAttribute('id');
+    let row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
+    let colors = app.get_mapping().custom;
+    change_swatch_color(row, swatch.dataset.target);
+    toggle_floating_element(ui_cache.palette_selector);
+    colors.set(ui_cache.palette_selector.dataset.source, swatch.dataset.target);
+    app.update_mapping({custom: colors});
+    ui_cache.palette_selector.dataset.source = null;
+    refresh_ui(false, false, true, false);
+}
+
 export function toggle_floating_element(float_el, force_hide = false, force_show = false) {
     if(force_hide) {
         float_el.classList.add('hidden');
@@ -106,6 +133,12 @@ export function toggle_floating_element(float_el, force_hide = false, force_show
         float_el.classList.toggle('hidden');
         float_el.classList.toggle('visible');
     }
+}
+
+export function toggle_palette_selector(el) {
+    position_floating_element(el, ui_cache.palette_selector, 'top');
+    toggle_floating_element(ui_cache.palette_selector);
+    ui_cache.palette_selector.dataset.source = el.closest("[data-source]").dataset.source;
 }
 
 export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false) {
