@@ -2,6 +2,18 @@
 
 ---
 
+## [0.7.3] - 2026-07-31
+
+### Fixed
+- Image exporting fixed. Some exports weren't exporting the image exactly as seen in the canvas.
+- Palette swapping function should be more optimized and faster.
+
+### Internal
+- Rendering pipeline was made more robust and structured into stages.
+- The app state's storage of transforms was changed to a Javascript Map object instead of a standard object.
+
+---
+
 ## [0.7.2] - 2026-07-30
 
 ### Added
