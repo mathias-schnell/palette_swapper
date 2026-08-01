@@ -9,28 +9,22 @@ import { ui_cache } from "./ui_cache.js";
 
 export function apply_palette(image_data, palette) {
     const buffer = new Uint32Array(image_data.data.buffer);
+    const uint32_palette = new Map();
+    
+    for (const [src_hex, tar_hex] of palette.entries()) {
+        uint32_palette.set(color.hex_to_uint32(src_hex), color.hex_to_uint32(tar_hex));
+    }
+
     for (let i = 0; i < buffer.length; i++) {
         if ((buffer[i] & 0xFF000000) === 0) continue;
-        const key = color.uint32_to_hex(buffer[i]);
-        const replacement = palette.get(key);
-        if (replacement !== undefined) buffer[i] = color.hex_to_uint32(replacement);
+        const replacement = uint32_palette.get(buffer[i]);
+        if (replacement !== undefined) buffer[i] = replacement;
     }
 }
 
 export function export_image(filename = "project.png", filetype = "image/png") {
-    const src = app.get_source();
-    const mapping = app.get_mapping();
-    const canvas = document.createElement("canvas");
-    if(!src.image) return;
-    canvas.width = src.image.naturalWidth;
-    canvas.height = src.image.naturalHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(src.image, 0, 0);
-    const image_data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    apply_palette(image_data, (mapping.method == 'custom' ? mapping.custom : mapping.colors));
-    ctx.putImageData(image_data, 0, 0);
     const link = document.createElement("a");
-    link.href = canvas.toDataURL(filetype);
+    link.href = ui_cache.canvas.toDataURL(filetype);
     link.download = filename;
     link.click();
 }

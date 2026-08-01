@@ -10,23 +10,27 @@ import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
 export function zoom_image(delta) {
-    app.get_transforms()['zoom'] ? app.set_transform('zoom', app.get_transforms()['zoom'] + delta) : app.set_transform('zoom', 1.00 + delta);
+    const zoom = app.get_transforms().get('zoom');
+    zoom ? app.set_transform('zoom', zoom + delta) : app.set_transform('zoom', 1.00 + delta);
     update_scale_ui(delta);
     canvas.render();
 }
 
 export function flip_image_horizontal() {
-    app.get_transforms()['flip_horizontal'] ? app.set_transform('flip_horizontal', !app.get_transforms()['flip_horizontal']) : app.set_transform('flip_horizontal', true);
+    const flip_h = app.get_transforms().get('flip_horizontal');
+    flip_h ? app.set_transform('flip_horizontal', !flip_h) : app.set_transform('flip_horizontal', true);
     canvas.render();
 }
 
 export function flip_image_vertical() {
-    app.get_transforms()['flip_vertical'] ? app.set_transform('flip_vertical', !app.get_transforms()['flip_vertical']) : app.set_transform('flip_vertical', true);
+    const flip_v = app.get_transforms().get('flip_vertical');
+    flip_v ? app.set_transform('flip_vertical', !flip_v) : app.set_transform('flip_vertical', true);
     canvas.render();
 }
 
 export function rotate_image(degrees) {
-    app.get_transforms()['rotate'] ? app.set_transform('rotate', app.get_transforms()['rotate'] + degrees) : app.set_transform('rotate', degrees);
+    const rotate = app.get_transforms().get('rotate');
+    rotate ? app.set_transform('rotate', rotate + degrees) : app.set_transform('rotate', degrees);
     canvas.render();
 }
 

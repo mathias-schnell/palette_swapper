@@ -19,7 +19,7 @@ const app = {
         image: new Image(),
         palette: new Map() // key type - string, value type - number
     },
-    transforms: {}
+    transforms: new Map(),
 };
 
 /* tooltip configuration settings */
@@ -43,6 +43,6 @@ export function update_transforms(data) { Object.assign(app.transforms, data); }
 
 /* specialized functions for interacting with the app state */
 export function remove_lock(source) { app.mapping.locked.delete(source); }
-export function remove_transform(name) { delete app.transforms[name]; }
+export function remove_transform(name) { app.transforms.delete(name); }
 export function set_lock(source, target) { app.mapping.locked.set(source, target); }
-export function set_transform(name, args) { app.transforms[name] = args; }
+export function set_transform(name, args) { app.transforms.set(name, args); }
