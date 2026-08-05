@@ -49,8 +49,8 @@ function build_state(canvas, ctx) {
         ctx             : ctx,
     };
     const zoom = state.transforms.get('zoom') ?? 1;
-    const rotation = state.transforms.get('rotate') ? state.transforms.get('rotate') % 360 : 0;
-    const rotated = Math.abs(rotation % 180) === 90;
+    const rotation = state.transforms.get('rotate') ?? 0;
+    const rotated = rotation % 180 === 90;
     const width = rotated ? state.source.image.naturalHeight * zoom : state.source.image.naturalWidth * zoom;
     const height = rotated ? state.source.image.naturalWidth * zoom : state.source.image.naturalHeight * zoom;
 

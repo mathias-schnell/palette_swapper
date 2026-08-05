@@ -12,6 +12,10 @@
                 'GIF' => 'export_gif'
             ]
         ],
+        'Edit' => [
+            'Undo' => 'undo',
+            'Redo' => 'redo'
+        ],
         'Image' => [
             'Flip' => [
                 'Horizontal' => 'flip_h',
@@ -25,5 +29,5 @@
         ],
         'Palette' => []
     ];
-    $toolbar_no_disable = [ 'load_source', 'load_palette' ];
+    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo' ];
     $workspace_conf = [];

@@ -10,27 +10,22 @@ import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
 export function zoom_image(delta) {
-    const zoom = app.get_transforms().get('zoom');
-    zoom ? app.set_transform('zoom', zoom + delta) : app.set_transform('zoom', 1.00 + delta);
-    update_scale_ui(delta);
+    app.add_to_history({type: 'zoom', value: delta, timestamp: Date.now()});
     canvas.render();
 }
 
 export function flip_image_horizontal() {
-    const flip_h = app.get_transforms().get('flip_horizontal');
-    flip_h ? app.set_transform('flip_horizontal', !flip_h) : app.set_transform('flip_horizontal', true);
+    app.add_to_history({type: 'flip_horizontal', value: true, timestamp: Date.now()});
     canvas.render();
 }
 
 export function flip_image_vertical() {
-    const flip_v = app.get_transforms().get('flip_vertical');
-    flip_v ? app.set_transform('flip_vertical', !flip_v) : app.set_transform('flip_vertical', true);
+    app.add_to_history({type: 'flip_vertical', value: true, timestamp: Date.now()});
     canvas.render();
 }
 
 export function rotate_image(degrees) {
-    const rotate = app.get_transforms().get('rotate');
-    rotate ? app.set_transform('rotate', rotate + degrees) : app.set_transform('rotate', degrees);
+    app.add_to_history({type: 'rotate', value: degrees, timestamp: Date.now()});
     canvas.render();
 }
 
@@ -167,11 +162,12 @@ export function toggle_palette_selector(el) {
     ui_cache.palette_selector.dataset.source = el.closest("[data-source]").dataset.source;
 }
 
-export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false) {
+export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false, skip_usu = false) {
     if (!skip_upm) update_palette_map();
     if (!skip_pps) populate_palette_selector();
     if (!skip_rp) redraw_palette();
     if (!skip_rc) canvas.render();
+    if (!skip_usu) update_scale_ui(app.get_transforms().get('zoom'));
 }
 
 export function redraw_palette() {
@@ -221,7 +217,7 @@ function clamp_to_viewport(x, y, el_rect, vw, vh) {
     return [clampedX, clampedY];
 }
 
-function update_scale_ui(delta) {
-    const zoom_val = parseFloat(ui_cache.zoom.querySelector("#zoom_input").value) + delta;
+function update_scale_ui(zoom_val) {
+    zoom_val = zoom_val ?? 1;
     ui_cache.zoom.querySelector("#zoom_input").value = zoom_val.toFixed(2);
 }

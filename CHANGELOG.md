@@ -1,4 +1,17 @@
 # Changelog
+---
+
+## [0.8.0] - 2026-08-04
+
+### Added
+- A history of actions is now part of the app state and can be interacted with.
+- Zoom in/out/up/down, horizontal and vertical flipping, and image rotation are all recorded in the action history. More actions to be added in later versions.
+- Undo and Redo are implementedm, added to the toolbar and interact with the action history as expected.
+- Keyboard shortcuts are implemented. Currently works with Undo (CTRL+Z), Redo (CTRL+Y), Zoom In (+), Zoom Out(-), Rotate 90 CW(R), Rotate 90 CCW(CTRL+R) and Rotate 180(CTRL+SHIFT+R).
+
+### Internal
+- Some code cleanup and reorganization to ensure that the UI is more consistent and getting its information from the action history first and foremost.
+- Added functions to `app.js` to interact with the action history and rebuild the transformation state everytime a change is made.
 
 ---
 
