@@ -9,25 +9,28 @@
             'Export Image' => [
                 'PNG' => 'export_png',
                 'JPG' => 'export_jpg',
-                'GIF' => 'export_gif'
+                'GIF' => 'export_gif',
             ]
         ],
         'Edit' => [
             'Undo' => 'undo',
-            'Redo' => 'redo'
+            'Redo' => 'redo',
+            '---' => '---',
+            'Zoom In' => 'zoom_in',
+            'Zoom Out' => 'zoom_out',
         ],
         'Image' => [
             'Flip' => [
                 'Horizontal' => 'flip_h',
-                'Vertical' => 'flip_v'
+                'Vertical' => 'flip_v',
             ],
             'Rotate' => [
                 '90° Clockwise' => 'rotate_90cw',
                 '90° Counterclockwise' => 'rotate_90ccw',
-                '180°' => 'rotate_180'
+                '180°' => 'rotate_180',
             ]
         ],
         'Palette' => []
     ];
-    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo' ];
+    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo', 'zoom_in', 'zoom_out' ];
     $workspace_conf = [];

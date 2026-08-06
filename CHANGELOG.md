@@ -1,4 +1,15 @@
 # Changelog
+
+---
+
+## [0.8.1] - 2026-08-05
+
+### Added
+- Zoom controls were added to the "Edit" menu in the toolbar and renamed to "Zoom In" and "Zoom Out".
+
+### Changed
+- Sidebar panels for "Image Settings" and "Image Info" were removed.
+
 ---
 
 ## [0.8.0] - 2026-08-04

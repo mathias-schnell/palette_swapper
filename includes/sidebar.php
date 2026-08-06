@@ -1,15 +1,5 @@
 <div id="sidebar" class="sidebar">
     <div id="sidebar_panel_container" class="sidebar_panel_container">
-        <div id="image_panel" class="sidebar_panel">
-            <div id="zoom_block">
-                <h2>Zoom</h2>
-                <p>
-                    <input id="zoom_input" name="zoom" readonly value="1.00">
-                    <button type="button" id="zoom_up" data-action="zoom_up">+</button>
-                    <button type="button" id="zoom_down" data-action="zoom_down">-</button>
-                </p>
-            </div>
-        </div>
         <div id="palette_panel" class="sidebar_panel">
             <div id="color_map_block">
                 <h2>Color Mapping Presets</h2>
@@ -38,21 +28,9 @@
                 </div>
             </div>
         </div>
-        <div id="info_panel" class="sidebar_panel">
-            <div id="info_dimensions">
-                <h2>Dimensions</h2>
-                <p><span class="source_width">px</span> × <span class="source_height">px</span></p>
-            </div>
-            <div id="info_colors">
-                <h2>Unique Colors</h2>
-                <p><span class="unique_colors"></span></p>
-            </div>
-        </div>
     </div>
     <div class="sidebar_tabs">
-        <div class="sidebar_tab" data-action="image_panel" data-tooltip="Image Settings">🖼</div>
         <div class="sidebar_tab" data-action="palette_panel" data-tooltip="Color Palette">🎨</div>
-        <div class="sidebar_tab" data-action="info_panel" data-tooltip="Image Info">ℹ</div>
         <div class="sidebar_tab" data-action="close_panel" data-tooltip="Close">×</div>
     </div>
 </div>

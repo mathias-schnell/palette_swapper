@@ -9,8 +9,6 @@ import * as ui from "./ui_utils.js";
 import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
 const sidebar_actions = {
-    zoom_up             : (e) => ui.zoom_image(0.25),
-    zoom_down           : (e) => ui.zoom_image(-0.25),
     lock_color          : (e) => ui.lock_color(e),
     image_panel         : (e) => ui.open_sidebar(e.target.dataset.action),
     palette_panel       : (e) => ui.open_sidebar(e.target.dataset.action),
@@ -22,6 +20,8 @@ const sidebar_actions = {
 const toolbar_actions = {
     undo                : (e) => app.regress_history(),
     redo                : (e) => app.advance_history(),
+    zoom_in             : (e) => ui.zoom_image(0.25),
+    zoom_out            : (e) => ui.zoom_image(-0.25),
     load_source         : (e) => source_upload.click(),
     load_palette        : (e) => palette_upload.click(),
     flip_h              : (e) => ui.flip_image_horizontal(),
@@ -41,9 +41,9 @@ const keyboard_shortcuts = {
     "r"             : (e) => toolbar_actions.rotate_90cw(),
     "ctrl+r"        : (e) => toolbar_actions.rotate_90ccw(),
     "ctrl+shift+r"  : (e) => toolbar_actions.rotate_180(),
-    "="             : (e) => sidebar_actions.zoom_up(),
-    "+"             : (e) => sidebar_actions.zoom_up(),
-    "-"             : (e) => sidebar_actions.zoom_down(),
+    "="             : (e) => toolbar_actions.zoom_in(),
+    "+"             : (e) => toolbar_actions.zoom_in(),
+    "-"             : (e) => toolbar_actions.zoom_out(),
 };
 
 /* try our best to ensure that everything starts after the DOM has loaded */
