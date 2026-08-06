@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.8.2] - 2026-08-05
+
+### Removed
+- Deleted `history_utils.js`
+
 ---
 
 ## [0.8.1] - 2026-08-05
