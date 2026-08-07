@@ -8,33 +8,29 @@ import * as image from "./image_utils.js";
 import * as ui from "./ui_utils.js";
 import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
-const history_actions = {
-    history_panel       : (e) => ui.open_history(e.target.dataset.action),
-    close_panel         : (e) => ui.close_history(),
-}
-
 const sidebar_actions = {
     lock_color          : (e) => ui.lock_color(e),
-    palette_panel       : (e) => ui.open_sidebar(e.target.dataset.action),
-    close_panel         : (e) => ui.close_sidebar(),
+    toggle_panel        : (sidebar, tab, action) => ui.toggle_sidebar(sidebar, tab, action),
     toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target),
 };
 
 const toolbar_actions = {
-    undo                : (e) => app.regress_history(),
-    redo                : (e) => app.advance_history(),
-    zoom_in             : (e) => ui.zoom_image(0.25),
-    zoom_out            : (e) => ui.zoom_image(-0.25),
-    load_source         : (e) => source_upload.click(),
-    load_palette        : (e) => palette_upload.click(),
-    flip_h              : (e) => ui.flip_image_horizontal(),
-    flip_v              : (e) => ui.flip_image_vertical(),
-    rotate_90cw         : (e) => ui.rotate_image(90),
-    rotate_90ccw        : (e) => ui.rotate_image(-90),
-    rotate_180          : (e) => ui.rotate_image(180),
-    export_png          : (e) => image.export_image('untitled.png', 'image/png'),
-    export_jpg          : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
-    export_gif          : (e) => image.export_image('untitled.gif', 'image/gif'),
+    undo                    : (e) => app.regress_history(),
+    redo                    : (e) => app.advance_history(),
+    zoom_in                 : (e) => ui.zoom_image(0.25),
+    zoom_out                : (e) => ui.zoom_image(-0.25),
+    load_source             : (e) => source_upload.click(),
+    load_palette            : (e) => palette_upload.click(),
+    flip_h                  : (e) => ui.flip_image_horizontal(),
+    flip_v                  : (e) => ui.flip_image_vertical(),
+    rotate_90cw             : (e) => ui.rotate_image(90),
+    rotate_90ccw            : (e) => ui.rotate_image(-90),
+    rotate_180              : (e) => ui.rotate_image(180),
+    export_png              : (e) => image.export_image('untitled.png', 'image/png'),
+    export_jpg              : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
+    export_gif              : (e) => image.export_image('untitled.gif', 'image/gif'),
+    show_source_palette     : (e) => ui.show_palette_window(app.get_source().palette),
+    show_target_palette     : (e) => ui.show_palette_window(app.get_target().palette),
 };
 
 const keyboard_shortcuts = {
@@ -72,10 +68,9 @@ function initialize_app(demo_mode = false) {
 
 /* binding for all events that affect the entire app */
 function bind_global_events() {
-    document.addEventListener('click', (e) => ui.close_all_menus());
+    document.addEventListener('click', (e) => ui.hide_floating_elements(e) );
     document.addEventListener('image_upload', (e) => ui.refresh_ui());
     document.addEventListener('history_change', (e) => ui.refresh_ui());
-    ui_cache.palette_selector.addEventListener('click', (e) => ui.set_custom_color(e.target));
 }
 
 /* binding for all events specific to the history panel */
@@ -84,8 +79,11 @@ function bind_history_events() {
 
     history.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.history_tooltip, el, 'middle', 'left'));
     history.addEventListener('click', (e) => {
-        const action = e.target.dataset.action;
-        if(action) { history_actions[action]?.(e); }
+        const tab = e.target.closest('.history_tab');
+        if (!tab) return;
+        const action = tab.dataset.action;
+        const panel_id = tab.dataset.panel;
+        if(action) { sidebar_actions[action]?.(history, tab, panel_id); }
     });
 }
 
@@ -106,13 +104,17 @@ function bind_sidebar_events() {
     sidebar.querySelector('#color_map_method').addEventListener('change', (e) => ui.refresh_ui());
     sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.sidebar_tooltip, el));
     sidebar.addEventListener('click', (e) => {
-        const action = e.target.dataset.action;
-        if(action) {
+        const action_node = e.target.closest('[data-action]');
+        if(!action_node) return;
+        const action = action_node.dataset.action;
+        if(action === "toggle_panel") {
+            const tab = e.target.closest('.sidebar_tab');
+            sidebar_actions[action]?.(sidebar, tab, tab.dataset.panel);
+        } else {
             sidebar_actions[action]?.(e);
-        } else if(!e.target.matches('#target_hex_select_list') && !e.target.matches('.target_hex_select_button')) {
-            ui.toggle_floating_element(ui_cache.palette_selector, true);
         }
     });
+    ui_cache.palette_selector.addEventListener('click', (e) => ui.set_custom_color(e.target));
 }
 
 /* binding for all events specific to the toolbar */
@@ -128,7 +130,13 @@ function bind_toolbar_events() {
         'flip_v', 
         'rotate_90cw', 
         'rotate_90ccw', 
-        'rotate_180'
+        'rotate_180',
+        'zoom_in',
+        'zoom_out',
+        'show_source_palette',
+    ];
+    const target_toolbar_items = [
+        'show_target_palette',
     ];
 
     source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0], () => ui.refresh_ui() ));
@@ -140,6 +148,9 @@ function bind_toolbar_events() {
     document.addEventListener('image_upload', (e) => {
         if(e.detail.type === "source") {
             ui.enable_toolbar_items(toolbar, source_toolbar_items); 
+        }
+        if(e.detail.type === "target") {
+            ui.enable_toolbar_items(toolbar, target_toolbar_items); 
         }
     });
 }

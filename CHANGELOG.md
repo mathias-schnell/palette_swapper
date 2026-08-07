@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.8.4] - 2026-08-07
+
+### Added
+- Two new toolbar items: "Show Source Palette" and "Show Target Palette". These will display closeable modal windows that show the full palette of the uploaded source image and the uploaded target palette. You can also mouse over each color to get a readout of the hex color code for that color.
+
+### Changed
+- Lots of styling changes and additions to accommodate the new palette modals.
+- "Color Palette" tab has been renamed to "Color Mapping" and some naming inside also changed.
+- Slight UI tweaks to make tabs look nicer.
+- "DEMO" banner was changed from a diagonal banner to a simple red block in the top-right corner.
+- There are no more "Close" tabs. Tabs will instead toggle open and closed when clicked.
+- Arrows were added to tabs to signify the direction the panels will slide when those tabs are clicked.
+- Toolbar items that are enabled or disabled and their triggers have been updated.
+
+---
+
+## [0.8.3] - 2026-08-06
+
+### Added
+- New sidebar on the right side of the screen with a 'Action History' tab. Opening it will display a panel that shows a user-readable list of the Action History.
+
+### Changed
+- Lots of stylings changed or added to accommodate new history sidebar.
+
+### Internal
+- Lots of adjustments to accommodate new history sidebar and its own tooltips.
+- The history sidebar is stored in its own PHP file called `history.php`.
+- Removed some event bindings that weren't being used anymore.
+
+---
+
 ## [0.8.2] - 2026-08-05
 
 ### Removed

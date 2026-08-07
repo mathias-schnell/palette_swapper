@@ -29,6 +29,9 @@
                 '180°' => 'rotate_180',
             ],
         ],
-        'Palette' => [],
+        'Palette' => [
+            'Show Source Palette' => 'show_source_palette',
+            'Show Target Palette' => 'show_target_palette',
+        ],
     ];
-    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo', 'zoom_in', 'zoom_out' ];
+    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo' ];

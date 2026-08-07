@@ -37,6 +37,15 @@ export function generate_palette_map(source_palette, target_palette, method) {
     return map;
 }
 
+export function get_contrasting_hex_color(hex) {
+    const clean_hex = hex.replace('#', '');
+    const r = parseInt(clean_hex.substring(0, 2), 16);
+    const g = parseInt(clean_hex.substring(2, 4), 16);
+    const b = parseInt(clean_hex.substring(4, 6), 16);
+    const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (brightness >= 128) ? '#222222' : '#f0f0f0';
+}
+
 export function get_distance_hsv(rgb_a, rgb_b) {
     const [h1, s1, v1] = rgb_to_hsv(...rgb_a);
     const [h2, s2, v2] = rgb_to_hsv(...rgb_b);

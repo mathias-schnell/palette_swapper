@@ -80,6 +80,13 @@ export function enable_toolbar_items(toolbar, items) {
     });
 }
 
+export function hide_floating_elements(e) {
+    close_all_menus();
+    if(!e.target.closest('#target_hex_select_list') && !e.target.closest('.target_hex_select_button')) { 
+        toggle_palette_selector(null, true);
+    }
+}
+
 export function lock_color(e) {
     e.target.classList.toggle('locked');
     e.target.classList.toggle('unlocked');
@@ -97,22 +104,11 @@ export function open_menu(menu_id) {
     document.getElementById(menu_id).classList.add('open');
 }
 
-export function open_history(panel_id) {
-    const history = document.getElementById('history');
-    const panels = document.querySelectorAll('.history_panel');
-    const target = document.getElementById(panel_id);
-    history.classList.add('open');
-    panels.forEach(panel => panel.classList.remove('open'));
-    target.classList.add('open');
-}
-
-export function open_sidebar(panel_id) {
-    const sidebar = document.getElementById('sidebar');
-    const panels = document.querySelectorAll('.sidebar_panel');
-    const target = document.getElementById(panel_id);
-    sidebar.classList.add('open');
-    panels.forEach(panel => panel.classList.remove('open'));
-    target.classList.add('open');
+export function toggle_sidebar(sidebar, tab, panel_id) {
+    const panel = document.getElementById(panel_id);
+    sidebar.classList.toggle('open');
+    panel.classList.toggle('open');
+    tab.classList.toggle('open');
 }
 
 export function populate_palette_selector() {
@@ -128,6 +124,51 @@ export function populate_palette_selector() {
         swatch.style.backgroundColor = `#${hex}`;
         ui_cache.palette_selector.appendChild(swatch);
     })
+}
+
+export function show_palette_window(palette) {
+    const pal_window = document.createElement("div");
+    const close_btn = document.createElement("button");
+    const grid_container = document.createElement("div");
+    const hex_container = document.createElement("div");
+    const hex_text = document.createElement("span");
+    const colors = palette.keys();
+    const size = Math.max(1, Math.ceil(Math.sqrt(palette.size)));
+
+    document.querySelector(".palette_window")?.remove();
+
+    hex_text.classList.add("palette_hex");
+    hex_text.textContent = `#FFFFFF`;
+    hex_container.classList.add("palette_hex_container");
+    hex_container.appendChild(hex_text);
+    pal_window.classList.add("palette_window");
+    pal_window.appendChild(hex_container);
+    grid_container.classList.add("palette_grid");
+    grid_container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    close_btn.classList.add("palette_close_btn");
+
+    close_btn.innerHTML = "&times;";
+    close_btn.addEventListener("click", () => {
+        pal_window.remove();
+    });
+    pal_window.appendChild(close_btn);
+
+    colors.forEach((hex) => {
+        const swatch = document.createElement("span");
+        swatch.classList.add("swatch");
+        swatch.style.backgroundColor = `#${hex}`;
+        swatch.addEventListener("mouseenter", () => {
+            const bg = color.get_contrasting_hex_color(hex);
+            hex_container.style.backgroundColor = `${bg}`
+            hex_text.style.color = `#${hex}`;
+            hex_text.style.opacity = 1;
+            hex_text.textContent = `#${hex}`;
+        });
+        grid_container.appendChild(swatch);
+    })
+
+    pal_window.appendChild(grid_container);
+    document.body.appendChild(pal_window);
 }
 
 export function set_custom_color(swatch) {
@@ -157,10 +198,14 @@ export function toggle_floating_element(float_el, force_hide = false, force_show
     }
 }
 
-export function toggle_palette_selector(el) {
-    position_floating_element(el, ui_cache.palette_selector, 'top');
-    toggle_floating_element(ui_cache.palette_selector);
-    ui_cache.palette_selector.dataset.source = el.closest("[data-source]").dataset.source;
+export function toggle_palette_selector(el, force_hide = false, force_show = false) {
+    if(el) {
+        const source = el.closest("[data-source]")?.dataset.source;
+        if(source) { ui_cache.palette_selector.dataset.source = source; }
+        if(!force_hide) { position_floating_element(el, ui_cache.palette_selector, 'top'); }
+    }
+    toggle_floating_element(ui_cache.palette_selector, force_hide, force_show);
+    
 }
 
 export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false, skip_rh = false) {
