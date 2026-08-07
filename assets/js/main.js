@@ -8,13 +8,16 @@ import * as image from "./image_utils.js";
 import * as ui from "./ui_utils.js";
 import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
+const history_actions = {
+    history_panel       : (e) => ui.open_history(e.target.dataset.action),
+    close_panel         : (e) => ui.close_history(),
+}
+
 const sidebar_actions = {
     lock_color          : (e) => ui.lock_color(e),
-    image_panel         : (e) => ui.open_sidebar(e.target.dataset.action),
     palette_panel       : (e) => ui.open_sidebar(e.target.dataset.action),
-    info_panel          : (e) => ui.open_sidebar(e.target.dataset.action),
     close_panel         : (e) => ui.close_sidebar(),
-    toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target)
+    toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target),
 };
 
 const toolbar_actions = {
@@ -31,7 +34,7 @@ const toolbar_actions = {
     rotate_180          : (e) => ui.rotate_image(180),
     export_png          : (e) => image.export_image('untitled.png', 'image/png'),
     export_jpg          : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
-    export_gif          : (e) => image.export_image('untitled.gif', 'image/gif')
+    export_gif          : (e) => image.export_image('untitled.gif', 'image/gif'),
 };
 
 const keyboard_shortcuts = {
@@ -57,6 +60,7 @@ function initialize_app(demo_mode = false) {
     ui_cache_init();
     bind_toolbar_events();
     bind_sidebar_events();
+    bind_history_events();
     bind_global_events();
     bind_keyboard_events();
 
@@ -71,8 +75,18 @@ function bind_global_events() {
     document.addEventListener('click', (e) => ui.close_all_menus());
     document.addEventListener('image_upload', (e) => ui.refresh_ui());
     document.addEventListener('history_change', (e) => ui.refresh_ui());
-    document.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(el));
     ui_cache.palette_selector.addEventListener('click', (e) => ui.set_custom_color(e.target));
+}
+
+/* binding for all events specific to the history panel */
+function bind_history_events() {
+    const history = document.getElementById('history');
+
+    history.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.history_tooltip, el, 'middle', 'left'));
+    history.addEventListener('click', (e) => {
+        const action = e.target.dataset.action;
+        if(action) { history_actions[action]?.(e); }
+    });
 }
 
 /* binding for all events tied to keyboard shortcuts */
@@ -90,6 +104,7 @@ function bind_sidebar_events() {
     const sidebar = document.getElementById('sidebar');
 
     sidebar.querySelector('#color_map_method').addEventListener('change', (e) => ui.refresh_ui());
+    sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.sidebar_tooltip, el));
     sidebar.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
         if(action) {

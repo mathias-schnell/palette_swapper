@@ -15,6 +15,7 @@
     <body>
         <?php include_once 'includes/toolbar.php'; ?>
         <?php include_once 'includes/sidebar.php'; ?>
+        <?php include_once 'includes/history.php'; ?>
         <?php include_once 'includes/workspace.php'; ?>
     </body>
 </html>

@@ -60,11 +60,13 @@ export function add_to_history(action) {
     app.history.actions.push(action);
     advance_history();
 }
+
 export function clear_history() {
     app.history.actions = [];
     app.history.current = -1;
     rebuild_transforms();
 }
+
 export function remove_from_history(index = null) {
     index = (index ?? app.history.current);
     if(index >= 0) {
@@ -72,6 +74,7 @@ export function remove_from_history(index = null) {
         regress_history();
     }
 }
+
 function rebuild_transforms() {
     const transforms = new Map();
     for (let i = 0; i <= app.history.current; i++) {
@@ -82,6 +85,7 @@ function rebuild_transforms() {
     app.transforms = transforms;
     document.dispatchEvent(new CustomEvent("history_change", {} ));
 }
+
 function simplify_transform_value(type, curr_val, delta_val) {
     switch (type) {
         case 'zoom':

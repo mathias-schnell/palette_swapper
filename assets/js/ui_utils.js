@@ -10,22 +10,22 @@ import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
 export function zoom_image(delta) {
-    app.add_to_history({type: 'zoom', value: delta, timestamp: Date.now()});
+    app.add_to_history({label: 'Zoom', type: 'zoom', value: delta, timestamp: Date.now()});
     canvas.render();
 }
 
 export function flip_image_horizontal() {
-    app.add_to_history({type: 'flip_horizontal', value: true, timestamp: Date.now()});
+    app.add_to_history({label: 'Flip Horizontal', type: 'flip_horizontal', value: true, timestamp: Date.now()});
     canvas.render();
 }
 
 export function flip_image_vertical() {
-    app.add_to_history({type: 'flip_vertical', value: true, timestamp: Date.now()});
+    app.add_to_history({label: 'Flip Vertical', type: 'flip_vertical', value: true, timestamp: Date.now()});
     canvas.render();
 }
 
 export function rotate_image(degrees) {
-    app.add_to_history({type: 'rotate', value: degrees, timestamp: Date.now()});
+    app.add_to_history({label: 'Rotate', type: 'rotate', value: degrees, timestamp: Date.now()});
     canvas.render();
 }
 
@@ -35,11 +35,10 @@ export function activate_toolbar_menus() {
     });
 }
 
-export function bind_tooltip(el) {
-    const tooltip = ui_cache.tooltip;
+export function bind_tooltip(tooltip, el, anchor_pt, placement, settings = app.tooltip_config) {
     el.addEventListener('mouseenter', (e) => {
         tooltip.textContent = e.target.dataset.tooltip;
-        position_floating_element(e.target, tooltip);
+        position_floating_element(e.target, tooltip, anchor_pt, placement, settings);
         toggle_floating_element(tooltip);
     });
     el.addEventListener('mouseleave', (e) => {
@@ -55,6 +54,13 @@ export function change_swatch_color(swatch_row, target_hex) {
 
 export function close_all_menus() {
     document.querySelectorAll('.toolbar_menu').forEach(menu => menu.classList.remove('open'));
+}
+
+export function close_history() {
+    document.getElementById('history').classList.remove('open');
+    document.querySelectorAll('.history_panel').forEach(
+        panel => panel.classList.remove('open')
+    );
 }
 
 export function close_sidebar() {
@@ -91,10 +97,20 @@ export function open_menu(menu_id) {
     document.getElementById(menu_id).classList.add('open');
 }
 
+export function open_history(panel_id) {
+    const history = document.getElementById('history');
+    const panels = document.querySelectorAll('.history_panel');
+    const target = document.getElementById(panel_id);
+    history.classList.add('open');
+    panels.forEach(panel => panel.classList.remove('open'));
+    target.classList.add('open');
+}
+
 export function open_sidebar(panel_id) {
-    document.getElementById('sidebar').classList.add('open');
+    const sidebar = document.getElementById('sidebar');
     const panels = document.querySelectorAll('.sidebar_panel');
     const target = document.getElementById(panel_id);
+    sidebar.classList.add('open');
     panels.forEach(panel => panel.classList.remove('open'));
     target.classList.add('open');
 }
@@ -112,21 +128,6 @@ export function populate_palette_selector() {
         swatch.style.backgroundColor = `#${hex}`;
         ui_cache.palette_selector.appendChild(swatch);
     })
-}
-
-export function position_floating_element(anchor, float_el, anchor_pt = 'middle', settings = app.tooltip_config) {
-    const rect = anchor.getBoundingClientRect();
-    const el_rect = float_el.getBoundingClientRect();
-    let top;
-    switch(anchor_pt) {
-        case 'top': top = rect.top; break;
-        case 'bottom': top = rect.bottom - el_rect.height; break;
-        default: top = rect.top + (rect.height / 2) - (el_rect.height / 2);
-    }
-    let left = rect.right + settings.offset_x;
-    [left, top] = clamp_to_viewport(left, top, el_rect, window.innerWidth, window.innerHeight);
-    float_el.style.left = `${left}px`;
-    float_el.style.top = `${top}px`;
 }
 
 export function set_custom_color(swatch) {
@@ -162,12 +163,12 @@ export function toggle_palette_selector(el) {
     ui_cache.palette_selector.dataset.source = el.closest("[data-source]").dataset.source;
 }
 
-export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false, skip_usu = false) {
+export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false, skip_rh = false) {
     if (!skip_upm) update_palette_map();
     if (!skip_pps) populate_palette_selector();
     if (!skip_rp) redraw_palette();
     if (!skip_rc) canvas.render();
-    if (!skip_usu) update_scale_ui(app.get_transforms().get('zoom'));
+    if (!skip_rh) refresh_history();
 }
 
 export function redraw_palette() {
@@ -211,13 +212,49 @@ export function update_palette_map() {
     app.update_mapping({colors: colors, custom: custom, method: method});
 }
 
+function refresh_history() {
+    const history = app.get_history();
+    const history_list = document.getElementById('history_list');
+    history_list.replaceChildren();
+    history.actions.forEach((action, index) => {
+        const li = document.createElement('li');
+        li.dataset.action = action.type;
+        li.dataset.index = index;
+        li.textContent = `${action.label}: ${action.value}`;
+        if (index > history.current) {
+            li.classList.add('inactive');
+        } else {
+            li.classList.add('active');
+        }
+        history_list.appendChild(li);
+    });
+}
+
+function position_floating_element(anchor, float_el, anchor_pt = 'middle', placement = 'right', settings = app.tooltip_config) {
+    const rect = anchor.getBoundingClientRect();
+    const el_rect = float_el.getBoundingClientRect();
+    let left, top;
+    switch(anchor_pt) {
+        case 'top': top = rect.top; break;
+        case 'bottom': top = rect.bottom - el_rect.height; break;
+        default: top = rect.top + (rect.height / 2) - (el_rect.height / 2);
+    }
+    switch(placement) {
+        case 'left': left = rect.left - el_rect.width - settings.offset_x; break;
+        default: left = rect.right + settings.offset_x;
+    }
+    [left, top] = clamp_to_viewport(left, top, el_rect, window.innerWidth, window.innerHeight);
+    float_el.style.left = `${left}px`;
+    float_el.style.top = `${top}px`;
+}
+
 function clamp_to_viewport(x, y, el_rect, vw, vh) {
     const clampedX = Math.max(5, Math.min(x, vw - el_rect.width - 5));
     const clampedY = Math.max(5, Math.min(y, vh - el_rect.height - 5));
     return [clampedX, clampedY];
 }
 
-function update_scale_ui(zoom_val) {
+/* function update_scale_ui(zoom_val) {
     zoom_val = zoom_val ?? 1;
     ui_cache.zoom.querySelector("#zoom_input").value = zoom_val.toFixed(2);
-}
+} */

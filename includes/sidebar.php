@@ -35,4 +35,4 @@
     </div>
 </div>
 <div id="target_hex_select_list" class="hidden"></div>
-<div id="tooltip" class="hidden"></div>
+<div id="sidebar_tooltip" class="hidden"></div>

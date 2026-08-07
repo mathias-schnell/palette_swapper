@@ -25,6 +25,39 @@ h6:not(:first-child) {
 }
 
 /* Specific Element Styles */
+#history,
+#sidebar {
+    display: flex;
+    flex-direction: row;
+    
+    position: fixed;
+    top: 32px;
+    transition: transform 0.25s ease;
+    z-index: 1000;
+}
+#history {
+    right: 0;
+    transform: translateX(300px);
+}
+#history.open {
+    transform: translateX(0);
+}
+#history.open .sidebar_panel_container {
+    transform: translateX(0);
+}
+#history_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#history_list li {
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+#history_list li.inactive {
+    color: #888;
+}
 #image_panel input[name="zoom"] {
     margin: 0;
     padding: 0;
@@ -41,15 +74,8 @@ h6:not(:first-child) {
     image-rendering: pixelated;
 }
 #sidebar {
-    display: flex;
-    flex-direction: row;
-    
     left: 0;
-    position: fixed;
-    top: 32px;
     transform: translateX(-300px);
-    transition: transform 0.25s ease;
-    z-index: 1000;
 }
 #sidebar.open {
     transform: translateX(0);
@@ -65,7 +91,8 @@ h6:not(:first-child) {
     display: grid;
 }
 #target_hex_select_list,
-#tooltip {
+#history_tooltip,
+#sidebar_tooltip {
     background: rgba(40, 40, 40, 0.95);
     border-radius: 4px;
     color: white;
@@ -78,13 +105,15 @@ h6:not(:first-child) {
     z-index: 1000;
 }
 #target_hex_select_list.hidden,
-#tooltip.hidden {
+#history_tooltip.hidden,
+#sidebar_tooltip.hidden {
     left: -1000px !important;
     opacity: 0 !important;
     top: -1000px !important;
 }
 #target_hex_select_list.visible,
-#tooltip.visible {
+#history_tooltip.visible,
+#sidebar_tooltip.visible {
     left: -1000px;
     opacity: 1;
     top: -1000px;
@@ -101,7 +130,8 @@ h6:not(:first-child) {
     width: 100%;
     z-index: 1001;
 }
-#tooltip {
+#history_tooltip,
+#sidebar_tooltip {
     pointer-events: none;
 }
 
@@ -158,11 +188,13 @@ h6:not(:first-child) {
     display: inline-block;
     margin-left: -5px;
 }
+.history_tabs,
 .sidebar_tabs {
     display: flex;
     flex-direction: column;
     z-index: 100;
 }
+.history_tab,
 .sidebar_tab {
     background: #f0f0f0;
     border: 1px solid #ccc;
@@ -176,6 +208,7 @@ h6:not(:first-child) {
     justify-content: center;
     z-index: 100;
 }
+.history_panel,
 .sidebar_panel {
     position: relative;
     height: 100vh;
@@ -189,14 +222,22 @@ h6:not(:first-child) {
     scrollbar-gutter: stable;
     z-index: 100;
 }
+.history_panel.open,
 .sidebar_panel.open {
     display: block;
 }
+.history_panel h2,
 .sidebar_panel h2 {
     font-weight: 700;
 }
+.history_panel p,
 .sidebar_panel p {
     margin: 5px 0 10px 0;
+}
+.history_panel_container {
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+    width: 300px;
 }
 .sidebar_panel_container {
     transform: translateX(-300px);

@@ -1,6 +1,5 @@
 <?php
     $demo_mode = true;
-    $sidebar_conf = [];
     $toolbar_conf = [
         'File' => [
             'Load Source Image' => 'load_source',
@@ -10,7 +9,7 @@
                 'PNG' => 'export_png',
                 'JPG' => 'export_jpg',
                 'GIF' => 'export_gif',
-            ]
+            ],
         ],
         'Edit' => [
             'Undo' => 'undo',
@@ -28,9 +27,8 @@
                 '90° Clockwise' => 'rotate_90cw',
                 '90° Counterclockwise' => 'rotate_90ccw',
                 '180°' => 'rotate_180',
-            ]
+            ],
         ],
-        'Palette' => []
+        'Palette' => [],
     ];
     $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo', 'zoom_in', 'zoom_out' ];
-    $workspace_conf = [];
