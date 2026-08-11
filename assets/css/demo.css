@@ -1,4 +1,4 @@
-body::after {
+body[data-demo='true']::after {
     position: fixed;
     top: 0;
     right: 0;

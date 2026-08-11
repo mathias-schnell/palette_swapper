@@ -4,7 +4,6 @@
 
 ## [0.8.X]
  - Responsive UI/UX and other UI/UX improvements.
- - Accessibility improvements.
  - Theme support.
 
 ---
@@ -13,7 +12,6 @@
  - Pixel highlighting from palette hover.
  - Better palette visualization.
  - Image filters (blur, sharpen, distort, etc).
- - Keyboard shortcuts.
 
 ---
 

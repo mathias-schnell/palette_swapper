@@ -6,13 +6,9 @@
     <head>
         <title>Palette Swapper</title>
         <script type="module" src="assets/js/main.js"></script>
-        <link rel="stylesheet" id="reset_css" href="assets/css/reset.css">
         <link rel="stylesheet" id="main_css" href="assets/css/main.css">
-        <?php if($demo_mode): ?>
-            <link rel="stylesheet" id="demo_css" href="assets/css/demo.css">
-        <?php endif; ?>
     </head>
-    <body>
+    <body data-demo='<?=$demo_mode ? "true" : "false";?>' >
         <?php include_once 'includes/toolbar.php'; ?>
         <?php include_once 'includes/sidebar.php'; ?>
         <?php include_once 'includes/history.php'; ?>

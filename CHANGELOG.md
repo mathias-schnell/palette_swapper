@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.8.5] - 2026-08-11
+
+### Internal
+- Added DOM body to the UI Cache.
+- Demo mode on/off and current theme are now properties of the DOM body.
+- `main.css` now imports `reset.css` and `demo.css` rather than the index page.
+- Toolbar buttons are now actual `<button>` tags to help with accessibility.
+- Internal functions changed to work with new toolbar `<button>`s.
+
+---
+
 ## [0.8.4] - 2026-08-07
 
 ### Added
@@ -13,6 +24,9 @@
 - There are no more "Close" tabs. Tabs will instead toggle open and closed when clicked.
 - Arrows were added to tabs to signify the direction the panels will slide when those tabs are clicked.
 - Toolbar items that are enabled or disabled and their triggers have been updated.
+
+### Internal
+- `ROADMAP.md` has been updated.
 
 ---
 

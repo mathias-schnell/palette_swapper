@@ -1,3 +1,6 @@
+@import url('reset.css');
+@import url('demo.css');
+
 /* General Tag Styles */
 * {
     box-sizing: border-box;
@@ -133,6 +136,25 @@ h6:not(:first-child) {
 #history_tooltip,
 #sidebar_tooltip {
     pointer-events: none;
+}
+#toolbar button.toolbar_item {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+
+    margin: 0;
+    padding: 0;
+
+    text-align: left;
+    cursor: pointer;
 }
 
 /* Custom Classes */
@@ -363,25 +385,27 @@ h6:not(:first-child) {
 }
 .toolbar_item {
     position: relative;
-    padding: 6px 12px;
-    cursor: pointer;
+    padding: 6px 12px !important;
+    cursor: pointer !important;
     user-select: none;
 }
 .toolbar_item:hover,
 .menu_item:hover {
-    background: black;
-    color: white;
+    background: black !important;
+    color: white !important;
 }
 .toolbar_item:hover > .toolbar_menu {
-    display: block;
+    display: flex;
+    flex-direction: column;
 }
 .toolbar_item.has_submenu::after {
     content: '\2BC8';
 }
-.toolbar_item .toolbar_item[aria-disabled="true"] {
-    opacity: 0.5;
-    cursor: default;
-    pointer-events: none; 
+.toolbar_item .toolbar_item[aria-disabled="true"],
+.toolbar_item .toolbar_item:disabled {
+    opacity: 0.5 !important;
+    cursor: default !important;
+    pointer-events: none !important; 
 }
 .toolbar_menu {
     position: absolute;

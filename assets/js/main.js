@@ -47,12 +47,11 @@ const keyboard_shortcuts = {
 
 /* try our best to ensure that everything starts after the DOM has loaded */
 window.addEventListener("DOMContentLoaded", () => {
-    const demo_mode = document.getElementById("demo_css") ? true : false;
-    initialize_app(demo_mode);
+    initialize_app();
 });
 
 /* all the initialization that is required before the app is properly used */
-function initialize_app(demo_mode = false) {
+function initialize_app() {
     ui_cache_init();
     bind_toolbar_events();
     bind_sidebar_events();
@@ -60,10 +59,11 @@ function initialize_app(demo_mode = false) {
     bind_global_events();
     bind_keyboard_events();
 
-    if(demo_mode) {
+    if(ui_cache.body.dataset.demo === "true") {
         image.load_source("/assets/demo/demo_source.png", (e) => ui.refresh_ui() );
         image.load_target("/assets/demo/demo_palette.png", (e) => ui.refresh_ui() );
     }
+    ui_cache.body.dataset.theme = "light";
 }
 
 /* binding for all events that affect the entire app */

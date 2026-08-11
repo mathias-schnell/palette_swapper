@@ -30,7 +30,8 @@ export function rotate_image(degrees) {
 }
 
 export function activate_toolbar_menus() {
-    ui_cache.toolbar.querySelectorAll("[aria-disabled='true']").forEach((el) => {
+    ui_cache.toolbar.querySelectorAll(".toolbar_item").forEach((el) => {
+        el.disabled = false;
         el.ariaDisabled = false;
     });
 }
@@ -74,6 +75,7 @@ export function enable_toolbar_items(toolbar, items) {
     Object.values(items).forEach((id) => {
         let el = toolbar.querySelector(`#${id}`);
         while (el && el != toolbar) {
+            el.disabled = false;
             el.ariaDisabled = "false";
             el = el.parentElement.closest(".toolbar_item");
         }

@@ -5,6 +5,7 @@
 
 /* the ui_cache object stores references to frequently accessed DOM elements */
 export const ui_cache = {
+    body: null,
     canvas: null,
     color_map: null,
     ctx: null,
@@ -21,6 +22,7 @@ export const ui_cache = {
 
 /* initialize the ui_cache by selecting and storing references to DOM elements */
 export function ui_cache_init() {
+    ui_cache.body = document.getElementsByTagName('body')[0];
     ui_cache.canvas = document.getElementById('preview_canvas');
     ui_cache.color_map = document.getElementById('color_map_block');
     ui_cache.ctx = ui_cache.canvas.getContext('2d', { willReadFrequently: true });
