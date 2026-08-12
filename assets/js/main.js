@@ -54,8 +54,8 @@ window.addEventListener("DOMContentLoaded", () => {
 function initialize_app() {
     ui_cache_init();
     bind_toolbar_events();
-    bind_sidebar_events();
-    bind_history_events();
+    bind_palette_sidebar_events();
+    bind_history_sidebar_events();
     bind_global_events();
     bind_keyboard_events();
 
@@ -74,16 +74,14 @@ function bind_global_events() {
 }
 
 /* binding for all events specific to the history panel */
-function bind_history_events() {
-    const history = document.getElementById('history');
-
-    history.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.history_tooltip, el, 'middle', 'left'));
-    history.addEventListener('click', (e) => {
-        const tab = e.target.closest('.history_tab');
+function bind_history_sidebar_events() {
+    ui_cache.history_sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.history_tooltip, el, 'middle', 'left'));
+    ui_cache.history_sidebar.addEventListener('click', (e) => {
+        const tab = e.target.closest('.tab');
         if (!tab) return;
         const action = tab.dataset.action;
         const panel_id = tab.dataset.panel;
-        if(action) { sidebar_actions[action]?.(history, tab, panel_id); }
+        if(action) { sidebar_actions[action]?.(ui_cache.history_sidebar, tab, panel_id); }
     });
 }
 
@@ -98,23 +96,21 @@ function bind_keyboard_events() {
 }
 
 /* binding for all events specific to the sidebar */
-function bind_sidebar_events() {
-    const sidebar = document.getElementById('sidebar');
-
-    sidebar.querySelector('#color_map_method').addEventListener('change', (e) => ui.refresh_ui());
-    sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.sidebar_tooltip, el));
-    sidebar.addEventListener('click', (e) => {
+function bind_palette_sidebar_events() {
+    ui_cache.palette_sidebar.querySelector('#mapping_method').addEventListener('change', (e) => ui.refresh_ui());
+    ui_cache.palette_sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.palette_tooltip, el));
+    ui_cache.palette_sidebar.addEventListener('click', (e) => {
         const action_node = e.target.closest('[data-action]');
         if(!action_node) return;
         const action = action_node.dataset.action;
         if(action === "toggle_panel") {
-            const tab = e.target.closest('.sidebar_tab');
-            sidebar_actions[action]?.(sidebar, tab, tab.dataset.panel);
+            const tab = e.target.closest('.tab');
+            sidebar_actions[action]?.(ui_cache.palette_sidebar, tab, tab.dataset.panel);
         } else {
             sidebar_actions[action]?.(e);
         }
     });
-    ui_cache.palette_selector.addEventListener('click', (e) => ui.set_custom_color(e.target));
+    ui_cache.palette_select_list.addEventListener('click', (e) => ui.set_custom_color(e.target));
 }
 
 /* binding for all events specific to the toolbar */

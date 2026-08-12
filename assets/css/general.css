@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.25em;
+}
+
+h1:not(:first-child), 
+h2:not(:first-child), 
+h3:not(:first-child), 
+h4:not(:first-child), 
+h5:not(:first-child), 
+h6:not(:first-child) {
+    margin-top: 0.75em;
+}
+
+.palette_close_btn {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    
+    background: #ffffff;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: #ff0000;
+    cursor: pointer;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 0.5;
+    padding: 5px 3px 3px 3px;
+    text-align: center;
+}
+
+.palette_grid {
+    display: grid;
+    gap: 4px;
+}
+
+.palette_grid .swatch {
+    display: block;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+
+.palette_hex {
+    font-size: 24px;
+    font-weight: bold;
+    opacity: 0;
+    text-transform: uppercase;
+}
+
+.palette_hex_container {
+    border-radius: 4px;
+    margin: 0 auto;
+    margin-bottom: 5px;
+    text-align: center;
+    width: auto;
+}
+
+.palette_window {
+    position: fixed;            
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    z-index: 1000;
+    
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    
+    padding: 12px; 
+}

@@ -1,6 +1,6 @@
-<div id="history" class="history">
-    <div class="history_tabs">
-        <div class="history_tab" data-action="toggle_panel" data-panel="history_panel" data-tooltip="Action History">
+<div id="history_sidebar" class="history_sidebar">
+    <div class="tabs">
+        <div class="tab" data-action="toggle_panel" data-panel="history_panel" data-tooltip="Action History">
             <div class='tab_arrow'></div>
             <div class='tab_icon'>⌛</div>
         </div>

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.8.6] - 2026-08-11
+
+### Internal
+- Renamed several UI elements to better communicate purpose and hierarchy.
+- Split `main.css` into several modules, such as `toolbar.css`, `variables.css` and `general.css`.
+- `main.css` is now just a hub for importing other stylesheets.
+- Laid groundwork for themeing with `variables.css`.
+- Cleaned up HTML framework, UI cache and stylesheets of unused code.
+
+---
+
 ## [0.8.5] - 2026-08-11
 
 ### Internal

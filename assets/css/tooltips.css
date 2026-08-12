@@ -1,0 +1,48 @@
+#history_tooltip,
+#palette_tooltip {
+    pointer-events: none;
+}
+
+#palette_select_list {
+    cursor: pointer;
+    display: grid;
+}
+
+#palette_select_list,
+#history_tooltip,
+#palette_tooltip {
+    background: rgba(40, 40, 40, 0.95);
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    padding: 6px 10px;
+    position: fixed;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+#palette_select_list.hidden,
+#history_tooltip.hidden,
+#palette_tooltip.hidden {
+    left: -1000px !important;
+    opacity: 0 !important;
+    top: -1000px !important;
+}
+
+#palette_select_list.visible,
+#history_tooltip.visible,
+#palette_tooltip.visible {
+    left: -1000px;
+    opacity: 1;
+    top: -1000px;
+}
+
+#palette_select_list .swatch {
+    border: 1px solid #000;
+    display: inline-block;
+    height: 24px;
+    vertical-align: middle;
+    width: 24px;
+}

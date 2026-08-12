@@ -84,7 +84,7 @@ export function enable_toolbar_items(toolbar, items) {
 
 export function hide_floating_elements(e) {
     close_all_menus();
-    if(!e.target.closest('#target_hex_select_list') && !e.target.closest('.target_hex_select_button')) { 
+    if(!e.target.closest('#palette_select_list') && !e.target.closest('.palette_select_button')) { 
         toggle_palette_selector(null, true);
     }
 }
@@ -113,18 +113,18 @@ export function toggle_sidebar(sidebar, tab, panel_id) {
     tab.classList.toggle('open');
 }
 
-export function populate_palette_selector() {
-    ui_cache.palette_selector.replaceChildren();
+export function populate_palette_selector(palette_selector) {
+    palette_selector.replaceChildren();
     const target_palette = app.get_target().palette;
     const colors = target_palette.keys();
     const size = Math.max(1, Math.ceil(Math.sqrt(target_palette.size)));
-    ui_cache.palette_selector.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    palette_selector.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     colors.forEach((hex) => {
         const swatch = document.createElement("span");
         swatch.classList.add("swatch");
         swatch.dataset.target = hex;
         swatch.style.backgroundColor = `#${hex}`;
-        ui_cache.palette_selector.appendChild(swatch);
+        palette_selector.appendChild(swatch);
     })
 }
 
@@ -175,15 +175,15 @@ export function show_palette_window(palette) {
 
 export function set_custom_color(swatch) {
     if(!swatch.matches('.swatch')) return;
-    const source = ui_cache.palette_selector.dataset.source;
-    const id = ui_cache.palette_selector.getAttribute('id');
+    const source = ui_cache.palette_select_list.dataset.source;
+    const id = ui_cache.palette_select_list.getAttribute('id');
     let row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
     let colors = app.get_mapping().custom;
     change_swatch_color(row, swatch.dataset.target);
-    toggle_floating_element(ui_cache.palette_selector);
-    colors.set(ui_cache.palette_selector.dataset.source, swatch.dataset.target);
+    toggle_floating_element(ui_cache.palette_select_list);
+    colors.set(ui_cache.palette_select_list.dataset.source, swatch.dataset.target);
     app.update_mapping({custom: colors});
-    ui_cache.palette_selector.dataset.source = null;
+    ui_cache.palette_select_list.dataset.source = null;
     refresh_ui(false, false, true, false);
 }
 
@@ -203,26 +203,26 @@ export function toggle_floating_element(float_el, force_hide = false, force_show
 export function toggle_palette_selector(el, force_hide = false, force_show = false) {
     if(el) {
         const source = el.closest("[data-source]")?.dataset.source;
-        if(source) { ui_cache.palette_selector.dataset.source = source; }
-        if(!force_hide) { position_floating_element(el, ui_cache.palette_selector, 'top'); }
+        if(source) { ui_cache.palette_select_list.dataset.source = source; }
+        if(!force_hide) { position_floating_element(el, ui_cache.palette_select_list, 'top'); }
     }
-    toggle_floating_element(ui_cache.palette_selector, force_hide, force_show);
+    toggle_floating_element(ui_cache.palette_select_list, force_hide, force_show);
     
 }
 
 export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false, skip_rh = false) {
     if (!skip_upm) update_palette_map();
-    if (!skip_pps) populate_palette_selector();
-    if (!skip_rp) redraw_palette();
+    if (!skip_pps) populate_palette_selector(ui_cache.palette_select_list);
+    if (!skip_rp) redraw_palette(ui_cache.palette_row_container, ui_cache.palette_row_prime);
     if (!skip_rc) canvas.render();
     if (!skip_rh) refresh_history();
 }
 
-export function redraw_palette() {
+export function redraw_palette(palette_row_container, palette_row_template) {
     const colors = (app.get_mapping().method === "custom" ? app.get_mapping().custom : app.get_mapping().colors);
-    ui_cache.palette_container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
+    palette_row_container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
     colors.forEach((tar_hex, source_hex) => {
-        const row = ui_cache.palette_row_prime.cloneNode(true);
+        const row = palette_row_template.cloneNode(true);
         row.removeAttribute('id');
         row.classList.toggle("custom_mode", app.get_mapping().method === "custom");
         row.dataset.source = source_hex;
@@ -235,12 +235,12 @@ export function redraw_palette() {
             row.querySelector('.lock_button').classList.toggle('locked', true);
             row.querySelector('.lock_button').classList.toggle('unlocked', false);
         }
-        ui_cache.palette_container.appendChild(row);
+        palette_row_container.appendChild(row);
     });
 }
 
 export function update_palette_map() {
-    const method = ui_cache.color_map.querySelector("#color_map_method").value;
+    const method = ui_cache.mapping_method.value;
     const locked = app.get_mapping().locked;
     const new_map = color.generate_palette_map(app.get_source().palette, app.get_target().palette, method);
     let colors = app.get_mapping().colors;

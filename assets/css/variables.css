@@ -1,0 +1,17 @@
+:root {
+    --bg-color: #ffffff;
+    --border-color-dark: #444444;
+    --border-color-light: #cccccc;
+    --hover-bg-color: #000000;
+    --text-color: #000000;
+    --text-font: sans-serif;
+    --text-color-disabled: #888888;
+
+    --history-sidebar-width: 300px;
+    --palette-sidebar-width: 300px;
+    --toolbar-height: 32px;
+
+    --tooltip-background: #000000;
+    --tooltip-font: sans-serif;
+    --tooltip-text-color: #FFFFFF;
+}

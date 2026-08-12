@@ -1,0 +1,112 @@
+#history_sidebar {
+    position: fixed;
+    right: 0;
+    top: var(--toolbar-height);
+
+    display: flex;
+    flex-direction: row;
+    transform: translateX(var(--history-sidebar-width));
+    transition: transform 0.25s ease;
+    z-index: 1000;
+}
+
+#history_sidebar.open {
+    transform: translateX(0);
+}
+
+#history_sidebar.open .sidebar_panel_container {
+    transform: translateX(0);
+}
+
+#history_sidebar #history_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#history_sidebar #history_list li {
+    border-bottom: 1px solid var(--border-color-light);
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+#history_sidebar #history_list li.inactive {
+    color: var(--text-color-disabled);
+}
+
+#history_sidebar .tabs {
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+#history_sidebar .tab {
+    background: #f0f0f0;
+    border: 1px solid #444;
+    border-top: none;
+    border-right: none;
+    cursor: pointer;
+    font-size: 24px;
+    height: 32px;
+    width: auto;
+
+    align-items: center;
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    z-index: 100;
+}
+
+#history_sidebar .tab .tab_arrow {
+    font-size: 16px;
+    line-height: 1;
+    text-align: center;
+}
+
+#history_sidebar .tab .tab_arrow {
+    margin-right: -4px;
+}
+
+#history_sidebar .tab .tab_icon {
+    vertical-align: middle;
+}
+
+#history_sidebar .tab.open .tab_arrow::before {
+    content: "\23F5";
+}
+
+#history_sidebar .tab:not(.open) .tab_arrow::before {
+    content: "\23F4";
+}
+
+#history_sidebar .history_panel {
+    position: relative;
+    height: 100vh;
+
+    background: #fff;
+    border: 1px solid #ccc;
+    display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+    scrollbar-gutter: stable;
+    z-index: 100;
+}
+
+#history_sidebar .history_panel.open {
+    display: block;
+}
+
+#history_sidebar .history_panel h2 {
+    font-weight: 700;
+}
+
+#history_sidebar .history_panel p {
+    margin: 5px 0 10px 0;
+}
+
+#history_sidebar .history_panel_container {
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+    width: 300px;
+}

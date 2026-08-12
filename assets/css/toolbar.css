@@ -1,0 +1,100 @@
+#toolbar {
+    background: white;
+    border-bottom: 1px solid #444;
+    color: black;
+    display: flex;
+    font-family: Arial, sans-serif;
+    height: 32px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1001;
+}
+
+#toolbar button.toolbar_item {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background: transparent;
+    border: none;
+    border-radius: 0;
+
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+
+    margin: 0;
+    padding: 0;
+
+    text-align: left;
+    cursor: pointer;
+}
+
+.toolbar_item {
+    position: relative;
+    padding: 6px 12px !important;
+    cursor: pointer !important;
+    user-select: none;
+}
+
+.toolbar_item:hover,
+.menu_item:hover {
+    background: black !important;
+    color: white !important;
+}
+
+.toolbar_item:hover > .toolbar_menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar_item.has_submenu::after {
+    content: '\2BC8';
+}
+
+.toolbar_item .toolbar_item[aria-disabled="true"],
+.toolbar_item .toolbar_item:disabled {
+    opacity: 0.5 !important;
+    cursor: default !important;
+    pointer-events: none !important; 
+}
+
+.toolbar_menu {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    
+    background: white;
+    border: 1px solid #222;
+    color: black;
+    cursor: default;
+    display: none;
+    min-width: 180px;
+    z-index: 1000;
+}
+
+.toolbar_menu.submenu {
+    left: 100%;
+    top: 0;
+}
+
+.menu_item {
+    background: white;
+    color: black;
+    position: relative;
+    padding: 6px 12px;
+    white-space: nowrap;
+}
+
+.menu_item:hover > .submenu {
+    display: block;
+}
+
+.menu_separator {
+    height: 1px;
+    background: black;
+    color: white;
+    margin: 4px 0;
+}
