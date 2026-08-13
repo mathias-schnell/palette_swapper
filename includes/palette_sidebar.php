@@ -2,7 +2,7 @@
     <div id="mapping_panel_container" class="mapping_panel_container">
         <div id="mapping_panel" class="mapping_panel">
             <div id="mapping_method_container" class="mapping_method_container">
-                <h2>Mapping Presets</h2>
+                <h3>Mapping Presets</h3>
                 <select id="mapping_method" class="mapping_method" data-action="mapping_method">
                     <option value="reset">Reset</option>
                     <option value="rgb">RGB</option>
@@ -13,7 +13,7 @@
                     <option value="custom">Custom</option>
                 </select>
             </div>
-            <h2>Color Mappings</h2>
+            <h3>Color Mappings</h3>
             <div id="palette_row_container" class="palette_row_container">
                 <div id="palette_row_prime" class="palette_row">
                     <div class="lock_button unlocked" data-action="lock_color"></div>

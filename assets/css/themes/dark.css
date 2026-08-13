@@ -1,20 +1,20 @@
-:root {
+[data-theme='dark'] {
     /* background colors */
-    --bg-color-1: #ffffff;
-    --bg-color-2: #000000;
+    --bg-color-1: #000000;
+    --bg-color-2: #FFFFFF;
 
     /* border colors */
-    --border-color-1: #444444;
-    --border-color-2: #cccccc;
+    --border-color-1: #cccccc;
+    --border-color-2: #444444;
 
     /* text colors */
-    --text-color-1: #000000;
-    --text-color-2: #FFFFFF;
+    --text-color-1: #FFFFFF;
+    --text-color-2: #000000;
     --text-color-disabled: #888888;
 
     /* text font settings */
     --text-font-family-1: Arial, sans-serif;
-    --text-font-family-2: 'Times New Roman';
+    --text-font-family-2: "Times New Roman";
     --text-font-family-mono: Consolas, Monaco, 'Courier New', monospace;
     --text-font-size-xxs: 10px;
     --text-font-size-xs: 12px;
@@ -33,13 +33,13 @@
     --toolbar-height: 32px;
 
     /* tooltip settings */
-    --tooltip-background: #000000;
+    --tooltip-background: #FFFFFF;
     --tooltip-font: sans-serif;
-    --tooltip-text-color: #FFFFFF;
+    --tooltip-text-color: #000000;
 
     /* tab settings */
-    --tab-bg-color-1: #F0F0F0;
-    --tab-text-color-1: #000000;
+    --tab-bg-color-1: #0F0F0F;
+    --tab-text-color-1: #FFFFFF;
     --tab-open-icon: "\23F4";
     --tab-closed-icon: "\23F5";
     --tab-arrow-spacing-left: -4px;

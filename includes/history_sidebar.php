@@ -7,7 +7,7 @@
     </div>
     <div id="history_panel_container" class="history_panel_container">
         <div id="history_panel" class="history_panel">
-            <h2>Action History</h2>
+            <h3>Action History</h3>
             <ul id='history_list' class='history_list'></ul>
         </div>
     </div>

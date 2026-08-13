@@ -4,7 +4,7 @@
 }
 
 .canvas_container {
-    border: 1px solid black;
+    border: 1px solid var(--border-color-2);
     display: inline-block;
     background:
         linear-gradient(45deg, #ccc 25%, transparent 25%),
@@ -16,10 +16,11 @@
 }
 
 .workspace {
+    background: var(--bg-color-1);
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 32px;
+    margin-top: var(--toolbar-height);
     min-height: 80vh;
     padding: 10px;
 }

@@ -7,3 +7,6 @@
 @import url('tooltips.css');
 @import url('workspace.css');
 @import url('demo.css');
+
+@import url('themes/dark.css');
+@import url('themes/light.css');

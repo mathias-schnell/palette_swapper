@@ -1,13 +1,5 @@
 # Roadmap
 
----
-
-## [0.8.X]
- - Responsive UI/UX and other UI/UX improvements.
- - Theme support.
-
----
-
 ## [0.9.X]
  - Pixel highlighting from palette hover.
  - Better palette visualization.

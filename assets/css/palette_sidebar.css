@@ -3,6 +3,7 @@
     left: 0;
     top: var(--toolbar-height);
 
+    color: var(--text-color-1);
     display: flex;
     flex-direction: row;
     transform: translateX(calc(-1 * var(--palette-sidebar-width)));
@@ -26,8 +27,8 @@
     position: relative;
     height: 100vh;
 
-    background: #fff;
-    border: 1px solid #ccc;
+    background: var(--bg-color-1);
+    border-right: 1px solid var(--border-color-1);
     display: none;
     overflow-y: auto;
     overflow-x: hidden;
@@ -38,10 +39,6 @@
 
 #palette_sidebar .mapping_panel.open {
     display: block;
-}
-
-#palette_sidebar .mapping_panel h2 {
-    font-weight: 700;
 }
 
 #palette_sidebar .mapping_panel p {
@@ -57,7 +54,7 @@
 #palette_sidebar .palette_row {
     align-items: center;
     display: flex;
-    font-family: Consolas, Monaco, 'Courier New', monospace;
+    font-family: var(--text-font-family-mono);
     gap: 5px;
     letter-spacing: -0.025em;
     margin: 2px 0;
@@ -71,11 +68,11 @@
 }
 
 #palette_sidebar .palette_row > .lock_button.locked::before {
-    content: "\1F512";
+    content: var(--lock-icon-locked);
 }
 
 #palette_sidebar .palette_row > .lock_button.unlocked::before {
-    content: "\1F513";
+    content: var(--lock-icon-unlocked);
 }
 
 #palette_sidebar .palette_row > .lock_button.locked ~ .target_color > .palette_select_button {
@@ -96,6 +93,19 @@
     margin-left: -5px;
 }
 
+#palette_sidebar .palette_select_button {
+    cursor: pointer;
+    display: inline-block;
+}
+
+#palette_sidebar .swatch {
+    border: 1px solid var(--border-color-1);
+    display: inline-block;
+    height: 24px;
+    vertical-align: middle;
+    width: 24px;
+}
+
 #palette_sidebar .tab_container {
     display: flex;
     flex-direction: column;
@@ -104,61 +114,79 @@
 
 #palette_sidebar .tab {
     align-items: center;
-    background: #f0f0f0;
-    border: 1px solid #444;
-    border-top: none;
-    border-left: none;
+    background: var(--tab-bg-color-1);
+    border-bottom: 1px solid var(--border-color-1);
+    border-right: 1px solid var(--border-color-1);
+    color: var(--tab-text-color-1);
     cursor: pointer;
     display: flex;
     gap: 0;
-    font-size: 24px;
-    height: 32px;
+    height: var(--tab-height);
     justify-content: center;
     width: auto;
     z-index: 100;
 }
 
-#palette_sidebar .tab .tab_arrow {
-    font-size: 16px;
+#palette_sidebar .tab > .tab_arrow {
+    font-size: var(--tab-open-close-icon-size);
     line-height: 1;
+    margin-left: var(--tab-arrow-spacing-left);
+    margin-right: var(--tab-arrow-spacing-right);
     text-align: center;
 }
 
-#palette_sidebar .tab .tab_arrow {
-    margin-left: -4px;
+#palette_sidebar .tab.open > .tab_arrow::before {
+    content: var(--tab-open-icon);
 }
 
-#palette_sidebar .tab .tab_icon {
+#palette_sidebar .tab:not(.open) > .tab_arrow::before {
+    content: var(--tab-closed-icon);
+}
+
+#palette_sidebar .tab > .tab_icon {
+    font-size: var(--tab-font-size);
     vertical-align: middle;
 }
 
-#palette_sidebar .tab.open .tab_arrow::before {
-    content: "\23F4";
+#palette_sidebar h1 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-xxl);
+    font-weight: var(--text-font-weight-bold);
 }
 
-#palette_sidebar .tab:not(.open) .tab_arrow::before {
-    content: "\23F5";
+#palette_sidebar h2 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-xl);
+    font-weight: var(--text-font-weight-bold);
 }
 
-#palette_sidebar .source_hex,
-#palette_sidebar .target_hex {
+#palette_sidebar h3 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-large);
+    font-weight: var(--text-font-weight-bold);
+}
+
+#palette_sidebar h4, h5, h6 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-medium);
+    font-weight: var(--text-font-weight-semibold);
+}
+
+#palette_sidebar div,
+#palette_sidebar p,
+#palette_sidebar span {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-medium);
+}
+
+#palette_sidebar .palette_row .source_hex,
+#palette_sidebar .palette_row .target_hex {
+    font-family: var(--text-font-family-mono);
+    font-size: var(--text-font-size-medium);
     text-transform: uppercase;
 }
 
-#palette_sidebar .source_swatch,
-#palette_sidebar .target_swatch {
+#palette_sidebar .palette_row .source_swatch,
+#palette_sidebar .palette_row .target_swatch {
     margin-right: 4px;
-}
-
-#palette_sidebar .swatch {
-    border: 1px solid #000;
-    display: inline-block;
-    height: 24px;
-    vertical-align: middle;
-    width: 24px;
-}
-
-#palette_sidebar .palette_select_button {
-    cursor: pointer;
-    display: inline-block;
 }

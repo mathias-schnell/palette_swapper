@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.8.7] - 2026-08-12
+
+### Added
+- New toolbar item called "Themes", with two options "Light" and "Dark". This will serve as a way to customize the look and feel of the UI.
+
+### Internal
+- New folder `themes` added to CSS directory. CSS variables specifically for individual themes will be stored here.
+- Palette Sidebar and History Sidebar code tweaked to work with new themeing.
+
+---
+
 ## [0.8.6] - 2026-08-11
 
 ### Internal

@@ -3,6 +3,7 @@
     right: 0;
     top: var(--toolbar-height);
 
+    color: var(--text-color-1);
     display: flex;
     flex-direction: row;
     transform: translateX(var(--history-sidebar-width));
@@ -25,7 +26,7 @@
 }
 
 #history_sidebar #history_list li {
-    border-bottom: 1px solid var(--border-color-light);
+    border-bottom: 1px solid var(--border-color-1);
     cursor: pointer;
     padding: 4px 8px;
 }
@@ -34,57 +35,12 @@
     color: var(--text-color-disabled);
 }
 
-#history_sidebar .tabs {
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-}
-
-#history_sidebar .tab {
-    background: #f0f0f0;
-    border: 1px solid #444;
-    border-top: none;
-    border-right: none;
-    cursor: pointer;
-    font-size: 24px;
-    height: 32px;
-    width: auto;
-
-    align-items: center;
-    display: flex;
-    gap: 0;
-    justify-content: center;
-    z-index: 100;
-}
-
-#history_sidebar .tab .tab_arrow {
-    font-size: 16px;
-    line-height: 1;
-    text-align: center;
-}
-
-#history_sidebar .tab .tab_arrow {
-    margin-right: -4px;
-}
-
-#history_sidebar .tab .tab_icon {
-    vertical-align: middle;
-}
-
-#history_sidebar .tab.open .tab_arrow::before {
-    content: "\23F5";
-}
-
-#history_sidebar .tab:not(.open) .tab_arrow::before {
-    content: "\23F4";
-}
-
 #history_sidebar .history_panel {
     position: relative;
     height: 100vh;
 
-    background: #fff;
-    border: 1px solid #ccc;
+    background: var(--bg-color-1);
+    border-left: 1px solid var(--border-color-1);
     display: none;
     overflow-y: auto;
     overflow-x: hidden;
@@ -97,10 +53,6 @@
     display: block;
 }
 
-#history_sidebar .history_panel h2 {
-    font-weight: 700;
-}
-
 #history_sidebar .history_panel p {
     margin: 5px 0 10px 0;
 }
@@ -108,5 +60,78 @@
 #history_sidebar .history_panel_container {
     transform: translateX(0);
     transition: transform 0.25s ease;
-    width: 300px;
+    width: var(--history-sidebar-width);
+}
+
+#history_sidebar .tabs {
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+#history_sidebar .tab {
+    align-items: center;
+    background: var(--tab-bg-color-1);
+    border-bottom: 1px solid var(--border-color-1);
+    border-left: 1px solid var(--border-color-1);
+    color: var(--tab-text-color-1);
+    cursor: pointer;
+    display: flex;
+    gap: 0;
+    height: var(--tab-height);
+    justify-content: center;
+    width: auto;
+    z-index: 100;
+}
+
+#history_sidebar .tab > .tab_arrow {
+    font-size: var(--tab-open-close-icon-size);
+    line-height: 1;
+    margin-left: var(--tab-arrow-spacing-right);
+    margin-right: var(--tab-arrow-spacing-left);
+    text-align: center;
+}
+
+#history_sidebar .tab.open > .tab_arrow::before {
+    content: var(--tab-closed-icon);
+}
+
+#history_sidebar .tab:not(.open) > .tab_arrow::before {
+    content: var(--tab-open-icon);
+}
+
+#history_sidebar .tab > .tab_icon {
+    font-size: var(--tab-font-size);
+    vertical-align: middle;
+}
+
+#history_sidebar h1 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-xxl);
+    font-weight: var(--text-font-weight-bold);
+}
+
+#history_sidebar h2 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-xl);
+    font-weight: var(--text-font-weight-bold);
+}
+
+#history_sidebar h3 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-large);
+    font-weight: var(--text-font-weight-bold);
+}
+
+#history_sidebar h4, h5, h6 {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-medium);
+    font-weight: var(--text-font-weight-semibold);
+}
+
+#history_sidebar div,
+#history_sidebar p,
+#history_sidebar span {
+    font-family: var(--text-font-family-1);
+    font-size: var(--text-font-size-medium);
 }

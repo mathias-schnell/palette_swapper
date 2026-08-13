@@ -31,6 +31,8 @@ const toolbar_actions = {
     export_gif              : (e) => image.export_image('untitled.gif', 'image/gif'),
     show_source_palette     : (e) => ui.show_palette_window(app.get_source().palette),
     show_target_palette     : (e) => ui.show_palette_window(app.get_target().palette),
+    theme_light             : (e) => ui_cache.body.dataset.theme = "light",
+    theme_dark              : (e) => ui_cache.body.dataset.theme = "dark",
 };
 
 const keyboard_shortcuts = {

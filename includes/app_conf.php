@@ -33,9 +33,9 @@
             'Show Source Palette' => 'show_source_palette',
             'Show Target Palette' => 'show_target_palette',
         ],
-        /*'Themes' => [
-            'Light' => 'light',
-            'Dark' => 'dark',
-        ]*/
+        'Themes' => [
+            'Light' => 'theme_light',
+            'Dark' => 'theme_dark',
+        ],
     ];
-    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo', 'light', 'dark' ];
+    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo', 'theme_light', 'theme_dark' ];
