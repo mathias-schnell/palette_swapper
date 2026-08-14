@@ -166,7 +166,9 @@
     font-weight: var(--text-font-weight-bold);
 }
 
-#palette_sidebar h4, h5, h6 {
+#palette_sidebar h4, 
+#palette_sidebar h5, 
+#palette_sidebar h6 {
     font-family: var(--text-font-family-1);
     font-size: var(--text-font-size-medium);
     font-weight: var(--text-font-weight-semibold);

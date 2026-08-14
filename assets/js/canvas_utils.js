@@ -4,7 +4,6 @@
 */
 
 import * as app from "./app.js";
-import * as color from "./color_utils.js";
 import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 

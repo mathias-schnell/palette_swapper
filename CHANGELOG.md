@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.8.8] - 2026-08-13
+
+### Changed
+- Many theme tweaks and color changes.
+
+### Internal
+- Normalized rotation values to prevent potential future bugs.
+- Fixed setting Map of transforms to the app state to prevent potential future bugs.
+- Set app-specific keybind events to not trigger when user is focused on an editable UI element like a text box.
+- Changed order of CSS files loaded in `main.css` for the sake of organization.
+- Removed `color_utils.js` import from `canvas_utils.js` because it wasn't being used.
+- Fixed some CSS rules across multiple files.
+
+---
+
 ## [0.8.7] - 2026-08-12
 
 ### Added

@@ -123,7 +123,9 @@
     font-weight: var(--text-font-weight-bold);
 }
 
-#history_sidebar h4, h5, h6 {
+#history_sidebar h4, 
+#history_sidebar h5, 
+#history_sidebar h6 {
     font-family: var(--text-font-family-1);
     font-size: var(--text-font-size-medium);
     font-weight: var(--text-font-weight-semibold);

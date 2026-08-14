@@ -44,7 +44,7 @@ export function get_history() { return app.history; }
 export function update_mapping(data) { Object.assign(app.mapping, data); }
 export function update_source(data) { Object.assign(app.source, data); }
 export function update_target(data) { Object.assign(app.target, data); }
-export function update_transforms(data) { Object.assign(app.transforms, data); }
+export function update_transforms(data) { app.transforms = new Map(data); }
 export function update_history(data) { Object.assign(app.history, data); }
 
 /* specialized functions for interacting with the app state */
@@ -93,13 +93,13 @@ function simplify_transform_value(type, curr_val, delta_val) {
             return Math.max(zoom + delta_val, 0.25);
         case 'flip_horizontal':
             const flip_h = curr_val ?? false;
-            return !curr_val;
+            return !flip_h;
         case 'flip_vertical':
             const flip_v = curr_val ?? false;
-            return !curr_val;
+            return !flip_v;
         case 'rotate':
             const rotate = curr_val ?? 0;
-            return (rotate + delta_val) % 360;
+            return ((rotate + delta_val % 360) + 360) % 360;
         default:
             return curr_val;
     }

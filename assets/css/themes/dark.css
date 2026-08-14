@@ -1,16 +1,17 @@
 [data-theme='dark'] {
     /* background colors */
-    --bg-color-1: #000000;
-    --bg-color-2: #FFFFFF;
+    --bg-color-main: #111214;
+    --bg-color-1: #202124;
+    --bg-color-2: #E6E6E6;
 
     /* border colors */
-    --border-color-1: #cccccc;
-    --border-color-2: #444444;
+    --border-color-1: #4A4D52;
+    --border-color-2: #202124;
 
     /* text colors */
-    --text-color-1: #FFFFFF;
-    --text-color-2: #000000;
-    --text-color-disabled: #888888;
+    --text-color-1: #E6E6E6;
+    --text-color-2: #202124;
+    --text-color-disabled: #777A7E;
 
     /* text font settings */
     --text-font-family-1: Arial, sans-serif;
@@ -27,19 +28,14 @@
     --text-font-weight-bold: 600;
     --text-font-weight-extrabold: 800;
 
-    /* component dimensions */
-    --history-sidebar-width: 300px;
-    --palette-sidebar-width: 300px;
-    --toolbar-height: 32px;
-
     /* tooltip settings */
-    --tooltip-background: #FFFFFF;
+    --tooltip-background: #E6E6E6;
     --tooltip-font: sans-serif;
-    --tooltip-text-color: #000000;
+    --tooltip-text-color: #202124;
 
     /* tab settings */
-    --tab-bg-color-1: #0F0F0F;
-    --tab-text-color-1: #FFFFFF;
+    --tab-bg-color-1: #202124;
+    --tab-text-color-1: #E6E6E6;
     --tab-open-icon: "\23F4";
     --tab-closed-icon: "\23F5";
     --tab-arrow-spacing-left: -4px;

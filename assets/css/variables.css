@@ -1,15 +1,16 @@
 :root {
     /* background colors */
-    --bg-color-1: #ffffff;
-    --bg-color-2: #000000;
+    --bg-color-main: #FFFFFF;
+    --bg-color-1: #F4F4F2;
+    --bg-color-2: #252525;
 
     /* border colors */
-    --border-color-1: #444444;
-    --border-color-2: #cccccc;
+    --border-color-1: #555555;
+    --border-color-2: #C8C8C8;
 
     /* text colors */
-    --text-color-1: #000000;
-    --text-color-2: #FFFFFF;
+    --text-color-1: #202020;
+    --text-color-2: #E4E4E4;
     --text-color-disabled: #888888;
 
     /* text font settings */
@@ -33,13 +34,13 @@
     --toolbar-height: 32px;
 
     /* tooltip settings */
-    --tooltip-background: #000000;
+    --tooltip-background: #252525;
     --tooltip-font: sans-serif;
-    --tooltip-text-color: #FFFFFF;
+    --tooltip-text-color: #F5F5F5;
 
     /* tab settings */
-    --tab-bg-color-1: #F0F0F0;
-    --tab-text-color-1: #000000;
+    --tab-bg-color-1: #F5F5F5;
+    --tab-text-color-1: #252525;
     --tab-open-icon: "\23F4";
     --tab-closed-icon: "\23F5";
     --tab-arrow-spacing-left: -4px;

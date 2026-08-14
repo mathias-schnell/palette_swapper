@@ -90,6 +90,7 @@ function bind_history_sidebar_events() {
 /* binding for all events tied to keyboard shortcuts */
 function bind_keyboard_events() {
     document.addEventListener("keydown", (e) => {
+        if (e.target.matches("input, textarea, select") || e.target.isContentEditable) return;
         const shortcut = shortcut_name(e);
         if (!keyboard_shortcuts[shortcut]) return;
         e.preventDefault();

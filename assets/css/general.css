@@ -1,9 +1,29 @@
 * {
     box-sizing: border-box;
+    scrollbar-color: var(--border-color-1) var(--bg-color-1);
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--bg-color-1);
+}
+
+*::-webkit-scrollbar-thumb {
+    background: var(--border-color-1);
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--border-color-2);
 }
 
 body {
-    background: var(--bg-color-1);
+    background: var(--bg-color-main);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -24,8 +44,8 @@ h6:not(:first-child) {
     top: -15px;
     right: -15px;
     
-    background: #FFFFFF;
-    border: 1px solid black;
+    background: #F0F0F0;
+    border: 1px solid #333333;
     border-radius: 5px;
     color: #ff0000;
     cursor: pointer;
@@ -50,6 +70,7 @@ h6:not(:first-child) {
 }
 
 .palette_hex {
+    font-family: var(--text-font-family-mono);
     font-size: 24px;
     font-weight: bold;
     opacity: 0;
@@ -70,8 +91,8 @@ h6:not(:first-child) {
     left: 50%;
     transform: translate(-50%, -50%); 
     
-    background: #ffffff;
-    border: 1px solid #ccc;
+    background: #F0F0F0;
+    border: 1px solid #333333;
     border-radius: 8px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     padding: 12px;
