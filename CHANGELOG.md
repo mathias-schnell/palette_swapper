@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.9] - 2026-08-14
+
+### Changed
+- More theme color tweaks.
+
+### Internal
+- Reorganized small bits of code.
+
+---
+
 ## [0.8.8] - 2026-08-13
 
 ### Changed

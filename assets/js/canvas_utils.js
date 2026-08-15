@@ -112,14 +112,14 @@ function resize(state) {
 }
 
 /* functions that draw to the canvas */
-function apply_effects(state) {
-    apply_color_map(state);
-}
-
 function apply_color_map(state) {
     const image_data = state.ctx.getImageData(0, 0, state.width, state.height);
     image.apply_palette(image_data, (state.mapping.method === "custom" ? state.mapping.custom : state.mapping.colors));
     state.ctx.putImageData(image_data, 0, 0);
+}
+
+function apply_effects(state) {
+    apply_color_map(state);
 }
 
 function clear(state) {
