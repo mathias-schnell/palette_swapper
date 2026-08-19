@@ -45,6 +45,7 @@ const keyboard_shortcuts = {
     "="             : (e) => toolbar_actions.zoom_in(),
     "+"             : (e) => toolbar_actions.zoom_in(),
     "-"             : (e) => toolbar_actions.zoom_out(),
+    "t"             : (e) => test_highlight(),    
 };
 
 /* try our best to ensure that everything starts after the DOM has loaded */
@@ -102,6 +103,17 @@ function bind_keyboard_events() {
 function bind_palette_sidebar_events() {
     ui_cache.palette_sidebar.querySelector('#mapping_method').addEventListener('change', (e) => ui.refresh_ui());
     ui_cache.palette_sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.palette_tooltip, el));
+    ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('mouseover', (e) => {
+        const source_row = e.target.closest('.source_color');
+        if (!source_row) return;
+        const source_hex = source_row.parentNode.dataset.source;
+        ui.highlight_color(app.get_base_image_cache(), ui_cache.highlight_canvas, ui_cache.highlight_ctx, source_hex);
+    });
+    ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('mouseout', (e) => {
+        const source_row = e.target.closest('.source_color');
+        if (!source_row) return;
+        ui.clear_highlights(ui_cache.highlight_canvas, ui_cache.highlight_ctx);
+    });
     ui_cache.palette_sidebar.addEventListener('click', (e) => {
         const action_node = e.target.closest('[data-action]');
         if(!action_node) return;

@@ -38,8 +38,11 @@ export function load_source(source) {
     src.image.onload = () => {
         src.palette = extract_palette(src.image);
         app.update_source(src);
-        [ui_cache.canvas.width, ui_cache.canvas.height] = [src.image.naturalWidth, src.image.naturalHeight];
-        ui_cache.canvas.style.display = "block";
+        const natWidth = src.image.naturalWidth + 'px';
+        const natHeight = src.image.naturalHeight + 'px';
+        const container = ui_cache.canvas_container;
+        [container.style.width, container.style.height] = [natWidth, natHeight];
+        container.style.display = "block";
         if (source instanceof File || source instanceof Blob) { URL.revokeObjectURL(src.image.src); }
         document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "source" } }));
     };

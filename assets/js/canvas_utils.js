@@ -7,27 +7,34 @@ import * as app from "./app.js";
 import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
-/* define some global constants for the canvas, its context and a list of transformation functions */
-const canvas = ui_cache.canvas;
-const ctx = ui_cache.ctx;
+let rendering = false;
 const transform_order = {
     rotate: rotate,
     flip_horizontal: flip_horizontal,
     flip_vertical: flip_vertical
 };
 
-
 /* master function that refreshes the canvas and applies all relevant operations and transforms */
 export function render() {
-    const state = build_state(ui_cache.canvas, ui_cache.ctx);
+    if(rendering) return;
+    rendering = true;
 
-    if(!validate_state(state)) return;
-    prepare_canvas(state);
-    state.ctx.save();
-    apply_transforms(state);
-    draw_scene(state);
-    state.ctx.restore();
-    apply_effects(state);
+    requestAnimationFrame(() => {
+        const state = build_state(ui_cache.canvas_container, ui_cache.ctx);
+        if(validate_state(state)) {
+            prepare_canvas(state);
+            state.ctx.save();
+            apply_transforms(state);
+            draw_scene(state);
+            state.ctx.restore();
+
+            const base_data = state.ctx.getImageData(0, 0, state.width, state.height);
+            app.set_base_image_cache(new Uint32Array(base_data.data.buffer));
+            
+            apply_effects(state);
+        }
+        rendering = false;
+    });
 }
 
 /* a function that applies all transformations in the order defined by transform_order */
@@ -39,12 +46,13 @@ function apply_transforms(state) {
     }
 }
 
-function build_state(canvas, ctx) {
+/* a function for building the state object that holds all data about the canvas's current state */
+function build_state(container, ctx) {
     const state = {
         source          : app.get_source(),
         mapping         : app.get_mapping(),
         transforms      : app.get_transforms(),
-        canvas          : canvas,
+        container       : container,
         ctx             : ctx,
     };
     const zoom = state.transforms.get('zoom') ?? 1;
@@ -62,11 +70,13 @@ function build_state(canvas, ctx) {
     return state;
 }
 
+/* a function that checks whether the state is valid */
 function validate_state(state) {
-    if(!state.canvas || !state.ctx || !state.source.image || state.width <= 0 || state.height <= 0) return false;
+    if(!state.container || !state.ctx || !state.source.image || state.width <= 0 || state.height <= 0) return false;
     return true;
 }
 
+/* a function that sets the canvas to the appropriate size and settings before drawing anything */
 function prepare_canvas(state) {
     resize(state);
     state.ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -74,6 +84,7 @@ function prepare_canvas(state) {
     clear(state);
 }
 
+/* a function for drawing the initial content to the canvas */
 function draw_scene(state) {
     draw_source(state);
 }
@@ -107,8 +118,12 @@ function rotate(state) {
 
 /* functions that help other functions with canvas operations */
 function resize(state) {
-    state.canvas.width = state.width;
-    state.canvas.height = state.height;
+    [...state.container.children].forEach(child => {
+        child.height = state.height;
+        child.width = state.width;
+    });
+    state.container.style.height = state.height + 'px';
+    state.container.style.width = state.width + 'px';
 }
 
 /* functions that draw to the canvas */

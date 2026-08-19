@@ -1,11 +1,28 @@
+@keyframes pulse_highlight {
+    0% { opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+#highlight_canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    pointer-events: none;
+}
+
+#highlight_canvas,
 #preview_canvas {
-    display: none;
     image-rendering: pixelated;
+    height: inherit;
+    width: inherit;
 }
 
 .canvas_container {
+    position: relative;
+
     border: 1px solid var(--border-color-1);
-    display: inline-block;
     background:
         linear-gradient(45deg, #ccc 25%, transparent 25%),
         linear-gradient(-45deg, #ccc 25%, transparent 25%),
@@ -13,6 +30,11 @@
         linear-gradient(-45deg, transparent 75%, #ccc 75%);
     background-size: 16px 16px;
     background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    display: none;
+}
+
+.pulse {
+    animation: pulse_highlight 1s infinite ease-in-out;
 }
 
 .workspace {

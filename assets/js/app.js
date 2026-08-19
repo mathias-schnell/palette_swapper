@@ -5,6 +5,7 @@
 
 /* the app state */
 const app = {
+    base_image_cache: null,
     history: {
         actions: [],
         current: -1
@@ -34,6 +35,7 @@ export const tooltip_config = {
 }
 
 /* get functions that return specific pieces of the app state */
+export function get_base_image_cache() { return app.base_image_cache; }
 export function get_mapping() { return app.mapping; }
 export function get_source() { return app.source; }
 export function get_target() { return app.target; }
@@ -52,6 +54,7 @@ export function advance_history() { if(app.history.current < app.history.actions
 export function regress_history() { if(app.history.current > -1) { app.history.current--; rebuild_transforms(); } }
 export function remove_transform(name) { app.transforms.delete(name); }
 export function remove_lock(source) { app.mapping.locked.delete(source); }
+export function set_base_image_cache(image_data) { app.base_image_cache = image_data; }
 export function set_lock(source, target) { app.mapping.locked.set(source, target); }
 
 /* specialized functions for interacting with the app history */

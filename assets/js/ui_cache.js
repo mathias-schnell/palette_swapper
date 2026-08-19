@@ -7,7 +7,10 @@
 export const ui_cache = {
     body: null,
     canvas: null,
+    canvas_container: null,
     ctx: null,
+    highlight_canvas: null,
+    highlight_ctx: null,
     history_sidebar: null,
     history_tooltip: null,
     mapping_method: null,
@@ -23,7 +26,10 @@ export const ui_cache = {
 export function ui_cache_init() {
     ui_cache.body = document.getElementsByTagName('body')[0];
     ui_cache.canvas = document.getElementById('preview_canvas');
+    ui_cache.canvas_container = document.querySelector('.workspace > .canvas_container');
     ui_cache.ctx = ui_cache.canvas.getContext('2d', { willReadFrequently: true });
+    ui_cache.highlight_canvas = document.getElementById('highlight_canvas');
+    ui_cache.highlight_ctx = ui_cache.highlight_canvas.getContext('2d');
     ui_cache.history_sidebar = document.getElementById('history_sidebar');
     ui_cache.history_tooltip = document.getElementById('history_tooltip');
     ui_cache.mapping_method = document.getElementById('mapping_method');

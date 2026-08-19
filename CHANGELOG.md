@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.0] - 2026-08-19
+
+### Added
+- Mousing over the rows of each pixel color in the Palette Sidebar will now start a highlighting effect, showing exactly what pixels of the image are affected by that row's color mapping.
+
+### Internal
+- Additional elements of the DOM are being cached.
+- Additional parts of the app state are being tracked/cached.
+- Style changes to accommodate the new highlighting feature.
+
+---
+
 ## [0.8.9] - 2026-08-14
 
 ### Changed

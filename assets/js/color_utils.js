@@ -13,6 +13,13 @@ const color_dist_funcs = {
     custom: get_distance_oklab
 };
 
+export function calc_hex_brightness(hex) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return ((r * 299) + (g * 587) + (b * 114)) / 1000;
+}
+
 export function find_closest_color(source, palette, method) {
     if (method === "reset" || method === "custom") return source;
     const source_rgb = hex_to_rgb(source);

@@ -9,6 +9,27 @@ import * as color from "./color_utils.js";
 import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
+export function highlight_color(image_data, overlay_canvas, overlay_canvas_ctx, hex) {
+    const brightness = color.calc_hex_brightness(hex);
+    const highlight_color = (brightness >= 128) ? 0xFF000000 : 0xFFFFFFFF;
+    const overlay_data = overlay_canvas_ctx.createImageData(overlay_canvas.width, overlay_canvas.height);
+    const overlay_buffer = new Uint32Array(overlay_data.data.buffer);
+    const target_int = color.hex_to_uint32(hex);
+
+    for (let i = 0; i < image_data.length; i++) {
+        if (image_data[i] === target_int) {
+            overlay_buffer[i] = highlight_color;
+        }
+    }
+    overlay_canvas_ctx.putImageData(overlay_data, 0, 0);
+    overlay_canvas.classList.add('pulse');
+}
+
+export function clear_highlights(overlay_canvas, overlay_canvas_ctx) {
+    overlay_canvas_ctx.clearRect(0, 0, overlay_canvas.width, overlay_canvas.height);
+    overlay_canvas.classList.remove('pulse');
+}
+
 export function zoom_image(delta) {
     app.add_to_history({label: 'Zoom', type: 'zoom', value: delta, timestamp: Date.now()});
     canvas.render();
