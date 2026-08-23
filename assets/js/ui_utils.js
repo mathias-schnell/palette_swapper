@@ -10,6 +10,7 @@ import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
 export function highlight_color(image_data, overlay_canvas, overlay_canvas_ctx, hex) {
+    if (!image_data || image_data.length !== overlay_canvas.width * overlay_canvas.height) return;
     const brightness = color.calc_hex_brightness(hex);
     const highlight_color = (brightness >= 128) ? 0xFF000000 : 0xFFFFFFFF;
     const overlay_data = overlay_canvas_ctx.createImageData(overlay_canvas.width, overlay_canvas.height);
@@ -32,29 +33,18 @@ export function clear_highlights(overlay_canvas, overlay_canvas_ctx) {
 
 export function zoom_image(delta) {
     app.add_to_history({label: 'Zoom', type: 'zoom', value: delta, timestamp: Date.now()});
-    canvas.render();
 }
 
 export function flip_image_horizontal() {
     app.add_to_history({label: 'Flip Horizontal', type: 'flip_horizontal', value: true, timestamp: Date.now()});
-    canvas.render();
 }
 
 export function flip_image_vertical() {
     app.add_to_history({label: 'Flip Vertical', type: 'flip_vertical', value: true, timestamp: Date.now()});
-    canvas.render();
 }
 
 export function rotate_image(degrees) {
     app.add_to_history({label: 'Rotate', type: 'rotate', value: degrees, timestamp: Date.now()});
-    canvas.render();
-}
-
-export function activate_toolbar_menus() {
-    ui_cache.toolbar.querySelectorAll(".toolbar_item").forEach((el) => {
-        el.disabled = false;
-        el.ariaDisabled = false;
-    });
 }
 
 export function bind_tooltip(tooltip, el, anchor_pt, placement, settings = app.tooltip_config) {
@@ -76,20 +66,6 @@ export function change_swatch_color(swatch_row, target_hex) {
 
 export function close_all_menus() {
     document.querySelectorAll('.toolbar_menu').forEach(menu => menu.classList.remove('open'));
-}
-
-export function close_history() {
-    document.getElementById('history').classList.remove('open');
-    document.querySelectorAll('.history_panel').forEach(
-        panel => panel.classList.remove('open')
-    );
-}
-
-export function close_sidebar() {
-    document.getElementById('sidebar').classList.remove('open');
-    document.querySelectorAll('.sidebar_panel').forEach(
-        panel => panel.classList.remove('open')
-    );
 }
 
 export function enable_toolbar_items(toolbar, items) {
@@ -121,10 +97,6 @@ export function lock_color(e) {
     } else {
         app.remove_lock(source);
     }
-}
-
-export function open_menu(menu_id) {
-    document.getElementById(menu_id).classList.add('open');
 }
 
 export function toggle_sidebar(sidebar, tab, panel_id) {
@@ -198,14 +170,15 @@ export function set_custom_color(swatch) {
     if(!swatch.matches('.swatch')) return;
     const source = ui_cache.palette_select_list.dataset.source;
     const id = ui_cache.palette_select_list.getAttribute('id');
-    let row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
-    let colors = app.get_mapping().custom;
+    const row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
+    const custom = app.get_mapping().custom;
+    custom.set(ui_cache.palette_select_list.dataset.source, swatch.dataset.target);
+    const custom_uint32 = image.palette_to_uint32(custom);
     change_swatch_color(row, swatch.dataset.target);
     toggle_floating_element(ui_cache.palette_select_list);
-    colors.set(ui_cache.palette_select_list.dataset.source, swatch.dataset.target);
-    app.update_mapping({custom: colors});
-    ui_cache.palette_select_list.dataset.source = null;
-    refresh_ui(false, false, true, false);
+    app.set_mapping_custom(custom);
+    app.set_mapping_custom_uint32(custom_uint32);
+    refresh_ui(false, true, true, false, true);
 }
 
 export function toggle_floating_element(float_el, force_hide = false, force_show = false) {
@@ -266,6 +239,8 @@ export function update_palette_map() {
     const new_map = color.generate_palette_map(app.get_source().palette, app.get_target().palette, method);
     let colors = app.get_mapping().colors;
     let custom = app.get_mapping().custom;
+    let colors_uint32 = app.get_mapping().colors_uint32;
+    let custom_uint32 = app.get_mapping().custom_uint32;
     
     if (custom.size === 0) {
         custom = structuredClone(colors);
@@ -277,7 +252,9 @@ export function update_palette_map() {
         }
     }
     colors = new_map;
-    app.update_mapping({colors: colors, custom: custom, method: method});
+    colors_uint32 = image.palette_to_uint32(new_map);
+    custom_uint32 = image.palette_to_uint32(custom);
+    app.update_mapping({colors: colors, colors_uint32: colors_uint32, custom: custom, custom_uint32: custom_uint32, method: method});
 }
 
 function refresh_history() {
@@ -286,9 +263,14 @@ function refresh_history() {
     history_list.replaceChildren();
     history.actions.forEach((action, index) => {
         const li = document.createElement('li');
+        const remove_btn = document.createElement('span');
+        remove_btn.dataset.action = "remove_history";
+        remove_btn.dataset.index = index;
+        remove_btn.classList.add('remove_history');
+        remove_btn.innerHTML = "&#120;";
         li.dataset.action = action.type;
-        li.dataset.index = index;
         li.textContent = `${action.label}: ${action.value}`;
+        li.appendChild(remove_btn);
         if (index > history.current) {
             li.classList.add('inactive');
         } else {
@@ -321,8 +303,3 @@ function clamp_to_viewport(x, y, el_rect, vw, vh) {
     const clampedY = Math.max(5, Math.min(y, vh - el_rect.height - 5));
     return [clampedX, clampedY];
 }
-
-/* function update_scale_ui(zoom_val) {
-    zoom_val = zoom_val ?? 1;
-    ui_cache.zoom.querySelector("#zoom_input").value = zoom_val.toFixed(2);
-} */

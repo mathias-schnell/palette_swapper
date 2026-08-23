@@ -7,18 +7,11 @@ import * as app from "./app.js";
 import * as color from "./color_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
-export function apply_palette(image_data, palette) {
-    const buffer = new Uint32Array(image_data.data.buffer);
-    const uint32_palette = new Map();
-    
-    for (const [src_hex, tar_hex] of palette.entries()) {
-        uint32_palette.set(color.hex_to_uint32(src_hex), color.hex_to_uint32(tar_hex));
-    }
-
-    for (let i = 0; i < buffer.length; i++) {
-        if ((buffer[i] & 0xFF000000) === 0) continue;
-        const replacement = uint32_palette.get(buffer[i]);
-        if (replacement !== undefined) buffer[i] = replacement;
+export function apply_palette(image_buffer, uint32_palette) {
+    for (let i = 0; i < image_buffer.length; i++) {
+        if ((image_buffer[i] & 0xFF000000) === 0) continue;
+        const replacement = uint32_palette.get(image_buffer[i]);
+        if (replacement !== undefined) image_buffer[i] = replacement;
     }
 }
 
@@ -37,6 +30,7 @@ export function load_source(source) {
     src.image.crossOrigin = "Anonymous";
     src.image.onload = () => {
         src.palette = extract_palette(src.image);
+        src.palette_uint32 = palette_to_uint32(src.palette);
         app.update_source(src);
         const natWidth = src.image.naturalWidth + 'px';
         const natHeight = src.image.naturalHeight + 'px';
@@ -63,6 +57,7 @@ export function load_target(target) {
     tar.image.crossOrigin = "Anonymous";
     tar.image.onload = () => {
         tar.palette = extract_palette(tar.image);
+        tar.palette_uint32 = palette_to_uint32(tar.palette);
         app.update_target(tar);
         if (target instanceof File || target instanceof Blob) { URL.revokeObjectURL(tar.image.src); }
         document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "target" } }));
@@ -73,6 +68,14 @@ export function load_target(target) {
     } else if (typeof target === 'string') {
         tar.image.src = target;
     }
+}
+
+export function palette_to_uint32(palette) {
+    const uint32_palette = new Map();
+    for (const [src_hex, tar_hex] of palette.entries()) {
+        uint32_palette.set(color.hex_to_uint32(src_hex), color.hex_to_uint32(tar_hex));
+    }
+    return uint32_palette;
 }
 
 function extract_palette(image) {

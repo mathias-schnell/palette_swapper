@@ -11,18 +11,22 @@ const app = {
         current: -1
     },
     mapping: {
-        colors: new Map(), // key type - string, value type - string
-        custom: new Map(), // key type - string, value type - string
-        locked: new Map(), // key type - string, value type - string
+        colors: new Map(),          // key type - string, value type - string
+        colors_uint32: new Map(),   // key type - uint32, value type - uint32
+        custom: new Map(),          // key type - string, value type - string
+        custom_uint32: new Map(),   // key type - uint32, value type - uint32
+        locked: new Map(),          // key type - string, value type - string
         method: 'reset'
     },
     source: {
         image: new Image(),
-        palette: new Map() // key type - string, value type - number
+        palette: new Map(),         // key type - string, value type - number
+        palette_uint32: new Map()   // key type - uint32, value type - uint32
     },
     target: {
         image: new Image(),
-        palette: new Map() // key type - string, value type - number
+        palette: new Map(),         // key type - string, value type - number
+        palette_uint32: new Map()   // key type - uint32, value type - uint32
     },
     transforms: new Map(),
 };
@@ -49,9 +53,17 @@ export function update_target(data) { Object.assign(app.target, data); }
 export function update_transforms(data) { app.transforms = new Map(data); }
 export function update_history(data) { Object.assign(app.history, data); }
 
+/* update functions for specific app state properties */
+export function set_mapping_colors(colors) { app.mapping.colors = colors; }
+export function set_mapping_colors_uint32(colors_uint32) { app.mapping.colors_uint32 = colors_uint32; }
+export function set_mapping_custom(custom) { app.mapping.custom = custom; }
+export function set_mapping_custom_uint32(custom_uint32) { app.mapping.custom_uint32 = custom_uint32; }
+export function set_mapping_locked(locked) { app.mapping.locked = locked; }
+export function set_mapping_method(method) { app.mapping.method = method; }
+
 /* specialized functions for interacting with the app state */
-export function advance_history() { if(app.history.current < app.history.actions.length - 1) { app.history.current++; rebuild_transforms(); } }
-export function regress_history() { if(app.history.current > -1) { app.history.current--; rebuild_transforms(); } }
+export function advance_history() { if(app.history.current < app.history.actions.length - 1) { app.history.current++; } }
+export function regress_history() { if(app.history.current > -1) { app.history.current--; } }
 export function remove_transform(name) { app.transforms.delete(name); }
 export function remove_lock(source) { app.mapping.locked.delete(source); }
 export function set_base_image_cache(image_data) { app.base_image_cache = image_data; }
@@ -62,6 +74,7 @@ export function add_to_history(action) {
     app.history.actions = app.history.actions.slice(0, app.history.current + 1);
     app.history.actions.push(action);
     advance_history();
+    rebuild_transforms(); 
 }
 
 export function clear_history() {
@@ -70,15 +83,14 @@ export function clear_history() {
     rebuild_transforms();
 }
 
-export function remove_from_history(index = null) {
-    index = (index ?? app.history.current);
-    if(index >= 0) {
-        app.history.actions.splice(index, 1);
-        regress_history();
-    }
+export function remove_from_history(index = app.history.current) {
+    if (index < 0 || index >= app.history.actions.length) return;
+    app.history.actions.splice(index, 1);
+    if (index <= app.history.current) regress_history();
+    rebuild_transforms(); 
 }
 
-function rebuild_transforms() {
+export function rebuild_transforms() {
     const transforms = new Map();
     for (let i = 0; i <= app.history.current; i++) {
         const type = app.history.actions[i].type;

@@ -35,6 +35,11 @@
     color: var(--text-color-disabled);
 }
 
+#history_sidebar #history_list li > span {
+    color: red;
+    float: right;
+}
+
 #history_sidebar .history_panel {
     position: relative;
     height: 100vh;

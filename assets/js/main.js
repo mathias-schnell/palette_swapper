@@ -10,13 +10,14 @@ import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
 const sidebar_actions = {
     lock_color          : (e) => ui.lock_color(e),
+    remove_history      : (e) => app.remove_from_history(e.target.dataset.index),
     toggle_panel        : (sidebar, tab, action) => ui.toggle_sidebar(sidebar, tab, action),
     toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target),
 };
 
 const toolbar_actions = {
-    undo                    : (e) => app.regress_history(),
-    redo                    : (e) => app.advance_history(),
+    undo                    : (e) => { app.regress_history(); app.rebuild_transforms(); },
+    redo                    : (e) => { app.advance_history(); app.rebuild_transforms(); },
     zoom_in                 : (e) => ui.zoom_image(0.25),
     zoom_out                : (e) => ui.zoom_image(-0.25),
     load_source             : (e) => source_upload.click(),
@@ -81,10 +82,14 @@ function bind_history_sidebar_events() {
     ui_cache.history_sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.history_tooltip, el, 'middle', 'left'));
     ui_cache.history_sidebar.addEventListener('click', (e) => {
         const tab = e.target.closest('.tab');
-        if (!tab) return;
-        const action = tab.dataset.action;
-        const panel_id = tab.dataset.panel;
-        if(action) { sidebar_actions[action]?.(ui_cache.history_sidebar, tab, panel_id); }
+        const action = e.target.dataset.action;
+        if (tab) {
+            const panel_id = tab.dataset.panel;
+            const tab_action = tab.dataset.action;
+            sidebar_actions[tab_action]?.(ui_cache.history_sidebar, tab, panel_id);
+        } else if (action) {
+            sidebar_actions[action]?.(e);
+        }
     });
 }
 

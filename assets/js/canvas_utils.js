@@ -7,7 +7,7 @@ import * as app from "./app.js";
 import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
-let rendering = false;
+let render_scheduled = false;
 const transform_order = {
     rotate: rotate,
     flip_horizontal: flip_horizontal,
@@ -16,8 +16,8 @@ const transform_order = {
 
 /* master function that refreshes the canvas and applies all relevant operations and transforms */
 export function render() {
-    if(rendering) return;
-    rendering = true;
+    if(render_scheduled) return;
+    render_scheduled = true;
 
     requestAnimationFrame(() => {
         const state = build_state(ui_cache.canvas_container, ui_cache.ctx);
@@ -33,7 +33,7 @@ export function render() {
             
             apply_effects(state);
         }
-        rendering = false;
+        render_scheduled = false;
     });
 }
 
@@ -129,7 +129,8 @@ function resize(state) {
 /* functions that draw to the canvas */
 function apply_color_map(state) {
     const image_data = state.ctx.getImageData(0, 0, state.width, state.height);
-    image.apply_palette(image_data, (state.mapping.method === "custom" ? state.mapping.custom : state.mapping.colors));
+    const uint32_palette = (state.mapping.method === "custom" ? state.mapping.custom_uint32 : state.mapping.colors_uint32);
+    image.apply_palette(new Uint32Array(image_data.data.buffer), uint32_palette);
     state.ctx.putImageData(image_data, 0, 0);
 }
 

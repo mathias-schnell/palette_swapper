@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.9.1] - 2026-08-23
+
+### Added
+- An "X" button to the history list that lets the user remove a specific action from the history.
+
+### Fixed
+- Fixed a bug with the history removal.
+
+### Internal
+- Lots of code cleanup and optimization. Palette mapping in particular should be faster and rendering should happen less often.
+
+---
+
 ## [0.9.0] - 2026-08-19
 
 ### Added
