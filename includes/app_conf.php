@@ -8,7 +8,7 @@
             'Export Image' => [
                 'PNG' => 'export_png',
                 'JPG' => 'export_jpg',
-                'GIF' => 'export_gif',
+                //'GIF' => 'export_gif',
             ],
         ],
         'Edit' => [

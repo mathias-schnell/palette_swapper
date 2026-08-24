@@ -31,7 +31,7 @@
     </div>
     <div class="tab_container">
         <div class="tab" data-action="toggle_panel" data-panel="mapping_panel" data-tooltip="Color Mapping">
-            <div class='tab_icon'>🎨</div>
+            <div class='tab_icon'>🌈</div>
             <div class='tab_arrow'></div>
         </div>
     </div>

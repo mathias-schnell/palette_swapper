@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.3] - 2026-08-23
+
+### Changed
+- History sideabr displays history actions in a better format.
+- Color Mapping tab's icon has been changed.
+- Export to GIF has been temporarily disabled.
+
+### Internal
+- Removed a lingering test function
+
+---
+
 ## [0.9.2] - 2026-08-23
 
 ### Changed

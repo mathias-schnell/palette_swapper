@@ -9,6 +9,13 @@ import * as color from "./color_utils.js";
 import * as image from "./image_utils.js";
 import { ui_cache } from "./ui_cache.js";
 
+const formatters = {
+    flip_horizontal     : (action) => format_action_flip_horizontal(action),
+    flip_vertical       : (action) => format_action_flip_vertical(action),
+    rotate              : (action) => format_action_rotate(action),
+    zoom                : (action) => format_action_zoom(action),
+}
+
 export function highlight_color(image_data, overlay_canvas, overlay_canvas_ctx, hex) {
     if (!image_data || image_data.length !== overlay_canvas.width * overlay_canvas.height) return;
     const brightness = color.calc_hex_brightness(hex);
@@ -235,6 +242,24 @@ export function refresh_palette_sidebar(sidebar, palette_row_container, palette_
     });
 }
 
+function format_action_flip_horizontal(action) {
+    return "Flip Horizontal";
+}
+
+function format_action_flip_vertical(action) {
+    return "Flip Vertical";
+}
+
+function format_action_rotate(action) {
+    if(action.value < 0) return "Rotate " + Math.abs(action.value) + "&deg; Counterclockwise";
+    else return "Rotate " + Math.abs(action.value) + "&deg; Clockwise";
+}
+
+function format_action_zoom(action) {
+    if(action.value < 0) return "Zoom Out " + (Math.abs(action.value) * 100) + "%";
+    else return "Zoom In " + (Math.abs(action.value) * 100) + "%";
+}
+
 function refresh_history_sidebar(sidebar) {
     const history_actions = app.get_history_actions();
     const current = app.get_history_current();
@@ -246,9 +271,9 @@ function refresh_history_sidebar(sidebar) {
         remove_btn.dataset.action = "remove_history";
         remove_btn.dataset.index = index;
         remove_btn.classList.add('remove_history');
-        remove_btn.innerHTML = "&#120;";
+        remove_btn.innerHTML = '&#120;';
         li.dataset.action = action.type;
-        li.textContent = `${action.label}: ${action.value}`;
+        li.innerHTML = formatters[action.type]?.(action);
         li.appendChild(remove_btn);
         if (index > current) {
             li.classList.add('inactive');

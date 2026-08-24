@@ -65,6 +65,7 @@ export function load_target(target) {
         if (target instanceof File || target instanceof Blob) { URL.revokeObjectURL(tar.image.src); }
         document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "target" } }));
     }
+    tar.image.onerror = () => { console.error("Failed to load image from target:", target); };
 
     if (target instanceof File || target instanceof Blob) {
         tar.image.src = URL.createObjectURL(target);

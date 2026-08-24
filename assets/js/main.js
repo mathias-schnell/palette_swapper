@@ -46,7 +46,6 @@ const keyboard_shortcuts = {
     "="             : (e) => toolbar_actions.zoom_in(),
     "+"             : (e) => toolbar_actions.zoom_in(),
     "-"             : (e) => toolbar_actions.zoom_out(),
-    "t"             : (e) => test_highlight(),    
 };
 
 /* try our best to ensure that everything starts after the DOM has loaded */
@@ -65,8 +64,8 @@ function initialize_app() {
     bind_keyboard_events();
 
     if(ui_cache.body.dataset.demo === "true") {
-        image.load_source("/assets/demo/demo_source.png", (e) => ui.refresh_ui() );
-        image.load_target("/assets/demo/demo_palette.png", (e) => ui.refresh_ui() );
+        image.load_source("/assets/demo/demo_source.png");
+        image.load_target("/assets/demo/demo_palette.png");
     }
     ui_cache.body.dataset.theme = "light";
 }
