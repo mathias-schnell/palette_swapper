@@ -11,18 +11,28 @@
 #palette_select_list,
 #history_tooltip,
 #palette_tooltip {
-    background: var(--bg-color-2);
-    border-radius: 4px;
-    color: var(--text-color-2);
-    font-family: var(--text-font-family-mono);
-    font-size: var(--text-font-size-medium);
-    padding: 6px 10px;
     position: fixed;
+
+    background: var(--tooltip-background);
+    color: var(--tooltip-text-color);
+    font-family: var(--tooltip-font);
+    font-size: var(--tooltip-font-size);
     opacity: 0;
     text-transform: uppercase;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.25s ease;
     white-space: nowrap;
     z-index: 1000;
+}
+
+#history_tooltip,
+#palette_tooltip {
+    border-radius: 4px;
+    padding: 6px 10px;
+}
+
+#palette_select_list {
+    border-radius: 6px;
+    padding: 10px;
 }
 
 #palette_select_list.hidden,

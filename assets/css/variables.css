@@ -35,7 +35,8 @@
 
     /* tooltip settings */
     --tooltip-background: #252525;
-    --tooltip-font: sans-serif;
+    --tooltip-font-family: sans-serif;
+    --tooltip-font-size: 16px;
     --tooltip-text-color: #F5F5F5;
 
     /* tab settings */

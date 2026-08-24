@@ -7,5 +7,3 @@
  - Browser compatibility testing.
  - Accessibility audit.
  - Performance profiling.
- - Code cleanup.
- - Final bug fixing.

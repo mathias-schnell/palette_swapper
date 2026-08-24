@@ -30,8 +30,8 @@ const toolbar_actions = {
     export_png              : (e) => image.export_image('untitled.png', 'image/png'),
     export_jpg              : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
     export_gif              : (e) => image.export_image('untitled.gif', 'image/gif'),
-    show_source_palette     : (e) => ui.show_palette_window(app.get_source().palette),
-    show_target_palette     : (e) => ui.show_palette_window(app.get_target().palette),
+    show_source_palette     : (e) => ui.show_palette_window(app.get_source_palette()),
+    show_target_palette     : (e) => ui.show_palette_window(app.get_target_palette()),
     theme_light             : (e) => ui_cache.body.dataset.theme = "light",
     theme_dark              : (e) => ui_cache.body.dataset.theme = "dark",
 };
@@ -56,6 +56,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 /* all the initialization that is required before the app is properly used */
 function initialize_app() {
+    app.reset();
     ui_cache_init();
     bind_toolbar_events();
     bind_palette_sidebar_events();
@@ -73,8 +74,11 @@ function initialize_app() {
 /* binding for all events that affect the entire app */
 function bind_global_events() {
     document.addEventListener('click', (e) => ui.hide_floating_elements(e) );
-    document.addEventListener('image_upload', (e) => ui.refresh_ui());
     document.addEventListener('history_change', (e) => ui.refresh_ui());
+    document.addEventListener('image_upload', (e) => {
+        if(e.detail.type === "target") ui.populate_palette_selector(ui_cache.palette_select_list);
+        ui.refresh_ui();
+    });
 }
 
 /* binding for all events specific to the history panel */
@@ -106,8 +110,11 @@ function bind_keyboard_events() {
 
 /* binding for all events specific to the sidebar */
 function bind_palette_sidebar_events() {
-    ui_cache.palette_sidebar.querySelector('#mapping_method').addEventListener('change', (e) => ui.refresh_ui());
     ui_cache.palette_sidebar.querySelectorAll('[data-tooltip]').forEach(el => ui.bind_tooltip(ui_cache.palette_tooltip, el));
+    ui_cache.palette_sidebar.querySelector('#mapping_method').addEventListener('change', (e) => {
+        app.set_mapping_method(e.target.value);
+        ui.refresh_ui(); 
+    });
     ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('mouseover', (e) => {
         const source_row = e.target.closest('.source_color');
         if (!source_row) return;

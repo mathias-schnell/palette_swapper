@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.9.2] - 2026-08-23
+
+### Changed
+- Text tooltips and color selector now use slightly different styling rules.
+
+### Internal
+- App state now uses setters and getters for each component of it.
+- App state now has reset and initialization functions for each component and the entire object.
+- More code cleanup and optimization.
+
+### Fixed
+- Fixed a bug with transparent colors on the canvas when using non-default themes.
+- Fixed a bug with the color mapping method not going back to "Reset" when loading a new source image.
+- Fixed a bug with Custom mappings sticking around from old images when loading new ones.
+- Fixed a bug with the canvas that was hiding part of the border around it.
+- Tooltips now actually use tooltip CSS variables.
+
+---
+
 ## [0.9.1] - 2026-08-23
 
 ### Added

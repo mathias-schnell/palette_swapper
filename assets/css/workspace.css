@@ -15,22 +15,25 @@
 #highlight_canvas,
 #preview_canvas {
     image-rendering: pixelated;
-    height: inherit;
-    width: inherit;
+    height: 100%;
+    width: 100%;
 }
 
 .canvas_container {
     position: relative;
 
-    border: 1px solid var(--border-color-1);
-    background:
+    background-color: #FFFFFF;
+    background-image:
         linear-gradient(45deg, #ccc 25%, transparent 25%),
         linear-gradient(-45deg, #ccc 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, #ccc 75%),
         linear-gradient(-45deg, transparent 75%, #ccc 75%);
-    background-size: 16px 16px;
-    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
-    display: none;
+    background-size: 24px 24px;
+    background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+    border: 1px solid var(--border-color-1);
+    box-sizing: border-box;
+    height: 0;
+    width: 0;
 }
 
 .pulse {

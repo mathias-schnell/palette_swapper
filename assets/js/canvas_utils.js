@@ -49,30 +49,25 @@ function apply_transforms(state) {
 /* a function for building the state object that holds all data about the canvas's current state */
 function build_state(container, ctx) {
     const state = {
-        source          : app.get_source(),
-        mapping         : app.get_mapping(),
+        colors_uint32   : app.get_mapping_colors_uint32(),
+        custom_uint32   : app.get_mapping_custom_uint32(),
+        map_method      : app.get_mapping_method(),
+        src_image       : app.get_source_image(),
         transforms      : app.get_transforms(),
         container       : container,
         ctx             : ctx,
     };
-    const zoom = state.transforms.get('zoom') ?? 1;
-    const rotation = state.transforms.get('rotate') ?? 0;
-    const rotated = rotation % 180 === 90;
-    const width = rotated ? state.source.image.naturalHeight * zoom : state.source.image.naturalWidth * zoom;
-    const height = rotated ? state.source.image.naturalWidth * zoom : state.source.image.naturalHeight * zoom;
-
-    state.zoom = zoom;
-    state.rotation = rotation;
-    state.rotated = rotated;
-    state.width = width;
-    state.height = height;
-
+    state.zoom = state.transforms.get('zoom') ?? 1;
+    state.rotation = state.transforms.get('rotate') ?? 0;
+    state.rotated = state.rotation % 180 === 90;
+    state.width = state.rotated ? state.src_image.naturalHeight * state.zoom : state.src_image.naturalWidth * state.zoom;
+    state.height = state.rotated ? state.src_image.naturalWidth * state.zoom : state.src_image.naturalHeight * state.zoom;
     return state;
 }
 
 /* a function that checks whether the state is valid */
 function validate_state(state) {
-    if(!state.container || !state.ctx || !state.source.image || state.width <= 0 || state.height <= 0) return false;
+    if(!state.container || !state.ctx || !state.src_image || state.width <= 0 || state.height <= 0) return false;
     return true;
 }
 
@@ -129,7 +124,7 @@ function resize(state) {
 /* functions that draw to the canvas */
 function apply_color_map(state) {
     const image_data = state.ctx.getImageData(0, 0, state.width, state.height);
-    const uint32_palette = (state.mapping.method === "custom" ? state.mapping.custom_uint32 : state.mapping.colors_uint32);
+    const uint32_palette = (state.map_method === "custom" ? state.custom_uint32 : state.colors_uint32);
     image.apply_palette(new Uint32Array(image_data.data.buffer), uint32_palette);
     state.ctx.putImageData(image_data, 0, 0);
 }
@@ -143,6 +138,6 @@ function clear(state) {
 }
 
 function draw_source(state) {
-    if (!state.source.image) return;
-    state.ctx.drawImage(state.source.image, 0, 0, state.source.image.naturalWidth * state.zoom, state.source.image.naturalHeight * state.zoom);
+    if (!state.src_image) return;
+    state.ctx.drawImage(state.src_image, 0, 0, state.width, state.height);
 }

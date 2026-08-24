@@ -29,14 +29,15 @@ export function load_source(source) {
     const src = { image: new Image(), palette: new Map() };
     src.image.crossOrigin = "Anonymous";
     src.image.onload = () => {
-        src.palette = extract_palette(src.image);
-        src.palette_uint32 = palette_to_uint32(src.palette);
-        app.update_source(src);
-        const natWidth = src.image.naturalWidth + 'px';
-        const natHeight = src.image.naturalHeight + 'px';
-        const container = ui_cache.canvas_container;
-        [container.style.width, container.style.height] = [natWidth, natHeight];
-        container.style.display = "block";
+        const palette = extract_palette(src.image);
+        app.reset_image_cache();
+        app.reset_history();
+        app.reset_mapping();
+        app.reset_source();
+        app.reset_transforms();
+        app.set_source_image(src.image);
+        app.set_source_palette(palette);
+        app.set_source_palette_uint32(palette_to_uint32(palette));
         if (source instanceof File || source instanceof Blob) { URL.revokeObjectURL(src.image.src); }
         document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "source" } }));
     };
@@ -56,9 +57,11 @@ export function load_target(target) {
     const tar = { image: new Image(), palette: new Map() };
     tar.image.crossOrigin = "Anonymous";
     tar.image.onload = () => {
-        tar.palette = extract_palette(tar.image);
-        tar.palette_uint32 = palette_to_uint32(tar.palette);
-        app.update_target(tar);
+        const palette = extract_palette(tar.image);
+        app.reset_target();
+        app.set_target_image(tar.image);
+        app.set_target_palette(palette);
+        app.set_target_palette_uint32(palette_to_uint32(palette));
         if (target instanceof File || target instanceof Blob) { URL.revokeObjectURL(tar.image.src); }
         document.dispatchEvent(new CustomEvent("image_upload", { detail: { type: "target" } }));
     }
@@ -76,6 +79,24 @@ export function palette_to_uint32(palette) {
         uint32_palette.set(color.hex_to_uint32(src_hex), color.hex_to_uint32(tar_hex));
     }
     return uint32_palette;
+}
+
+export function update_palette_mapping() {
+    const method = app.get_mapping_method();
+    const locked_colors = app.get_mapping_locked();
+    const new_map = color.generate_palette_map(app.get_source_palette(), app.get_target_palette(), method);
+    const colors = app.get_mapping_colors();
+    const custom = (app.get_mapping_custom().size === 0 ? structuredClone(colors) : app.get_mapping_custom());
+    for (const key of new_map.keys()) {
+        if(locked_colors.has(key)) {
+            new_map.set(key, locked_colors.get(key));
+            custom.set(key, locked_colors.get(key));
+        }
+    }
+    app.set_mapping_colors(new_map);
+    app.set_mapping_colors_uint32(palette_to_uint32(new_map));
+    app.set_mapping_custom(custom);
+    app.set_mapping_custom_uint32(palette_to_uint32(custom));
 }
 
 function extract_palette(image) {

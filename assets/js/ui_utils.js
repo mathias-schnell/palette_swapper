@@ -93,7 +93,7 @@ export function lock_color(e) {
     const source = e.target.closest("[data-source]").dataset.source;
     if(e.target.classList.contains('locked')) {
         const target = e.target.closest("[data-target]").dataset.target;
-        app.set_lock(source, target);
+        app.create_lock(source, target);
     } else {
         app.remove_lock(source);
     }
@@ -108,7 +108,7 @@ export function toggle_sidebar(sidebar, tab, panel_id) {
 
 export function populate_palette_selector(palette_selector) {
     palette_selector.replaceChildren();
-    const target_palette = app.get_target().palette;
+    const target_palette = app.get_target_palette();
     const colors = target_palette.keys();
     const size = Math.max(1, Math.ceil(Math.sqrt(target_palette.size)));
     palette_selector.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
@@ -171,14 +171,14 @@ export function set_custom_color(swatch) {
     const source = ui_cache.palette_select_list.dataset.source;
     const id = ui_cache.palette_select_list.getAttribute('id');
     const row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
-    const custom = app.get_mapping().custom;
+    const custom = app.get_mapping_custom();
     custom.set(ui_cache.palette_select_list.dataset.source, swatch.dataset.target);
     const custom_uint32 = image.palette_to_uint32(custom);
     change_swatch_color(row, swatch.dataset.target);
     toggle_floating_element(ui_cache.palette_select_list);
     app.set_mapping_custom(custom);
     app.set_mapping_custom_uint32(custom_uint32);
-    refresh_ui(false, true, true, false, true);
+    refresh_ui();
 }
 
 export function toggle_floating_element(float_el, force_hide = false, force_show = false) {
@@ -204,28 +204,30 @@ export function toggle_palette_selector(el, force_hide = false, force_show = fal
     
 }
 
-export function refresh_ui(skip_upm = false, skip_pps = false, skip_rp = false, skip_rc = false, skip_rh = false) {
-    if (!skip_upm) update_palette_map();
-    if (!skip_pps) populate_palette_selector(ui_cache.palette_select_list);
-    if (!skip_rp) redraw_palette(ui_cache.palette_row_container, ui_cache.palette_row_prime);
-    if (!skip_rc) canvas.render();
-    if (!skip_rh) refresh_history();
+export function refresh_ui() {
+    image.update_palette_mapping();
+    refresh_palette_sidebar(ui_cache.palette_sidebar, ui_cache.palette_row_container, ui_cache.palette_row_prime);
+    refresh_history_sidebar(ui_cache.history_sidebar);
+    canvas.render();
 }
 
-export function redraw_palette(palette_row_container, palette_row_template) {
-    const colors = (app.get_mapping().method === "custom" ? app.get_mapping().custom : app.get_mapping().colors);
+export function refresh_palette_sidebar(sidebar, palette_row_container, palette_row_template) {
+    const method = app.get_mapping_method();
+    const locked_colors = app.get_mapping_locked();
+    const colors = (method === 'custom' ? app.get_mapping_custom() : app.get_mapping_colors());
+    sidebar.querySelector('#mapping_method').value = method;
     palette_row_container.querySelectorAll('.palette_row:not(#palette_row_prime)').forEach(el => el.remove());
     colors.forEach((tar_hex, source_hex) => {
         const row = palette_row_template.cloneNode(true);
         row.removeAttribute('id');
-        row.classList.toggle("custom_mode", app.get_mapping().method === "custom");
+        row.classList.toggle("custom_mode", method === "custom");
         row.dataset.source = source_hex;
         row.dataset.target = tar_hex;
         row.querySelector('.source_swatch').style.background = `#${source_hex}`;
         row.querySelector('.target_swatch').style.background = `#${tar_hex}`;
         row.querySelector('.source_hex').textContent = `#${source_hex}`;
         row.querySelector('.target_hex').textContent = `#${tar_hex}`;
-        if (app.get_mapping().locked.get(source_hex)) {
+        if (locked_colors.get(source_hex)) {
             row.querySelector('.lock_button').classList.toggle('locked', true);
             row.querySelector('.lock_button').classList.toggle('unlocked', false);
         }
@@ -233,35 +235,12 @@ export function redraw_palette(palette_row_container, palette_row_template) {
     });
 }
 
-export function update_palette_map() {
-    const method = ui_cache.mapping_method.value;
-    const locked = app.get_mapping().locked;
-    const new_map = color.generate_palette_map(app.get_source().palette, app.get_target().palette, method);
-    let colors = app.get_mapping().colors;
-    let custom = app.get_mapping().custom;
-    let colors_uint32 = app.get_mapping().colors_uint32;
-    let custom_uint32 = app.get_mapping().custom_uint32;
-    
-    if (custom.size === 0) {
-        custom = structuredClone(colors);
-    }
-    for (const key of new_map.keys()) {
-        if(locked.has(key)) {
-            new_map.set(key, locked.get(key));
-            custom.set(key, locked.get(key));
-        }
-    }
-    colors = new_map;
-    colors_uint32 = image.palette_to_uint32(new_map);
-    custom_uint32 = image.palette_to_uint32(custom);
-    app.update_mapping({colors: colors, colors_uint32: colors_uint32, custom: custom, custom_uint32: custom_uint32, method: method});
-}
-
-function refresh_history() {
-    const history = app.get_history();
-    const history_list = document.getElementById('history_list');
+function refresh_history_sidebar(sidebar) {
+    const history_actions = app.get_history_actions();
+    const current = app.get_history_current();
+    const history_list = sidebar.querySelector('#history_list');
     history_list.replaceChildren();
-    history.actions.forEach((action, index) => {
+    history_actions.forEach((action, index) => {
         const li = document.createElement('li');
         const remove_btn = document.createElement('span');
         remove_btn.dataset.action = "remove_history";
@@ -271,7 +250,7 @@ function refresh_history() {
         li.dataset.action = action.type;
         li.textContent = `${action.label}: ${action.value}`;
         li.appendChild(remove_btn);
-        if (index > history.current) {
+        if (index > current) {
             li.classList.add('inactive');
         } else {
             li.classList.add('active');
