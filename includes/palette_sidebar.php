@@ -1,6 +1,18 @@
 <div id="palette_sidebar" class="palette_sidebar">
-    <div id="mapping_panel_container" class="mapping_panel_container">
-        <div id="mapping_panel" class="mapping_panel">
+    <div id="source_panel_container" class="panel_container source_panel_container">
+        <div id="source_panel" class="panel source_panel">
+            <h3>Source Palette</h3>
+            <div id="source_palette_container" class="palette_container"></div>
+        </div>
+    </div>
+    <div id="target_panel_container" class="panel_container target_panel_container">
+        <div id="target_panel" class="panel target_panel">
+            <h3>Target Palette</h3>
+            <div id="target_palette_container" class="palette_container"></div>
+        </div>
+    </div>
+    <div id="mapping_panel_container" class="panel_container mapping_panel_container">
+        <div id="mapping_panel" class="panel mapping_panel">
             <div id="mapping_method_container" class="mapping_method_container">
                 <h3>Mapping Presets</h3>
                 <select id="mapping_method" class="mapping_method" data-action="mapping_method">
@@ -20,7 +32,7 @@
                     <div class="source_color">
                         <span class="swatch source_swatch"></span><span class="source_hex"></span>
                     </div>
-                    →
+                    <span class="swatch_arrow">&#10148;</span>
                     <div class="target_color">
                         <span class="swatch target_swatch"></span><span class="target_hex"></span>
                         <div class="palette_select_button" data-action="toggle_pal_select">&#9205;</div>
@@ -30,9 +42,20 @@
         </div>
     </div>
     <div class="tab_container">
-        <div class="tab" data-action="toggle_panel" data-panel="mapping_panel" data-tooltip="Color Mapping">
-            <div class='tab_icon'>🌈</div>
-            <div class='tab_arrow'></div>
+        <div class="tab_wrapper">
+            <button class="tab" data-action="show_source_palette" data-panel="source_panel" data-tooltip="Source Palette">
+                🎨
+            </button>
+        </div>
+        <div class="tab_wrapper">
+            <button class="tab" data-action="show_target_palette" data-panel="target_panel" data-tooltip="Target Palette">
+                🎯
+            </button>
+        </div>
+        <div class="tab_wrapper">
+            <button class="tab" data-action="toggle_panel" data-panel="mapping_panel" data-tooltip="Color Mapping">
+                🌈
+            </button>
         </div>
     </div>
 </div>

@@ -9,10 +9,12 @@ import * as ui from "./ui_utils.js";
 import { ui_cache, ui_cache_init } from "./ui_cache.js";
 
 const sidebar_actions = {
-    lock_color          : (e) => ui.lock_color(e),
-    remove_history      : (e) => app.remove_from_history(e.target.dataset.index),
-    toggle_panel        : (sidebar, tab, action) => ui.toggle_sidebar(sidebar, tab, action),
-    toggle_pal_select   : (e) => ui.toggle_palette_selector(e.target),
+    lock_color              : (e) => ui.lock_color(e),
+    remove_history          : (e) => app.remove_from_history(e.target.dataset.index),
+    toggle_panel            : (sidebar, tab, panel) => ui.toggle_panel(sidebar, tab, panel),
+    show_source_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); ui.draw_palette_in_panel(panel, app.get_source_palette()); },
+    show_target_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); ui.draw_palette_in_panel(panel, app.get_target_palette()); },
+    toggle_pal_select       : (e) => ui.toggle_palette_selector(e.target),
 };
 
 const toolbar_actions = {
@@ -30,8 +32,6 @@ const toolbar_actions = {
     export_png              : (e) => image.export_image('untitled.png', 'image/png'),
     export_jpg              : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
     export_gif              : (e) => image.export_image('untitled.gif', 'image/gif'),
-    show_source_palette     : (e) => ui.show_palette_window(app.get_source_palette()),
-    show_target_palette     : (e) => ui.show_palette_window(app.get_target_palette()),
     theme_light             : (e) => ui_cache.body.dataset.theme = "light",
     theme_dark              : (e) => ui_cache.body.dataset.theme = "dark",
 };
@@ -87,9 +87,8 @@ function bind_history_sidebar_events() {
         const tab = e.target.closest('.tab');
         const action = e.target.dataset.action;
         if (tab) {
-            const panel_id = tab.dataset.panel;
-            const tab_action = tab.dataset.action;
-            sidebar_actions[tab_action]?.(ui_cache.history_sidebar, tab, panel_id);
+            const panel = ui_cache.history_sidebar.querySelector('#' + tab.dataset.panel);
+            sidebar_actions[action]?.(ui_cache.history_sidebar, tab, panel);
         } else if (action) {
             sidebar_actions[action]?.(e);
         }
@@ -126,12 +125,11 @@ function bind_palette_sidebar_events() {
         ui.clear_highlights(ui_cache.highlight_canvas, ui_cache.highlight_ctx);
     });
     ui_cache.palette_sidebar.addEventListener('click', (e) => {
-        const action_node = e.target.closest('[data-action]');
-        if(!action_node) return;
-        const action = action_node.dataset.action;
-        if(action === "toggle_panel") {
-            const tab = e.target.closest('.tab');
-            sidebar_actions[action]?.(ui_cache.palette_sidebar, tab, tab.dataset.panel);
+        const tab = e.target.closest('.tab');
+        const action = e.target.dataset.action;
+        if(tab) {
+            const panel = ui_cache.palette_sidebar.querySelector('#' + tab.dataset.panel);
+            sidebar_actions[action]?.(ui_cache.palette_sidebar, tab, panel);
         } else {
             sidebar_actions[action]?.(e);
         }

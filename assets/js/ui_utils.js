@@ -106,11 +106,18 @@ export function lock_color(e) {
     }
 }
 
-export function toggle_sidebar(sidebar, tab, panel_id) {
-    const panel = document.getElementById(panel_id);
-    sidebar.classList.toggle('open');
-    panel.classList.toggle('open');
-    tab.classList.toggle('open');
+export function toggle_panel(sidebar, tab, panel) {
+    const was_open = tab.classList.contains('open');
+    
+    sidebar.querySelectorAll('.tab.open, .panel.open').forEach((e) => {
+        e.classList.remove('open');
+    });
+    sidebar.classList.toggle('open', !was_open);
+    
+    if(!was_open) {
+        panel.classList.add('open');
+        tab.classList.add('open');
+    }
 }
 
 export function populate_palette_selector(palette_selector) {
@@ -128,32 +135,20 @@ export function populate_palette_selector(palette_selector) {
     })
 }
 
-export function show_palette_window(palette) {
-    const pal_window = document.createElement("div");
-    const close_btn = document.createElement("button");
+export function draw_palette_in_panel(panel, palette) {
+    const palette_container = panel.querySelector(".palette_container");
     const grid_container = document.createElement("div");
     const hex_container = document.createElement("div");
     const hex_text = document.createElement("span");
     const colors = palette.keys();
     const size = Math.max(1, Math.ceil(Math.sqrt(palette.size)));
 
-    document.querySelector(".palette_window")?.remove();
-
     hex_text.classList.add("palette_hex");
     hex_text.textContent = `#FFFFFF`;
     hex_container.classList.add("palette_hex_container");
     hex_container.appendChild(hex_text);
-    pal_window.classList.add("palette_window");
-    pal_window.appendChild(hex_container);
     grid_container.classList.add("palette_grid");
     grid_container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-    close_btn.classList.add("palette_close_btn");
-
-    close_btn.innerHTML = "&times;";
-    close_btn.addEventListener("click", () => {
-        pal_window.remove();
-    });
-    pal_window.appendChild(close_btn);
 
     colors.forEach((hex) => {
         const swatch = document.createElement("span");
@@ -169,8 +164,10 @@ export function show_palette_window(palette) {
         grid_container.appendChild(swatch);
     })
 
-    pal_window.appendChild(grid_container);
-    document.body.appendChild(pal_window);
+    palette_container.replaceChildren();
+    palette_container.classList.add("palette_window");
+    palette_container.appendChild(hex_container);
+    palette_container.appendChild(grid_container);
 }
 
 export function set_custom_color(swatch) {

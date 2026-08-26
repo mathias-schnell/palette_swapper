@@ -29,10 +29,6 @@
                 '180°' => 'rotate_180',
             ],
         ],
-        'Palette' => [
-            'Show Source Palette' => 'show_source_palette',
-            'Show Target Palette' => 'show_target_palette',
-        ],
         'Themes' => [
             'Light' => 'theme_light',
             'Dark' => 'theme_dark',

@@ -68,46 +68,70 @@
     width: var(--history-sidebar-width);
 }
 
-#history_sidebar .tabs {
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
+#history_sidebar .tab_container .tab_wrapper {
+    position: relative;
 }
 
-#history_sidebar .tab {
+#history_sidebar .tab_container .tab_wrapper button {
+    position: relative;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: inherit;
+    font: inherit;
+    line-height: inherit;
+    margin: 0;
+    text-align: left;
+}
+
+#history_sidebar .tab_container .tab_wrapper button.tab {
     align-items: center;
     background: var(--tab-bg-color-1);
     border-bottom: 1px solid var(--border-color-1);
     border-left: 1px solid var(--border-color-1);
     color: var(--tab-text-color-1);
     cursor: pointer;
-    display: flex;
+    font-size: var(--tab-font-size);
     gap: 0;
     height: var(--tab-height);
     justify-content: center;
+    vertical-align: middle;
     width: auto;
     z-index: 100;
 }
 
-#history_sidebar .tab > .tab_arrow {
-    font-size: var(--tab-open-close-icon-size);
-    line-height: 1;
-    margin-left: var(--tab-arrow-spacing-right);
-    margin-right: var(--tab-arrow-spacing-left);
-    text-align: center;
+#history_sidebar .tab_container .tab_wrapper button.tab.open {
+    background: var(--tab-bg-color-2);
+    padding-right: 5px;
 }
 
-#history_sidebar .tab.open > .tab_arrow::before {
-    content: var(--tab-closed-icon);
+#history_sidebar .tab_container .tab_wrapper button.tab.open::before,
+#history_sidebar .tab_container .tab_wrapper button.tab.open::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
 }
 
-#history_sidebar .tab:not(.open) > .tab_arrow::before {
-    content: var(--tab-open-icon);
+#history_sidebar .tab_container .tab_wrapper button.tab.open::before {
+    left: -9px;
+
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+    border-right: 9px solid var(--border-color-1);
 }
 
-#history_sidebar .tab > .tab_icon {
-    font-size: var(--tab-font-size);
-    vertical-align: middle;
+#history_sidebar .tab_container .tab_wrapper button.tab.open::after {
+    left: -8px;
+
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+    border-right: 9px solid var(--tab-bg-color-2);
 }
 
 #history_sidebar h1 {

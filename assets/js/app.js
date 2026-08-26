@@ -34,7 +34,7 @@ const app = {
 /* tooltip configuration settings */
 export const tooltip_config = {
     delay: 200,
-    offset_x: 5,
+    offset_x: 15,
     offset_y: 0
 }
 

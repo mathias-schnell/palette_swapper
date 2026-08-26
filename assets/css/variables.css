@@ -41,14 +41,12 @@
 
     /* tab settings */
     --tab-bg-color-1: #ECECEC;
+    --tab-bg-color-2: color-mix(in oklch, var(--tab-bg-color-1), black 5%);
     --tab-text-color-1: #252525;
     --tab-open-icon: "\23F4";
     --tab-closed-icon: "\23F5";
-    --tab-arrow-spacing-left: -4px;
-    --tab-arrow-spacing-right: 0px;
     --tab-font-size: 24px;
     --tab-height: 32px;
-    --tab-open-close-icon-size: 16px;
 
     /* lock icon settings */
     --lock-icon-locked: "\1F512";

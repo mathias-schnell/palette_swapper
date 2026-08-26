@@ -1,12 +1,13 @@
 <div id="history_sidebar" class="history_sidebar">
-    <div class="tabs">
-        <div class="tab" data-action="toggle_panel" data-panel="history_panel" data-tooltip="Action History">
-            <div class='tab_arrow'></div>
-            <div class='tab_icon'>⌛</div>
+    <div class="tab_container">
+        <div class="tab_wrapper">
+            <button class="tab" data-action="toggle_panel" data-panel="history_panel" data-tooltip="Action History">
+                ⌛
+            </button>
         </div>
     </div>
-    <div id="history_panel_container" class="history_panel_container">
-        <div id="history_panel" class="history_panel">
+    <div id="history_panel_container" class="panel_container history_panel_container">
+        <div id="history_panel" class="panel history_panel">
             <h3>Action History</h3>
             <ul id='history_list' class='history_list'></ul>
         </div>

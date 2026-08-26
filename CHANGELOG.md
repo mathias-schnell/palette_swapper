@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.4] - 2026-08-25
+
+### Changed
+- Tabs on sidebars are now HTML buttons to help with accessibility.
+- Tabs have also been redesigned to indicate which are active and inactive, as well as better aesthetics overall.
+- "Palette" options have been removed from the toolbar and moved to the left sidebar as new tabs.
+
+---
+
 ## [0.9.3] - 2026-08-23
 
 ### Changed
