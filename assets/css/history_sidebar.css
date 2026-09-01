@@ -106,32 +106,8 @@
 
 #history_sidebar .tab_container .tab_wrapper button.tab.open {
     background: var(--tab-bg-color-2);
-    padding-right: 5px;
-}
-
-#history_sidebar .tab_container .tab_wrapper button.tab.open::before,
-#history_sidebar .tab_container .tab_wrapper button.tab.open::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 0;
-    height: 0;
-}
-
-#history_sidebar .tab_container .tab_wrapper button.tab.open::before {
-    left: -9px;
-
-    border-top: 16px solid transparent;
-    border-bottom: 16px solid transparent;
-    border-right: 9px solid var(--border-color-1);
-}
-
-#history_sidebar .tab_container .tab_wrapper button.tab.open::after {
-    left: -8px;
-
-    border-top: 16px solid transparent;
-    border-bottom: 16px solid transparent;
-    border-right: 9px solid var(--tab-bg-color-2);
+    padding-left: 5px;
+    border-radius: 8px 0 0 8px;
 }
 
 #history_sidebar h1 {

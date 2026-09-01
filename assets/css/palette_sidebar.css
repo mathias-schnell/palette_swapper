@@ -152,31 +152,7 @@
 #palette_sidebar .tab_container .tab_wrapper button.tab.open {
     background: var(--tab-bg-color-2);
     padding-right: 5px;
-}
-
-#palette_sidebar .tab_container .tab_wrapper button.tab.open::before,
-#palette_sidebar .tab_container .tab_wrapper button.tab.open::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    width: 0;
-    height: 0;
-}
-
-#palette_sidebar .tab_container .tab_wrapper button.tab.open::before {
-    right: -9px;
-
-    border-top: 16px solid transparent;
-    border-bottom: 16px solid transparent;
-    border-left: 9px solid var(--border-color-1);
-}
-
-#palette_sidebar .tab_container .tab_wrapper button.tab.open::after {
-    right: -8px;
-
-    border-top: 16px solid transparent;
-    border-bottom: 16px solid transparent;
-    border-left: 9px solid var(--tab-bg-color-2);
+    border-radius: 0 8px 8px 0;
 }
 
 #palette_sidebar #palette_row_prime {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.10] - 2026-09-01
+
+### Changed
+- Changed the style for active tabs from a pointed tip to a rounded one since it's much easier to style and looks better.
+
+---
+
 ## [0.9.9] - 2026-09-01
 
 ### Internal
