@@ -18,22 +18,25 @@ const transform_order = {
 export function render() {
     if(render_scheduled) return;
     render_scheduled = true;
-
+    
     requestAnimationFrame(() => {
-        const state = build_state(ui_cache.canvas_container, ui_cache.ctx);
-        if(validate_state(state)) {
-            prepare_canvas(state);
-            state.ctx.save();
-            apply_transforms(state);
-            draw_scene(state);
-            state.ctx.restore();
+        try {
+            const state = build_state(ui_cache.canvas_container, ui_cache.ctx);
+            if(validate_state(state)) {
+                prepare_canvas(state);
+                state.ctx.save();
+                apply_transforms(state);
+                draw_scene(state);
+                state.ctx.restore();
 
-            const base_data = state.ctx.getImageData(0, 0, state.width, state.height);
-            app.set_base_image_cache(new Uint32Array(base_data.data.buffer));
-            
-            apply_effects(state);
+                const base_data = state.ctx.getImageData(0, 0, state.width, state.height);
+                app.set_base_image_cache(new Uint32Array(base_data.data.buffer));
+                
+                apply_effects(state);
+            }
+        } finally {
+            render_scheduled = false;
         }
-        render_scheduled = false;
     });
 }
 
@@ -67,8 +70,13 @@ function build_state(container, ctx) {
 
 /* a function that checks whether the state is valid */
 function validate_state(state) {
-    if(!state.container || !state.ctx || !state.src_image || state.width <= 0 || state.height <= 0) return false;
-    return true;
+    return state.container && 
+           state.ctx && 
+           state.src_image && 
+           Number.isFinite(state.width) && 
+           Number.isFinite(state.height) && 
+           state.width > 0 && 
+           state.height > 0;
 }
 
 /* a function that sets the canvas to the appropriate size and settings before drawing anything */

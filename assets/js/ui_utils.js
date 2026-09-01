@@ -179,16 +179,17 @@ export function display_palette_hex(hex_color, container) {
     text.textContent = `#${hex_color}`;
 }
 
-export function set_custom_color(swatch) {
+export function set_custom_color(swatch, palette_select_list, palette_row_container) {
     if(!swatch.matches('.swatch')) return;
-    const source = ui_cache.palette_select_list.dataset.source;
-    const id = ui_cache.palette_select_list.getAttribute('id');
-    const row = document.querySelector(`[data-source*='${source}']:not(#${id})`);
+    const source = palette_select_list.dataset.source;
+    const target = swatch.dataset.target;
+    const id = palette_select_list.getAttribute('id');
+    const row = palette_row_container.querySelector(`[data-source='${source}']:not(#${id})`);
     const custom = app.get_mapping_custom();
-    custom.set(ui_cache.palette_select_list.dataset.source, swatch.dataset.target);
+    custom.set(source, target);
     const custom_uint32 = image.palette_to_uint32(custom);
-    change_swatch_color(row, swatch.dataset.target);
-    toggle_floating_element(ui_cache.palette_select_list);
+    change_swatch_color(row, target);
+    toggle_floating_element(palette_select_list);
     app.set_mapping_custom(custom);
     app.set_mapping_custom_uint32(custom_uint32);
     refresh_ui();
@@ -240,7 +241,7 @@ export function refresh_palette_sidebar(sidebar, palette_row_container, palette_
         row.querySelector('.target_swatch').style.background = `#${tar_hex}`;
         row.querySelector('.source_hex').textContent = `#${source_hex}`;
         row.querySelector('.target_hex').textContent = `#${tar_hex}`;
-        if (locked_colors.get(source_hex)) {
+        if (locked_colors.has(source_hex)) {
             row.querySelector('.lock_button').classList.toggle('locked', true);
             row.querySelector('.lock_button').classList.toggle('unlocked', false);
         }

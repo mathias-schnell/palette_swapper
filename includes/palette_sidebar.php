@@ -28,14 +28,14 @@
             <h3>Color Mappings</h3>
             <div id="palette_row_container" class="palette_row_container">
                 <div id="palette_row_prime" class="palette_row">
-                    <div class="lock_button unlocked" data-action="lock_color"></div>
+                    <button type="button" class="lock_button unlocked" data-action="lock_color" aria-label="Lock Color Mapping"></button>
                     <div class="source_color">
                         <span class="swatch source_swatch"></span><span class="source_hex"></span>
                     </div>
                     <span class="swatch_arrow">&#10148;</span>
                     <div class="target_color">
                         <span class="swatch target_swatch"></span><span class="target_hex"></span>
-                        <div class="palette_select_button" data-action="toggle_pal_select">&#9205;</div>
+                        <button type="button" class="palette_select_button" data-action="toggle_pal_select" aria-label="Choose Palette Color">&#9205;</button>
                     </div>
                 </div>
             </div>

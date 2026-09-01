@@ -164,7 +164,7 @@ function bind_palette_sidebar_events() {
             ui.display_palette_hex(hex, container);
         });
     });
-    ui_cache.palette_select_list.addEventListener('click', (e) => ui.set_custom_color(e.target));
+    ui_cache.palette_select_list.addEventListener('click', (e) => ui.set_custom_color(e.target, ui_cache.palette_select_list, ui_cache.palette_row_container));
 }
 
 /* binding for all events specific to the toolbar */

@@ -36,6 +36,7 @@
 
     /* tab settings */
     --tab-bg-color-1: #2C2C2C;
+    --tab-bg-color-2: #3A3A3A;
     --tab-bg-color-2: color-mix(in oklch, var(--tab-bg-color-1), white 8%);
     --tab-text-color-1: #E6E6E6;
     --tab-open-icon: "\23F4";

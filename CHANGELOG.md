@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.9] - 2026-09-01
+
+### Internal
+- Added fallback CSS styles just in case certain CSS functions aren't available in some browsers.
+- Changed the lock and palette color select buttons from `<div>` tags to `<button>` tags.
+- Added some safeguards to the canvas rendering.
+- Added more to the reset CSS stylesheet to account for `<button>` tags.
+- Reduced reliance on global DOM document for UI functions.
+
+---
+
 ## [0.9.8] - 2026-09-01
 
 ### Changed
