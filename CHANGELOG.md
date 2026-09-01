@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.6] - 2026-08-31
+
+### Added
+- New Toolbar group called "Window". All options within this group toggle specific tabs as if they were clicked.
+
+---
+
 ## [0.9.5] - 2026-08-31
 
 ### Changed

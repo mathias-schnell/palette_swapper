@@ -33,5 +33,22 @@
             'Light' => 'theme_light',
             'Dark' => 'theme_dark',
         ],
+        'Window' => [
+            'Source Palette' => 'show_source_panel',
+            'Target Palette' => 'show_target_panel',
+            'Color Mapping' => 'show_mapping_panel',
+            '---' => '---',
+            'Action History' => 'show_history_panel',
+        ]
     ];
-    $toolbar_no_disable = [ 'load_source', 'load_palette', 'undo', 'redo', 'theme_light', 'theme_dark' ];
+    $toolbar_no_disable = [
+        'load_source', 
+        'load_palette', 
+        'undo', 
+        'redo', 
+        'theme_light', 
+        'theme_dark',
+        'show_source_panel',
+        'show_target_panel',
+        'show_mapping_panel',
+        'show_history_panel', ];

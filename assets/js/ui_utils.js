@@ -123,6 +123,12 @@ export function toggle_panel(sidebar, tab, panel) {
     }
 }
 
+export function toggle_panel_from_toolbar(e) {
+    const panel = "[data-panel='" + e.target.dataset.action.replace("show_", "") + "']";
+    console.log(panel);
+    document.querySelector(panel).click();
+}
+
 export function populate_palette_selector(palette_selector, palette) {
     palette_selector.replaceChildren();
     const colors = palette.keys();

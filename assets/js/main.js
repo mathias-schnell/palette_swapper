@@ -12,8 +12,8 @@ const sidebar_actions = {
     lock_color              : (e) => ui.lock_color(e),
     remove_history          : (e) => app.remove_from_history(e.target.dataset.index),
     toggle_panel            : (sidebar, tab, panel) => ui.toggle_panel(sidebar, tab, panel),
-    show_source_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); },
-    show_target_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); },
+    show_source_palette     : (sidebar, tab, panel) => ui.toggle_panel(sidebar, tab, panel),
+    show_target_palette     : (sidebar, tab, panel) => ui.toggle_panel(sidebar, tab, panel),
     toggle_pal_select       : (e) => ui.toggle_palette_selector(e.target),
 };
 
@@ -34,6 +34,10 @@ const toolbar_actions = {
     export_gif              : (e) => image.export_image('untitled.gif', 'image/gif'),
     theme_light             : (e) => ui_cache.body.dataset.theme = "light",
     theme_dark              : (e) => ui_cache.body.dataset.theme = "dark",
+    show_source_panel       : (e) => ui.toggle_panel_from_toolbar(e),
+    show_target_panel       : (e) => ui.toggle_panel_from_toolbar(e),
+    show_mapping_panel      : (e) => ui.toggle_panel_from_toolbar(e),
+    show_history_panel      : (e) => ui.toggle_panel_from_toolbar(e),
 };
 
 const keyboard_shortcuts = {
