@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.8] - 2026-09-01
+
+### Changed
+- Changed some event triggers from "mouseover" and "mouseout" to "pointerover" and "pointerout" since the latter include pen and touch controls in addition to mouse controls.
+
+---
+
 ## [0.9.7] - 2026-09-01
 
 ### Internal

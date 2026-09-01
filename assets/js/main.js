@@ -133,13 +133,13 @@ function bind_palette_sidebar_events() {
         app.set_mapping_method(e.target.value);
         ui.refresh_ui(); 
     });
-    ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('mouseover', (e) => {
+    ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('pointerover', (e) => {
         const source_row = e.target.closest('.source_color');
         if (!source_row) return;
         const source_hex = source_row.parentNode.dataset.source;
         ui.highlight_color(app.get_base_image_cache(), ui_cache.highlight_canvas, ui_cache.highlight_ctx, source_hex);
     });
-    ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('mouseout', (e) => {
+    ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('pointerout', (e) => {
         const source_row = e.target.closest('.source_color');
         if (!source_row) return;
         ui.clear_highlights(ui_cache.highlight_canvas, ui_cache.highlight_ctx);
@@ -155,9 +155,10 @@ function bind_palette_sidebar_events() {
         }
     });
     ui_cache.palette_sidebar.querySelectorAll(".palette_container").forEach(container => {
-        container.addEventListener('mouseover', (e) => {
+        container.addEventListener('pointerover', (e) => {
             const swatch = e.target.closest('.palette_grid .swatch');
             if (!swatch) return;
+            if (swatch.contains(e.relatedTarget)) return;
             const hex = swatch.dataset.hex;
             const container = swatch.closest('.palette_container').querySelector('.palette_hex_container');
             ui.display_palette_hex(hex, container);
