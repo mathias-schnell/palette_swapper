@@ -12,8 +12,8 @@ const sidebar_actions = {
     lock_color              : (e) => ui.lock_color(e),
     remove_history          : (e) => app.remove_from_history(e.target.dataset.index),
     toggle_panel            : (sidebar, tab, panel) => ui.toggle_panel(sidebar, tab, panel),
-    show_source_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); ui.draw_palette_in_panel(panel, app.get_source_palette()); },
-    show_target_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); ui.draw_palette_in_panel(panel, app.get_target_palette()); },
+    show_source_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); },
+    show_target_palette     : (sidebar, tab, panel) => { ui.toggle_panel(sidebar, tab, panel); },
     toggle_pal_select       : (e) => ui.toggle_palette_selector(e.target),
 };
 
@@ -43,6 +43,8 @@ const keyboard_shortcuts = {
     "r"             : (e) => toolbar_actions.rotate_90cw(),
     "ctrl+r"        : (e) => toolbar_actions.rotate_90ccw(),
     "ctrl+shift+r"  : (e) => toolbar_actions.rotate_180(),
+    "ctrl+h"        : (e) => toolbar_actions.flip_h(),
+    "ctrl+v"        : (e) => toolbar_actions.flip_v(),
     "="             : (e) => toolbar_actions.zoom_in(),
     "+"             : (e) => toolbar_actions.zoom_in(),
     "-"             : (e) => toolbar_actions.zoom_out(),
@@ -72,10 +74,23 @@ function initialize_app() {
 
 /* binding for all events that affect the entire app */
 function bind_global_events() {
-    document.addEventListener('click', (e) => ui.hide_floating_elements(e) );
+    document.addEventListener('click', (e) => {
+        if (!ui_cache.toolbar.contains(e.target)) {
+            ui.hide_toolbar_menus(e, ui_cache.toolbar);
+        }
+        ui.hide_floating_elements(e);
+    });
     document.addEventListener('history_change', (e) => ui.refresh_ui());
     document.addEventListener('image_upload', (e) => {
-        if(e.detail.type === "target") ui.populate_palette_selector(ui_cache.palette_select_list);
+        if(e.detail.type === "source") {
+            const panel = ui_cache.palette_sidebar.querySelector('#source_panel');
+            ui.draw_palette_in_panel(panel, app.get_source_palette());
+        }
+        if(e.detail.type === "target") {
+            const panel = ui_cache.palette_sidebar.querySelector('#target_panel');
+            ui.draw_palette_in_panel(panel, app.get_target_palette());
+            ui.populate_palette_selector(ui_cache.palette_select_list, app.get_target_palette());
+        }
         ui.refresh_ui();
     });
 }
@@ -139,7 +154,7 @@ function bind_palette_sidebar_events() {
 
 /* binding for all events specific to the toolbar */
 function bind_toolbar_events() {
-    const toolbar = document.getElementById('toolbar');
+    const toolbar = ui_cache.toolbar;
     const source_upload = toolbar.querySelector('#source_upload');
     const palette_upload = toolbar.querySelector('#palette_upload');
     const source_toolbar_items = [
@@ -162,8 +177,21 @@ function bind_toolbar_events() {
     source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0], () => ui.refresh_ui() ));
     palette_upload.addEventListener('change', (e) => image.load_target(e.target.files[0], () => ui.refresh_ui() ));
     toolbar.addEventListener('click', (e) => {
-        const action = e.target.dataset.action;
-        if(action) toolbar_actions[action]?.(e);
+        const target = e.target;
+        const action = target.dataset.action;
+        if(target.getAttribute('aria-haspopup') === 'true') {
+            const menu = target.nextElementSibling;
+            const was_open = menu.classList.contains('open');
+            ui.hide_toolbar_menus(e, toolbar);
+            if(!was_open) {
+                menu.classList.add("open");
+                target.setAttribute("aria-expanded", "true");
+            }
+        }
+        if(action) {
+            toolbar_actions[action]?.(e);
+            ui.hide_toolbar_menus(e, toolbar);
+        }
     });
     document.addEventListener('image_upload', (e) => {
         if(e.detail.type === "source") {

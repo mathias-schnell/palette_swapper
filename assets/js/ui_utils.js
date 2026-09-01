@@ -71,10 +71,6 @@ export function change_swatch_color(swatch_row, target_hex) {
     swatch_row.querySelector('.target_hex').textContent = `#${target_hex}`;
 }
 
-export function close_all_menus() {
-    document.querySelectorAll('.toolbar_menu').forEach(menu => menu.classList.remove('open'));
-}
-
 export function enable_toolbar_items(toolbar, items) {
     Object.values(items).forEach((id) => {
         let el = toolbar.querySelector(`#${id}`);
@@ -87,10 +83,17 @@ export function enable_toolbar_items(toolbar, items) {
 }
 
 export function hide_floating_elements(e) {
-    close_all_menus();
     if(!e.target.closest('#palette_select_list') && !e.target.closest('.palette_select_button')) { 
         toggle_palette_selector(null, true);
     }
+}
+
+export function hide_toolbar_menus(e, toolbar) {
+    toolbar.querySelectorAll('.toolbar_menu.open').forEach(menu => {
+        menu.classList.remove('open');
+        const button = menu.previousElementSibling;
+        button?.setAttribute('aria-expanded', 'false');
+    });
 }
 
 export function lock_color(e) {
@@ -120,11 +123,10 @@ export function toggle_panel(sidebar, tab, panel) {
     }
 }
 
-export function populate_palette_selector(palette_selector) {
+export function populate_palette_selector(palette_selector, palette) {
     palette_selector.replaceChildren();
-    const target_palette = app.get_target_palette();
-    const colors = target_palette.keys();
-    const size = Math.max(1, Math.ceil(Math.sqrt(target_palette.size)));
+    const colors = palette.keys();
+    const size = Math.max(1, Math.ceil(Math.sqrt(palette.size)));
     palette_selector.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     colors.forEach((hex) => {
         const swatch = document.createElement("span");
@@ -139,16 +141,14 @@ export function draw_palette_in_panel(panel, palette) {
     const palette_container = panel.querySelector(".palette_container");
     const grid_container = document.createElement("div");
     const hex_container = document.createElement("div");
-    const hex_text = document.createElement("span");
+    const hex_text = document.createElement("span"); 
     const colors = palette.keys();
-    const size = Math.max(1, Math.ceil(Math.sqrt(palette.size)));
 
     hex_text.classList.add("palette_hex");
     hex_text.textContent = `#FFFFFF`;
     hex_container.classList.add("palette_hex_container");
     hex_container.appendChild(hex_text);
     grid_container.classList.add("palette_grid");
-    grid_container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
 
     colors.forEach((hex) => {
         const swatch = document.createElement("span");

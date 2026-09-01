@@ -220,6 +220,8 @@
 #palette_sidebar .palette_container .palette_grid {
     display: grid;
     gap: 4px;
+    grid-template-columns: repeat(auto-fit, 32px);
+    justify-content: center;
 }
 
 #palette_sidebar .palette_container .palette_grid .swatch {

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.9.5] - 2026-08-31
+
+### Changed
+- Toolbar has been refactored to use HTML buttons to help with accessibility.
+
+### Internal
+- Toolbar menu generation, structure, ids and classes have all been refactored to be neater, shorter and easier to understand.
+- Toolbar styling has also been cleaned up.
+- UI functions have been separated and cleaned up.
+- Palette sidebar styling has been cleaned up.
+
+---
+
 ## [0.9.4] - 2026-08-25
 
 ### Changed
