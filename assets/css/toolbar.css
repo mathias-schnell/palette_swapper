@@ -45,7 +45,8 @@
     width: 100%;
 }
 
-#toolbar .toolbar_item:hover {
+#toolbar .toolbar_item:hover,
+#toolbar .toolbar_item:focus-within {
     background-color: var(--bg-color-2);
     color: var(--text-color-2);
 }
@@ -103,7 +104,8 @@
     margin-left: 24px;
 }
 
-#toolbar .toolbar_menu .toolbar_group:hover > .toolbar_menu {
+#toolbar .toolbar_menu .toolbar_group:hover > .toolbar_menu,
+#toolbar .toolbar_menu .toolbar_group:focus-within > .toolbar_menu {
     display: flex;
 }
 

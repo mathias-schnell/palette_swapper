@@ -13,6 +13,7 @@ export const ui_cache = {
     highlight_ctx: null,
     history_sidebar: null,
     history_tooltip: null,
+    palette_select_list: null,
     mapping_method: null,
     palette_row_container: null,
     palette_row_prime: null,
@@ -20,6 +21,8 @@ export const ui_cache = {
     palette_sidebar: null,
     palette_tooltip: null,
     toolbar: null,
+    upload_palette: null,
+    upload_source: null,
 }
 
 /* initialize the ui_cache by selecting and storing references to DOM elements */
@@ -39,4 +42,6 @@ export function ui_cache_init() {
     ui_cache.palette_sidebar = document.getElementById('palette_sidebar');
     ui_cache.palette_tooltip = document.getElementById('palette_tooltip');
     ui_cache.toolbar = document.getElementById('toolbar');
+    ui_cache.upload_palette = document.getElementById('palette_upload');
+    ui_cache.upload_source = document.getElementById('source_upload');
 }

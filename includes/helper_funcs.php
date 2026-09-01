@@ -3,9 +3,10 @@
         if($name === '---') return "<div class='menu_separator'></div>";
 
         if(is_array($item)):
+            $menu_name = str_replace(' ', '_', strtolower($name)) . "_menu";
             $html = "<div class='toolbar_group'>";
-            $html .= "<button type='button' class='toolbar_item has_submenu' aria-expanded='false' aria-haspopup='true'> {$name} </button>";
-            $html .= "<div class='toolbar_menu'>";
+            $html .= "<button type='button' class='toolbar_item has_submenu' aria-controls='{$menu_name}' aria-expanded='false' aria-haspopup='true'> {$name} </button>";
+            $html .= "<div id='{$menu_name}' class='toolbar_menu'>";
             foreach($item as $subname => $subitem):
                 $html .= menu_to_html($subname, $subitem, $depth + 1, $do_not_disable);
             endforeach;

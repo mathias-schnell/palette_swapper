@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.7] - 2026-09-01
+
+### Internal
+- Reduced some redundancy in color functions.
+- Added more UI parts to the UI cache.
+- Added more Aria information to the toolbar.
+- Made the logic for detecting mousing/hovering over swatches cleaner and more efficient.
+- Added more styling to accommodate keyboard navigation through the toolbar.
+
+---
+
 ## [0.9.6] - 2026-08-31
 
 ### Added

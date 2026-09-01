@@ -18,40 +18,41 @@ const sidebar_actions = {
 };
 
 const toolbar_actions = {
-    undo                    : (e) => { app.regress_history(); app.rebuild_transforms(); },
-    redo                    : (e) => { app.advance_history(); app.rebuild_transforms(); },
-    zoom_in                 : (e) => ui.zoom_image(0.25),
-    zoom_out                : (e) => ui.zoom_image(-0.25),
-    load_source             : (e) => source_upload.click(),
-    load_palette            : (e) => palette_upload.click(),
-    flip_h                  : (e) => ui.flip_image_horizontal(),
-    flip_v                  : (e) => ui.flip_image_vertical(),
-    rotate_90cw             : (e) => ui.rotate_image(90),
-    rotate_90ccw            : (e) => ui.rotate_image(-90),
-    rotate_180              : (e) => ui.rotate_image(180),
-    export_png              : (e) => image.export_image('untitled.png', 'image/png'),
-    export_jpg              : (e) => image.export_image('untitled.jpg', 'image/jpeg'),
-    export_gif              : (e) => image.export_image('untitled.gif', 'image/gif'),
-    theme_light             : (e) => ui_cache.body.dataset.theme = "light",
-    theme_dark              : (e) => ui_cache.body.dataset.theme = "dark",
-    show_source_panel       : (e) => ui.toggle_panel_from_toolbar(e),
-    show_target_panel       : (e) => ui.toggle_panel_from_toolbar(e),
-    show_mapping_panel      : (e) => ui.toggle_panel_from_toolbar(e),
-    show_history_panel      : (e) => ui.toggle_panel_from_toolbar(e),
+    undo                    : () => { app.regress_history(); app.rebuild_transforms(); },
+    redo                    : () => { app.advance_history(); app.rebuild_transforms(); },
+    zoom_in                 : () => ui.zoom_image(0.25),
+    zoom_out                : () => ui.zoom_image(-0.25),
+    load_source             : () => ui_cache.upload_source.click(),
+    load_palette            : () => ui_cache.upload_palette.click(),
+    flip_h                  : () => ui.flip_image_horizontal(),
+    flip_v                  : () => ui.flip_image_vertical(),
+    rotate_90cw             : () => ui.rotate_image(90),
+    rotate_90ccw            : () => ui.rotate_image(-90),
+    rotate_180              : () => ui.rotate_image(180),
+    export_png              : () => image.export_image('untitled.png', 'image/png'),
+    export_jpg              : () => image.export_image('untitled.jpg', 'image/jpeg'),
+    export_gif              : () => image.export_image('untitled.gif', 'image/gif'),
+    theme_light             : () => ui_cache.body.dataset.theme = "light",
+    theme_dark              : () => ui_cache.body.dataset.theme = "dark",
+    show_source_panel       : () => ui.toggle_panel_from_toolbar(ui_cache.palette_sidebar, "source_panel"),
+    show_target_panel       : () => ui.toggle_panel_from_toolbar(ui_cache.palette_sidebar, "target_panel"),
+    show_mapping_panel      : () => ui.toggle_panel_from_toolbar(ui_cache.palette_sidebar, "mapping_panel"),
+    show_history_panel      : () => ui.toggle_panel_from_toolbar(ui_cache.history_sidebar, "history_panel"),
 };
 
 const keyboard_shortcuts = {
-    "ctrl+z"        : (e) => toolbar_actions.undo(),
-    "ctrl+y"        : (e) => toolbar_actions.redo(),
-    "ctrl+shift+z"  : (e) => toolbar_actions.redo(),
-    "r"             : (e) => toolbar_actions.rotate_90cw(),
-    "ctrl+r"        : (e) => toolbar_actions.rotate_90ccw(),
-    "ctrl+shift+r"  : (e) => toolbar_actions.rotate_180(),
-    "ctrl+h"        : (e) => toolbar_actions.flip_h(),
-    "ctrl+v"        : (e) => toolbar_actions.flip_v(),
-    "="             : (e) => toolbar_actions.zoom_in(),
-    "+"             : (e) => toolbar_actions.zoom_in(),
-    "-"             : (e) => toolbar_actions.zoom_out(),
+    "escape"        : () => ui.hide_toolbar_menus(ui_cache.toolbar),
+    "ctrl+z"        : () => toolbar_actions.undo(),
+    "ctrl+y"        : () => toolbar_actions.redo(),
+    "ctrl+shift+z"  : () => toolbar_actions.redo(),
+    "r"             : () => toolbar_actions.rotate_90cw(),
+    "ctrl+r"        : () => toolbar_actions.rotate_90ccw(),
+    "ctrl+shift+r"  : () => toolbar_actions.rotate_180(),
+    "ctrl+h"        : () => toolbar_actions.flip_h(),
+    "ctrl+v"        : () => toolbar_actions.flip_v(),
+    "="             : () => toolbar_actions.zoom_in(),
+    "+"             : () => toolbar_actions.zoom_in(),
+    "-"             : () => toolbar_actions.zoom_out(),
 };
 
 /* try our best to ensure that everything starts after the DOM has loaded */
@@ -80,11 +81,11 @@ function initialize_app() {
 function bind_global_events() {
     document.addEventListener('click', (e) => {
         if (!ui_cache.toolbar.contains(e.target)) {
-            ui.hide_toolbar_menus(e, ui_cache.toolbar);
+            ui.hide_toolbar_menus(ui_cache.toolbar);
         }
         ui.hide_floating_elements(e);
     });
-    document.addEventListener('history_change', (e) => ui.refresh_ui());
+    document.addEventListener('history_change', () => ui.refresh_ui());
     document.addEventListener('image_upload', (e) => {
         if(e.detail.type === "source") {
             const panel = ui_cache.palette_sidebar.querySelector('#source_panel');
@@ -153,6 +154,15 @@ function bind_palette_sidebar_events() {
             sidebar_actions[action]?.(e);
         }
     });
+    ui_cache.palette_sidebar.querySelectorAll(".palette_container").forEach(container => {
+        container.addEventListener('mouseover', (e) => {
+            const swatch = e.target.closest('.palette_grid .swatch');
+            if (!swatch) return;
+            const hex = swatch.dataset.hex;
+            const container = swatch.closest('.palette_container').querySelector('.palette_hex_container');
+            ui.display_palette_hex(hex, container);
+        });
+    });
     ui_cache.palette_select_list.addEventListener('click', (e) => ui.set_custom_color(e.target));
 }
 
@@ -186,15 +196,15 @@ function bind_toolbar_events() {
         if(target.getAttribute('aria-haspopup') === 'true') {
             const menu = target.nextElementSibling;
             const was_open = menu.classList.contains('open');
-            ui.hide_toolbar_menus(e, toolbar);
+            ui.hide_toolbar_menus(toolbar);
             if(!was_open) {
                 menu.classList.add("open");
                 target.setAttribute("aria-expanded", "true");
             }
         }
         if(action) {
-            toolbar_actions[action]?.(e);
-            ui.hide_toolbar_menus(e, toolbar);
+            toolbar_actions[action]?.();
+            ui.hide_toolbar_menus(toolbar);
         }
     });
     document.addEventListener('image_upload', (e) => {

@@ -88,7 +88,7 @@ export function hide_floating_elements(e) {
     }
 }
 
-export function hide_toolbar_menus(e, toolbar) {
+export function hide_toolbar_menus(toolbar) {
     toolbar.querySelectorAll('.toolbar_menu.open').forEach(menu => {
         menu.classList.remove('open');
         const button = menu.previousElementSibling;
@@ -123,10 +123,10 @@ export function toggle_panel(sidebar, tab, panel) {
     }
 }
 
-export function toggle_panel_from_toolbar(e) {
-    const panel = "[data-panel='" + e.target.dataset.action.replace("show_", "") + "']";
-    console.log(panel);
-    document.querySelector(panel).click();
+export function toggle_panel_from_toolbar(sidebar, panel_id) {
+    const panel = sidebar.querySelector('#' + panel_id);
+    const tab = sidebar.querySelector(`.tab[data-panel="${panel_id}"]`);
+    toggle_panel(sidebar, tab, panel);
 }
 
 export function populate_palette_selector(palette_selector, palette) {
@@ -159,14 +159,8 @@ export function draw_palette_in_panel(panel, palette) {
     colors.forEach((hex) => {
         const swatch = document.createElement("span");
         swatch.classList.add("swatch");
+        swatch.dataset.hex = `${hex}`;
         swatch.style.backgroundColor = `#${hex}`;
-        swatch.addEventListener("mouseenter", () => {
-            const bg = color.get_contrasting_hex_color(hex);
-            hex_container.style.backgroundColor = `${bg}`
-            hex_text.style.color = `#${hex}`;
-            hex_text.style.opacity = 1;
-            hex_text.textContent = `#${hex}`;
-        });
         grid_container.appendChild(swatch);
     })
 
@@ -174,6 +168,15 @@ export function draw_palette_in_panel(panel, palette) {
     palette_container.classList.add("palette_window");
     palette_container.appendChild(hex_container);
     palette_container.appendChild(grid_container);
+}
+
+export function display_palette_hex(hex_color, container) {
+    const bg = color.get_contrasting_hex_color(hex_color);
+    const text = container.querySelector('.palette_hex');
+    container.style.backgroundColor = `${bg}`;
+    text.style.color = `#${hex_color}`;
+    text.style.opacity = 1;
+    text.textContent = `#${hex_color}`;
 }
 
 export function set_custom_color(swatch) {
