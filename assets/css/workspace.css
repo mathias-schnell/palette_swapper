@@ -31,7 +31,7 @@
     background-size: 24px 24px;
     background-position: 0 0, 0 12px, 12px -12px, -12px 0;
     border: 1px solid var(--border-color-1);
-    box-sizing: border-box;
+    box-sizing: content-box;
     height: 0;
     width: 0;
 }

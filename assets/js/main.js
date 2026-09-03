@@ -135,13 +135,13 @@ function bind_palette_sidebar_events() {
     });
     ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('pointerover', (e) => {
         const source_row = e.target.closest('.source_color');
-        if (!source_row) return;
+        if (!source_row || source_row.contains(e.relatedTarget)) return;
         const source_hex = source_row.parentNode.dataset.source;
         ui.highlight_color(app.get_base_image_cache(), ui_cache.highlight_canvas, ui_cache.highlight_ctx, source_hex);
     });
     ui_cache.palette_sidebar.querySelector('.palette_row_container').addEventListener('pointerout', (e) => {
         const source_row = e.target.closest('.source_color');
-        if (!source_row) return;
+        if (!source_row || source_row.contains(e.relatedTarget)) return;
         ui.clear_highlights(ui_cache.highlight_canvas, ui_cache.highlight_ctx);
     });
     ui_cache.palette_sidebar.addEventListener('click', (e) => {
@@ -183,14 +183,12 @@ function bind_toolbar_events() {
         'rotate_180',
         'zoom_in',
         'zoom_out',
-        'show_source_palette',
     ];
     const target_toolbar_items = [
-        'show_target_palette',
     ];
 
-    source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0], () => ui.refresh_ui() ));
-    palette_upload.addEventListener('change', (e) => image.load_target(e.target.files[0], () => ui.refresh_ui() ));
+    source_upload.addEventListener('change', (e) => image.load_source(e.target.files[0]));
+    palette_upload.addEventListener('change', (e) => image.load_target(e.target.files[0]));
     toolbar.addEventListener('click', (e) => {
         const target = e.target;
         const action = target.dataset.action;

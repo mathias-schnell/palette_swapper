@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.12] - 2026-09-03
+
+### Fixed
+- Pixel highlighting when mousing over swatches in the Mapping Panel is more consistent.
+
+### Internal
+- Removed some old and unused code.
+- Fixed some minor dimension calculations for the canvas.
+
+---
+
 ## [0.9.11] - 2026-09-03
 
 ### Fixed
