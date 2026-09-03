@@ -35,7 +35,7 @@
     color: var(--text-color-disabled);
 }
 
-#history_sidebar #history_list li > span {
+#history_sidebar #history_list li > .remove_history {
     color: red;
     float: right;
 }

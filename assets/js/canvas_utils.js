@@ -29,7 +29,7 @@ export function render() {
                 draw_scene(state);
                 state.ctx.restore();
 
-                const base_data = state.ctx.getImageData(0, 0, state.width, state.height);
+                const base_data = state.ctx.getImageData(0, 0, state.canvas_width, state.canvas_height);
                 app.set_base_image_cache(new Uint32Array(base_data.data.buffer));
                 
                 apply_effects(state);
@@ -62,9 +62,11 @@ function build_state(container, ctx) {
     };
     state.zoom = state.transforms.get('zoom') ?? 1;
     state.rotation = state.transforms.get('rotate') ?? 0;
-    state.rotated = state.rotation % 180 === 90;
-    state.width = state.rotated ? state.src_image.naturalHeight * state.zoom : state.src_image.naturalWidth * state.zoom;
-    state.height = state.rotated ? state.src_image.naturalWidth * state.zoom : state.src_image.naturalHeight * state.zoom;
+    state.rotated = Math.abs(state.rotation % 180) === 90;
+    state.image_width = state.src_image.naturalWidth * state.zoom;
+    state.image_height = state.src_image.naturalHeight * state.zoom;
+    state.canvas_width = state.rotated ? state.image_height : state.image_width;
+    state.canvas_height = state.rotated ? state.image_width : state.image_height;
     return state;
 }
 
@@ -73,10 +75,10 @@ function validate_state(state) {
     return state.container && 
            state.ctx && 
            state.src_image && 
-           Number.isFinite(state.width) && 
-           Number.isFinite(state.height) && 
-           state.width > 0 && 
-           state.height > 0;
+           Number.isFinite(state.image_width) && 
+           Number.isFinite(state.image_height) && 
+           state.image_width > 0 && 
+           state.image_height > 0;
 }
 
 /* a function that sets the canvas to the appropriate size and settings before drawing anything */
@@ -95,26 +97,26 @@ function draw_scene(state) {
 /* functions that apply transformations to the canvas context */
 function flip_horizontal(state) {
     if (!state.transforms.get('flip_horizontal')) return;
-    state.ctx.translate(state.width, 0);
+    state.ctx.translate(state.image_width, 0);
     state.ctx.scale(-1, 1);
 }
 
 function flip_vertical(state) {
     if (!state.transforms.get('flip_vertical')) return;
-    state.ctx.translate(0, state.height);
+    state.ctx.translate(0, state.image_height);
     state.ctx.scale(1, -1);
 }
 
 function rotate(state) {
     if (state.rotation === 0) return;
     if (state.rotation === 90 || state.rotation === -270) {
-        state.ctx.translate(state.width, 0);
+        state.ctx.translate(state.image_height, 0);
         state.ctx.rotate(Math.PI / 2);
     } else if (state.rotation === -90 || state.rotation === 270) {
-        state.ctx.translate(0, state.height);
+        state.ctx.translate(0, state.image_width);
         state.ctx.rotate(-Math.PI / 2);
     } else if (state.rotation === 180 || state.rotation === -180) {
-        state.ctx.translate(state.width, state.height);
+        state.ctx.translate(state.image_width, state.image_height);
         state.ctx.rotate(Math.PI);
     }
 }
@@ -122,16 +124,16 @@ function rotate(state) {
 /* functions that help other functions with canvas operations */
 function resize(state) {
     [...state.container.children].forEach(child => {
-        child.height = state.height;
-        child.width = state.width;
+        child.height = state.canvas_height;
+        child.width = state.canvas_width;
     });
-    state.container.style.height = state.height + 'px';
-    state.container.style.width = state.width + 'px';
+    state.container.style.height = state.canvas_height + 'px';
+    state.container.style.width = state.canvas_width + 'px';
 }
 
 /* functions that draw to the canvas */
 function apply_color_map(state) {
-    const image_data = state.ctx.getImageData(0, 0, state.width, state.height);
+    const image_data = state.ctx.getImageData(0, 0, state.canvas_width, state.canvas_height);
     const uint32_palette = (state.map_method === "custom" ? state.custom_uint32 : state.colors_uint32);
     image.apply_palette(new Uint32Array(image_data.data.buffer), uint32_palette);
     state.ctx.putImageData(image_data, 0, 0);
@@ -142,10 +144,9 @@ function apply_effects(state) {
 }
 
 function clear(state) {
-    state.ctx.clearRect(0, 0, state.width, state.height);
+    state.ctx.clearRect(0, 0, state.canvas_width, state.canvas_height);
 }
 
 function draw_source(state) {
-    if (!state.src_image) return;
-    state.ctx.drawImage(state.src_image, 0, 0, state.width, state.height);
+    state.ctx.drawImage(state.src_image, 0, 0, state.image_width, state.image_height);
 }

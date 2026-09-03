@@ -59,6 +59,7 @@ export function load_target(target) {
     tar.image.onload = () => {
         const palette = extract_palette(tar.image);
         app.reset_target();
+        app.reset_mapping();
         app.set_target_image(tar.image);
         app.set_target_palette(palette);
         app.set_target_palette_uint32(palette_to_uint32(palette));

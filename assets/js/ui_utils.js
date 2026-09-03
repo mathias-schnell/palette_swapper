@@ -258,8 +258,8 @@ function format_action_flip_vertical(action) {
 }
 
 function format_action_rotate(action) {
-    if(action.value < 0) return "Rotate " + Math.abs(action.value) + "&deg; Counterclockwise";
-    else return "Rotate " + Math.abs(action.value) + "&deg; Clockwise";
+    if(action.value < 0) return "Rotate " + Math.abs(action.value) + "° Counterclockwise";
+    else return "Rotate " + Math.abs(action.value) + "° Clockwise";
 }
 
 function format_action_zoom(action) {
@@ -274,13 +274,14 @@ function refresh_history_sidebar(sidebar) {
     history_list.replaceChildren();
     history_actions.forEach((action, index) => {
         const li = document.createElement('li');
-        const remove_btn = document.createElement('span');
+        const remove_btn = document.createElement('button');
+        remove_btn.type = "button";
         remove_btn.dataset.action = "remove_history";
         remove_btn.dataset.index = index;
         remove_btn.classList.add('remove_history');
-        remove_btn.innerHTML = '&#120;';
+        remove_btn.textContent = 'x';
         li.dataset.action = action.type;
-        li.innerHTML = formatters[action.type]?.(action);
+        li.textContent = formatters[action.type]?.(action);
         li.appendChild(remove_btn);
         if (index > current) {
             li.classList.add('inactive');

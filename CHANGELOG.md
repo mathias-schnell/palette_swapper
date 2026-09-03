@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.11] - 2026-09-03
+
+### Fixed
+- Rectangular images were rotating incorrectly.
+
+### Changed
+- Changed the red 'x' for removing history actions into a `<button>` tag.
+- Reset custom color mapping when loading a new target palette.
+
+### Internal
+- Modified the canvas state object to account for both image dimensions and canvas dimensions.
+- Modified the surroudning functions to correctly account for the correct dimensions.
+
+---
+
 ## [0.9.10] - 2026-09-01
 
 ### Changed
