@@ -27,10 +27,10 @@ export function load_source(source) {
     if (!source) return;
 
     const src = { image: new Image(), palette: new Map() };
-    src.image.crossOrigin = "Anonymous";
     src.image.onload = () => {
         const palette = extract_palette(src.image);
         app.reset_image_cache();
+        app.set_new_base_image(true);
         app.reset_history();
         app.reset_mapping();
         app.reset_source();
@@ -55,7 +55,6 @@ export function load_target(target) {
     if (!target) return;
 
     const tar = { image: new Image(), palette: new Map() };
-    tar.image.crossOrigin = "Anonymous";
     tar.image.onload = () => {
         const palette = extract_palette(tar.image);
         app.reset_target();

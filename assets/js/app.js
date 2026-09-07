@@ -6,6 +6,7 @@
 /* the app state */
 const app = {
     base_image_cache: null,
+    new_base_image: false,
     history: {
         actions: [],
         current: -1
@@ -40,6 +41,7 @@ export const tooltip_config = {
 
 /* getter functions that return specific pieces of the app state */
 export function get_base_image_cache()          { return app.base_image_cache; }
+export function get_new_base_image()            { return app.new_base_image; }
 export function get_history_actions()           { return app.history.actions; }
 export function get_history_current()           { return app.history.current; }
 export function get_mapping_colors()            { return app.mapping.colors; }
@@ -58,6 +60,7 @@ export function get_transforms()                { return app.transforms; }
 
 /* setter functions for specific app state properties */
 export function set_base_image_cache(image_data)            { app.base_image_cache = image_data; }
+export function set_new_base_image(new_base_image)          { app.new_base_image = new_base_image; }
 export function set_history_actions(actions)                { app.history.actions = actions; }
 export function set_history_current(current)                { app.history.current = current; }
 export function set_mapping_colors(colors)                  { app.mapping.colors = colors; }

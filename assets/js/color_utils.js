@@ -14,6 +14,7 @@ const color_dist_funcs = {
 };
 
 export function calc_hex_brightness(hex) {
+    if(typeof hex === 'string') hex = hex.replace('#', '');
     const r = parseInt(hex.substring(0, 2), 16);
     const g = parseInt(hex.substring(2, 4), 16);
     const b = parseInt(hex.substring(4, 6), 16);
@@ -45,7 +46,8 @@ export function generate_palette_map(source_palette, target_palette, method) {
 }
 
 export function get_contrasting_hex_color(hex) {
-    return (calc_hex_brightness(hex.replace('#', '')) >= 128) ? '#222222' : '#f0f0f0';
+    if(typeof hex === 'string') hex = hex.replace('#', '');
+    return (calc_hex_brightness(hex) >= 128) ? '#222222' : '#f0f0f0';
 }
 
 export function get_distance_hsv(rgb_a, rgb_b) {
@@ -72,10 +74,12 @@ export function get_distance_rgb_w(rgb_a, rgb_b, weights = [0.3, 0.59, 0.11]) {
 }
 
 export function hex_to_rgb(hex) {
+    if(typeof hex === 'string') hex = hex.replace('#', '');
     return [parseInt(hex.substring(0, 2), 16), parseInt(hex.substring(2, 4), 16), parseInt(hex.substring(4, 6), 16)];
 }
 
 export function hex_to_uint32(hex) {
+    if(typeof hex === 'string') hex = hex.replace('#', '');
     const num = parseInt(hex, 16);
     return ((0xFF << 24) | ((num & 0xFF) << 16) | (((num >> 8) & 0xFF) << 8) | ((num >> 16) & 0xFF)) >>> 0;
 }

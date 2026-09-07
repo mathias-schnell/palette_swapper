@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.13] - 2026-09-03
+
+### Internal
+- Fixed a potential memory leak edge case and improved canvas rendering performance.
+- Ensured that hex strings are properly cleaned of hash tags when used for color calculation functions.
+- Removed CORS check for image loading since loading from an external URL will never happen.
+
+---
+
 ## [0.9.12] - 2026-09-03
 
 ### Fixed

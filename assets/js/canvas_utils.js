@@ -28,9 +28,12 @@ export function render() {
                 apply_transforms(state);
                 draw_scene(state);
                 state.ctx.restore();
-
-                const base_data = state.ctx.getImageData(0, 0, state.canvas_width, state.canvas_height);
-                app.set_base_image_cache(new Uint32Array(base_data.data.buffer));
+                
+                if(app.get_new_base_image()) {
+                    const base_data = state.ctx.getImageData(0, 0, state.canvas_width, state.canvas_height);
+                    app.set_base_image_cache(new Uint32Array(base_data.data.buffer));
+                    app.set_new_base_image(false);
+                }
                 
                 apply_effects(state);
             }
